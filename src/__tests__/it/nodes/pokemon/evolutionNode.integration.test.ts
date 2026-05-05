@@ -1,4 +1,3 @@
-import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
 import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import {createTestEnv} from "../../../testEnv";
 import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";

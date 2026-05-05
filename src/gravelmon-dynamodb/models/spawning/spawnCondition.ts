@@ -1,4 +1,3 @@
-import { deserializerRegistry } from "../../service/deserializerRegistry";
 import { ResourceLocation } from "../minecraft/resourceLocation";
 import { NumberRange } from "../properties/numberRange";
 import { deserializeTimeRange, serializeTimeRange, TimeRange } from "../properties/time";

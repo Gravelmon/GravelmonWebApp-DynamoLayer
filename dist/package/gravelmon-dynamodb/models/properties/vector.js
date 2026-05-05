@@ -1,0 +1,19 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.serializeVector = serializeVector;
+exports.deserializeVector = deserializeVector;
+function serializeVector(vector) {
+    return {
+        x: vector.x,
+        y: vector.y,
+        z: vector.z
+    };
+}
+function deserializeVector(data) {
+    return {
+        x: data.x,
+        y: data.y,
+        z: data.z
+    };
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidmVjdG9yLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vc3JjL2dyYXZlbG1vbi1keW5hbW9kYi9tb2RlbHMvcHJvcGVydGllcy92ZWN0b3IudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFNQSwwQ0FNQztBQUVELDhDQU1DO0FBZEQsU0FBZ0IsZUFBZSxDQUFDLE1BQWM7SUFDMUMsT0FBTztRQUNILENBQUMsRUFBRSxNQUFNLENBQUMsQ0FBQztRQUNYLENBQUMsRUFBRSxNQUFNLENBQUMsQ0FBQztRQUNYLENBQUMsRUFBRSxNQUFNLENBQUMsQ0FBQztLQUNkLENBQUM7QUFDTixDQUFDO0FBRUQsU0FBZ0IsaUJBQWlCLENBQUMsSUFBUztJQUN2QyxPQUFPO1FBQ0gsQ0FBQyxFQUFFLElBQUksQ0FBQyxDQUFDO1FBQ1QsQ0FBQyxFQUFFLElBQUksQ0FBQyxDQUFDO1FBQ1QsQ0FBQyxFQUFFLElBQUksQ0FBQyxDQUFDO0tBQ1osQ0FBQztBQUNOLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgdHlwZSBWZWN0b3IgPSB7XHJcbiAgICB4OiBudW1iZXI7XHJcbiAgICB5OiBudW1iZXI7XHJcbiAgICB6OiBudW1iZXI7XHJcbn1cclxuXHJcbmV4cG9ydCBmdW5jdGlvbiBzZXJpYWxpemVWZWN0b3IodmVjdG9yOiBWZWN0b3IpOiBSZWNvcmQ8c3RyaW5nLCBhbnk+IHtcclxuICAgIHJldHVybiB7XHJcbiAgICAgICAgeDogdmVjdG9yLngsXHJcbiAgICAgICAgeTogdmVjdG9yLnksXHJcbiAgICAgICAgejogdmVjdG9yLnpcclxuICAgIH07XHJcbn1cclxuXHJcbmV4cG9ydCBmdW5jdGlvbiBkZXNlcmlhbGl6ZVZlY3RvcihkYXRhOiBhbnkpOiBWZWN0b3Ige1xyXG4gICAgcmV0dXJuIHtcclxuICAgICAgICB4OiBkYXRhLngsXHJcbiAgICAgICAgeTogZGF0YS55LFxyXG4gICAgICAgIHo6IGRhdGEuelxyXG4gICAgfTtcclxufSJdfQ==

@@ -1,17 +1,15 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBGraphService } from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { createTestEnv } from "../../../testEnv";
 import { getNodePK } from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 
 import {
     FormNode,
-    FormData, createFormPrimaryTypeEdge, FormTypeRelationship, FormPrimaryTypeEdge, FormEntity, FormSecondaryTypeEdge,
+    FormData, FormTypeRelationship, FormPrimaryTypeEdge, FormEntity, FormSecondaryTypeEdge,
     FormHasAbilityEdge, FormHasAbilityEdgeType, AbilityIdentifier, createFormDropsItemEdge
 } from "../../../../gravelmon-dynamodb/nodes";
 
 import {
     PokemonIdentifier,
-    createPokemonNode,
     PokemonData
 } from "../../../../gravelmon-dynamodb/nodes";
 
@@ -29,10 +27,6 @@ import {
 import { ResourceLocation } from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
 import { NumberRange } from "../../../../gravelmon-dynamodb/models/properties/numberRange";
 import { ItemEntity } from "../../../../gravelmon-dynamodb/nodes/minecraft/itemNode";
-
-const tableName =
-    process.env.DYNAMODB_TABLE ||
-    `TestGraphTable-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 let service: DynamoDBGraphService;
 let env: ReturnType<typeof createTestEnv>;

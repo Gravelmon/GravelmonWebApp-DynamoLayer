@@ -1,5 +1,4 @@
-import { DynamoNode, DynamoEdge, getNodePK } from '../../service/dynamoNodes';
-import { FormEntity } from '../../nodes/pokemon/formNode';
+import { DynamoEdge, getNodePK } from '../../service/dynamoNodes';
 import { ItemEntity } from '../../nodes/minecraft/itemNode';
 import { ResourceLocation } from '../minecraft/resourceLocation';
 import { PokemonIdentifier } from '../../nodes/pokemon/pokemonNode';

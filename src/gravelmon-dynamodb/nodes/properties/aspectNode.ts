@@ -1,6 +1,5 @@
 import { deserializerRegistry } from '../../service/deserializerRegistry';
 import { DynamoNode } from '../../service/dynamoNodes';
-import {Time} from "../../models/properties/time";
 
 export const AspectEntity = "Aspect";
 export const HasAspectEdgeType = "HasAspect";

@@ -1,9 +1,3 @@
-import {
-    DynamoDBClient,
-    CreateTableCommand,
-    DeleteTableCommand,
-    DescribeTableCommand
-} from "@aws-sdk/client-dynamodb";
 import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { createGameNode, GameEntity } from "../../../gravelmon-dynamodb/nodes/gameNode";
 import { getNodePK } from "../../../gravelmon-dynamodb/service/dynamoNodes";
@@ -13,12 +7,6 @@ import { ResourceLocation } from "../../../gravelmon-dynamodb/models/minecraft/r
 import { GameData } from "../../../gravelmon-dynamodb/models/gameData";
 import {createTestEnv} from "../../testEnv";
 
-const tableName =
-    process.env.DYNAMODB_TABLE ||
-    `TestGraphTable-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-const endpoint = process.env.DYNAMODB_ENDPOINT || "http://localhost:8000";
-
-let dynamoClient: DynamoDBClient;
 let service: DynamoDBGraphService;
 let env: ReturnType<typeof createTestEnv>;
 
@@ -26,7 +14,6 @@ beforeAll(async () => {
     env = createTestEnv("game-node")
     await env.createTable();
     service = env.service;
-    dynamoClient = env.client;
 });
 
 afterAll(async () => {

@@ -1,11 +1,9 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { createGameNode } from "../../../gravelmon-dynamodb/nodes/gameNode";
 import { GameData } from "../../../gravelmon-dynamodb/models/gameData";
 import {createTestEnv} from "../../testEnv";
 import {createEggGroupNode} from "../../../gravelmon-dynamodb/nodes";
 
-let dynamoClient: DynamoDBClient;
 let service: DynamoDBGraphService;
 let env: ReturnType<typeof createTestEnv>;
 
@@ -13,7 +11,6 @@ beforeAll(async () => {
     env = createTestEnv("game-node")
     await env.createTable();
     service = env.service;
-    dynamoClient = env.client;
 });
 
 afterAll(async () => {

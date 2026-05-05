@@ -1,8 +1,7 @@
 import {
     DynamoDBClient,
     DescribeTableCommand,
-    UpdateTableCommand,
-    GlobalSecondaryIndexDescription, DynamoDBClientConfig
+    DynamoDBClientConfig
 } from "@aws-sdk/client-dynamodb";
 import {
     BatchGetCommand,

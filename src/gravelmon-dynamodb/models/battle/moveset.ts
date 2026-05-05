@@ -1,6 +1,6 @@
 import { DynamoEdge, getNodePK } from '../../service/dynamoNodes';
 import { PokemonEntity, PokemonIdentifier } from '../../nodes/pokemon/pokemonNode';
-import { MoveEntity, MoveIdentifier, MoveCategory, MoveType } from '../../nodes/battle/moveNode';
+import { MoveEntity, MoveIdentifier, MoveCategory } from '../../nodes/battle/moveNode';
 import { deserializerRegistry } from '../../service/deserializerRegistry';
 
 const enum MoveSetLearnType {

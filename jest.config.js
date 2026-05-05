@@ -8,8 +8,8 @@ module.exports = {
     '**/?(*.)+(spec|test).ts'
   ],
   collectCoverageFrom: [
-    'src/**/*.{ts,js}',
-    '!src/**/*.d.ts',
+    'lib/**/*.{ts,js}',
+    '!lib/**/*.d.ts',
   ],
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   moduleFileExtensions: ['ts', 'js', 'mjs', 'cjs', 'jsx', 'tsx', 'json', 'node'],

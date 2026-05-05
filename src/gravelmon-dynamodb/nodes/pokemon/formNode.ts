@@ -2,11 +2,9 @@ import {DynamoEdge, getNodePK, getPkName} from '../../service/dynamoNodes';
 import { GenderDifferenceNode as GenderDifference } from '../../models/assets/genderDifference';
 import {
     deserializePokemonData,
-    HasAbilityEdgeType,
     PokemonData,
     PokemonIdentifier,
-    PokemonNode,
-    PokemonTypeRelationship
+    PokemonNode
 } from './pokemonNode';
 import { AspectEntity, HasAspectEdgeType } from '../properties/aspectNode';
 import {HasLabelEdgeType, LabelEntity} from "../properties/labelNode";
