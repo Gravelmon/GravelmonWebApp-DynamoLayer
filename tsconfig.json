@@ -9,10 +9,6 @@
       "ES2020",
       "DOM"
     ],
-    "rootDir": "./src",
-    "paths": {
-      "@graph/*": ["./nodejs/gravelmon-dynamodb/*"]
-    },
     "resolveJsonModule": true,
     "noEmitOnError": true,
     "declaration": true,
