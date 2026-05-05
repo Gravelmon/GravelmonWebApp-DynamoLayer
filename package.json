@@ -2,8 +2,8 @@
   "name": "gravelmon-dynamodb",
   "version": "0.1.0",
   "description": "Node.js runtime contents for the DynamoDB Lambda layer.",
-  "main": "./dist/package/gravelmon-dynamodb.js",
-  "types": "./dist/package/gravelmon-dynamodb.d.ts",
+  "main": "./dist/package/gravelmon-dynamodb/index.js",
+  "types": "./dist/package/gravelmon-dynamodb/index.d.ts",
   "scripts": {
     "build": "tsc",
     "build-layer": "esbuild --bundle --platform=node --sourcemap ./src/gravelmon-dynamodb --outdir=dist/layer/nodejs/node_modules",
