@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PoseType = void 0;
+var PoseType;
+(function (PoseType) {
+    PoseType[PoseType["STAND"] = 0] = "STAND";
+    PoseType[PoseType["PORTRAIT"] = 1] = "PORTRAIT";
+    PoseType[PoseType["PROFILE"] = 2] = "PROFILE";
+    PoseType[PoseType["WALK"] = 3] = "WALK";
+    PoseType[PoseType["HOVER"] = 4] = "HOVER";
+    PoseType[PoseType["FLY"] = 5] = "FLY";
+    PoseType[PoseType["FLOAT"] = 6] = "FLOAT";
+    PoseType[PoseType["SWIM"] = 7] = "SWIM";
+    PoseType[PoseType["GLIDE"] = 8] = "GLIDE";
+    PoseType[PoseType["SLEEP"] = 9] = "SLEEP";
+    PoseType[PoseType["SHOULDER_LEFT"] = 10] = "SHOULDER_LEFT";
+    PoseType[PoseType["SHOULDER_RIGHT"] = 11] = "SHOULDER_RIGHT";
+    PoseType[PoseType["OPEN"] = 12] = "OPEN";
+    PoseType[PoseType["NONE"] = 13] = "NONE";
+})(PoseType || (exports.PoseType = PoseType = {}));
