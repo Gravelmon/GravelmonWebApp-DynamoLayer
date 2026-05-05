@@ -1,9 +1,9 @@
 import {
     DynamoDBClient,
 } from "@aws-sdk/client-dynamodb";
-import {DynamoDBGraphService} from "../../../../dynamodb-graph/service/dynamoDBGraphService";
+import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { createTestEnv } from "../../../testEnv";
-import { AbilityIdentifier, AbilityNode } from "../../../../dynamodb-graph/nodes";
+import { AbilityIdentifier, AbilityNode } from "../../../../gravelmon-dynamodb/nodes";
 const tableName =
     process.env.DYNAMODB_TABLE ||
     `TestGraphTable-${Date.now()}-${Math.random().toString(36).slice(2)}`;

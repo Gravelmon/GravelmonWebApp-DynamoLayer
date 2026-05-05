@@ -1,5 +1,5 @@
 {
-  "name": "dynamodb-graph",
+  "name": "gravelmon-dynamodb",
   "version": "1.0.0",
   "description": "DynamoDB graph utility package for Lambda layer.",
   "main": "index.js",

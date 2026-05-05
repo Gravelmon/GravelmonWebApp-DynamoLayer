@@ -4,11 +4,11 @@ import {
     DeleteTableCommand,
     DescribeTableCommand
 } from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../../../dynamodb-graph/service/dynamoDBGraphService";
-import { getNodePK } from "../../../dynamodb-graph/service/dynamoNodes";
+import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { getNodePK } from "../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../testEnv";
-import {SoundData} from "../../../dynamodb-graph/models/soundData";
-import {createSoundNode, SoundEntity} from "../../../dynamodb-graph/nodes/soundNode";
+import {SoundData} from "../../../gravelmon-dynamodb/models/soundData";
+import {createSoundNode, SoundEntity} from "../../../gravelmon-dynamodb/nodes/soundNode";
 
 const tableName =
     process.env.DYNAMODB_TABLE ||

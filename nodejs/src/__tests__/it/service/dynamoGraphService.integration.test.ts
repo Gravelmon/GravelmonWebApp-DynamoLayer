@@ -1,9 +1,9 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../../../dynamodb-graph/service/dynamoDBGraphService";
-import { createGameNode } from "../../../dynamodb-graph/nodes/gameNode";
-import { GameData } from "../../../dynamodb-graph/models/gameData";
+import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { createGameNode } from "../../../gravelmon-dynamodb/nodes/gameNode";
+import { GameData } from "../../../gravelmon-dynamodb/models/gameData";
 import {createTestEnv} from "../../testEnv";
-import {createEggGroupNode} from "../../../dynamodb-graph/nodes";
+import {createEggGroupNode} from "../../../gravelmon-dynamodb/nodes";
 
 let dynamoClient: DynamoDBClient;
 let service: DynamoDBGraphService;

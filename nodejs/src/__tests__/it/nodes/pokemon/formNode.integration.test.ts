@@ -1,34 +1,34 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../../../../dynamodb-graph/service/dynamoDBGraphService";
+import { DynamoDBGraphService } from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { createTestEnv } from "../../../testEnv";
-import { getNodePK } from "../../../../dynamodb-graph/service/dynamoNodes";
+import { getNodePK } from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 
 import {
     FormNode,
     FormData, createFormPrimaryTypeEdge, FormTypeRelationship, FormPrimaryTypeEdge, FormEntity, FormSecondaryTypeEdge,
     FormHasAbilityEdge, FormHasAbilityEdgeType, AbilityIdentifier, createFormDropsItemEdge
-} from "../../../../dynamodb-graph/nodes";
+} from "../../../../gravelmon-dynamodb/nodes";
 
 import {
     PokemonIdentifier,
     createPokemonNode,
     PokemonData
-} from "../../../../dynamodb-graph/nodes";
+} from "../../../../gravelmon-dynamodb/nodes";
 
-import { Stats } from "../../../../dynamodb-graph/models/properties/stats";
-import { PoseType } from "../../../../dynamodb-graph/models/assets/posing/poseType";
-import {CommonLayerNames} from "../../../../dynamodb-graph/models/assets/resolverData";
-import { SpawnType, SpawnData } from "../../../../dynamodb-graph/models/spawning/spawnData";
-import { SpawnablePositionType, SpawnBucket } from "../../../../dynamodb-graph/models/spawning/spawning";
-import { SpawnCondition } from "../../../../dynamodb-graph/models/spawning/spawnCondition";
+import { Stats } from "../../../../gravelmon-dynamodb/models/properties/stats";
+import { PoseType } from "../../../../gravelmon-dynamodb/models/assets/posing/poseType";
+import {CommonLayerNames} from "../../../../gravelmon-dynamodb/models/assets/resolverData";
+import { SpawnType, SpawnData } from "../../../../gravelmon-dynamodb/models/spawning/spawnData";
+import { SpawnablePositionType, SpawnBucket } from "../../../../gravelmon-dynamodb/models/spawning/spawning";
+import { SpawnCondition } from "../../../../gravelmon-dynamodb/models/spawning/spawnCondition";
 import {
     DropsItemEdgeType,
     FormDropsItemEdge
-} from "../../../../dynamodb-graph/nodes/pokemon/formNode";
+} from "../../../../gravelmon-dynamodb/nodes/pokemon/formNode";
 
-import { ResourceLocation } from "../../../../dynamodb-graph/models/minecraft/resourceLocation";
-import { NumberRange } from "../../../../dynamodb-graph/models/properties/numberRange";
-import { ItemEntity } from "../../../../dynamodb-graph/nodes/minecraft/itemNode";
+import { ResourceLocation } from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
+import { NumberRange } from "../../../../gravelmon-dynamodb/models/properties/numberRange";
+import { ItemEntity } from "../../../../gravelmon-dynamodb/nodes/minecraft/itemNode";
 
 const tableName =
     process.env.DYNAMODB_TABLE ||

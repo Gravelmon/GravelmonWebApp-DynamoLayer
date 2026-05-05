@@ -4,9 +4,9 @@ import {
     DeleteTableCommand,
     DescribeTableCommand
 } from "@aws-sdk/client-dynamodb";
-import { ResourceLocation } from "../../../../dynamodb-graph/models/minecraft/resourceLocation";
-import {StructureNode, StructureTagNode} from "../../../../dynamodb-graph/nodes/minecraft/structureNode";
-import {DynamoDBGraphService} from "../../../../dynamodb-graph/service/dynamoDBGraphService";
+import { ResourceLocation } from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
+import {StructureNode, StructureTagNode} from "../../../../gravelmon-dynamodb/nodes/minecraft/structureNode";
+import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { createTestEnv } from "../../../testEnv";
 const tableName =
     process.env.DYNAMODB_TABLE ||

@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const srcDir = path.resolve(__dirname, "..", "dist", "dynamodb-graph");
-const targetDir = path.resolve(__dirname, "..", "node_modules", "dynamodb-graph");
+const srcDir = path.resolve(__dirname, "..", "dist", "gravelmon-dynamodb");
+const targetDir = path.resolve(__dirname, "..", "node_modules", "gravelmon-dynamodb");
 
 function removeDirectory(dir) {
   if (fs.existsSync(dir)) {

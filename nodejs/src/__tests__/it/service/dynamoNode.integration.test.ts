@@ -1,7 +1,7 @@
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../../../dynamodb-graph/service/dynamoDBGraphService";
+import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { createTestEnv } from "../../testEnv";
-import {DynamoEdge, DynamoNode, getNodePK } from "../../../dynamodb-graph/service/dynamoNodes";
+import {DynamoEdge, DynamoNode, getNodePK } from "../../../gravelmon-dynamodb/service/dynamoNodes";
 
 const tableName =
     process.env.DYNAMODB_TABLE ||

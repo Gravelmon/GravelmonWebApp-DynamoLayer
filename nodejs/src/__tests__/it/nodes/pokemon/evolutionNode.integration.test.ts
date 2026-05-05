@@ -1,16 +1,16 @@
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
-import {DynamoDBGraphService} from "../../../../dynamodb-graph/service/dynamoDBGraphService";
+import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import {createTestEnv} from "../../../testEnv";
-import {getNodePK} from "../../../../dynamodb-graph/service/dynamoNodes";
+import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 
-import {PokemonIdentifier} from "../../../../dynamodb-graph/nodes";
-import {ResourceLocation} from "../../../../dynamodb-graph/models/minecraft/resourceLocation";
+import {PokemonIdentifier} from "../../../../gravelmon-dynamodb/nodes";
+import {ResourceLocation} from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
 import {
     createEvolutionNode,
     EvolutionEntity,
     EvolutionIdentifier, EvolutionNode,
     EvolutionType
-} from "../../../../dynamodb-graph/nodes";
+} from "../../../../gravelmon-dynamodb/nodes";
 import {
     LevelCondition,
     RatioCondition,
@@ -27,12 +27,12 @@ import {
     StatRatio,
     Gender,
     EvolutionConditionType
-} from "../../../../dynamodb-graph/models/properties/evolutionCondition";
+} from "../../../../gravelmon-dynamodb/models/properties/evolutionCondition";
 
-import {NumberRange} from "../../../../dynamodb-graph/models/properties/numberRange";
-import {MoveIdentifier} from "../../../../dynamodb-graph/nodes";
-import {TimeRange} from "../../../../dynamodb-graph/models/properties/time";
-import {TimeCondition} from "../../../../dynamodb-graph/models/properties/evolutionCondition";
+import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
+import {MoveIdentifier} from "../../../../gravelmon-dynamodb/nodes";
+import {TimeRange} from "../../../../gravelmon-dynamodb/models/properties/time";
+import {TimeCondition} from "../../../../gravelmon-dynamodb/models/properties/evolutionCondition";
 
 let service: DynamoDBGraphService;
 let env: ReturnType<typeof createTestEnv>;

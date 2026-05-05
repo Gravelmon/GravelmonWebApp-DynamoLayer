@@ -4,13 +4,13 @@ import {
     DeleteTableCommand,
     DescribeTableCommand
 } from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../../../dynamodb-graph/service/dynamoDBGraphService";
-import { createGameNode, GameEntity } from "../../../dynamodb-graph/nodes/gameNode";
-import { getNodePK } from "../../../dynamodb-graph/service/dynamoNodes";
-import { PokemonIdentifier } from "../../../dynamodb-graph/nodes";
-import { MoveIdentifier } from "../../../dynamodb-graph/nodes";
-import { ResourceLocation } from "../../../dynamodb-graph/models/minecraft/resourceLocation";
-import { GameData } from "../../../dynamodb-graph/models/gameData";
+import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { createGameNode, GameEntity } from "../../../gravelmon-dynamodb/nodes/gameNode";
+import { getNodePK } from "../../../gravelmon-dynamodb/service/dynamoNodes";
+import { PokemonIdentifier } from "../../../gravelmon-dynamodb/nodes";
+import { MoveIdentifier } from "../../../gravelmon-dynamodb/nodes";
+import { ResourceLocation } from "../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
+import { GameData } from "../../../gravelmon-dynamodb/models/gameData";
 import {createTestEnv} from "../../testEnv";
 
 const tableName =

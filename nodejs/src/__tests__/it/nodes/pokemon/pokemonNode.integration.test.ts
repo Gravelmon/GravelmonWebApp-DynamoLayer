@@ -1,6 +1,6 @@
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
-import {DynamoDBGraphService} from "../../../../dynamodb-graph/service/dynamoDBGraphService";
-import {getNodePK} from "../../../../dynamodb-graph/service/dynamoNodes";
+import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../../testEnv";
 import {
     createPokemonNode,
@@ -19,15 +19,15 @@ import {
     PokemonTypeRelationship,
     PokemonSecondaryTypeEdge,
     PokemonHasAbilityEdge, HasAbilityEdgeType
-} from "../../../../dynamodb-graph/nodes";
-import {BehaviourOptions, SleepDepth} from "../../../../dynamodb-graph/models/behaviour/behaviour";
-import {NumberRange} from "../../../../dynamodb-graph/models/properties/numberRange";
-import {Time} from "../../../../dynamodb-graph/models/properties/time";
-import {RidingKey} from "../../../../dynamodb-graph/models/behaviour/riding";
-import {PoseType} from "../../../../dynamodb-graph/models/assets/posing/poseType";
+} from "../../../../gravelmon-dynamodb/nodes";
+import {BehaviourOptions, SleepDepth} from "../../../../gravelmon-dynamodb/models/behaviour/behaviour";
+import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
+import {Time} from "../../../../gravelmon-dynamodb/models/properties/time";
+import {RidingKey} from "../../../../gravelmon-dynamodb/models/behaviour/riding";
+import {PoseType} from "../../../../gravelmon-dynamodb/models/assets/posing/poseType";
 
-import {Stats} from "../../../../dynamodb-graph/models/properties/stats";
-import {MoveSet} from "../../../../dynamodb-graph/models/battle/moveset";
+import {Stats} from "../../../../gravelmon-dynamodb/models/properties/stats";
+import {MoveSet} from "../../../../gravelmon-dynamodb/models/battle/moveset";
 
 const tableName =
     process.env.DYNAMODB_TABLE ||

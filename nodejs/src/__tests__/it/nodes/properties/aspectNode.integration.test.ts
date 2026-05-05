@@ -1,5 +1,5 @@
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
-import {DynamoDBGraphService} from "../../../../dynamodb-graph/service/dynamoDBGraphService";
+import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import {createTestEnv} from "../../../testEnv";
 import {
     AspectEntity,
@@ -7,7 +7,7 @@ import {
     createChoiceAspectNode,
     createFlagAspectNode,
     FlagAspectNode
-} from "../../../../dynamodb-graph/nodes/properties/aspectNode";
+} from "../../../../gravelmon-dynamodb/nodes/properties/aspectNode";
 
 const tableName =
     process.env.DYNAMODB_TABLE ||

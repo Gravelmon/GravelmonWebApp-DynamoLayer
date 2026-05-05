@@ -1,16 +1,16 @@
 import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
-import {DynamoDBGraphService} from "../../../../dynamodb-graph/service/dynamoDBGraphService";
-import {getNodePK} from "../../../../dynamodb-graph/service/dynamoNodes";
+import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../../testEnv";
 import {
     createSpawnPresetNode,
     SpawnPresetEntity,
     SpawnPresetOptions
-} from "../../../../dynamodb-graph/nodes/spawning/spawnPresetNode";
-import {ResourceLocation} from "../../../../dynamodb-graph/models/minecraft/resourceLocation";
-import {LabelMode, SpawnCondition} from "../../../../dynamodb-graph/models/spawning/spawnCondition";
-import {NumberRange} from "../../../../dynamodb-graph/models/properties/numberRange";
-import {Time} from "../../../../dynamodb-graph/models/properties/time";
+} from "../../../../gravelmon-dynamodb/nodes/spawning/spawnPresetNode";
+import {ResourceLocation} from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
+import {LabelMode, SpawnCondition} from "../../../../gravelmon-dynamodb/models/spawning/spawnCondition";
+import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
+import {Time} from "../../../../gravelmon-dynamodb/models/properties/time";
 
 const tableName =
     process.env.DYNAMODB_TABLE ||

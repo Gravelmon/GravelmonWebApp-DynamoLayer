@@ -4,13 +4,13 @@ import {
     DeleteTableCommand,
     DescribeTableCommand
 } from "@aws-sdk/client-dynamodb";
-import { ResourceLocation } from "../../../../dynamodb-graph/models/minecraft/resourceLocation";
-import {BiomeNode, BiomeTagNode} from "../../../../dynamodb-graph/nodes/minecraft/biomeNode";
-import {DynamoDBGraphService} from "../../../../dynamodb-graph/service/dynamoDBGraphService";
+import { ResourceLocation } from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
+import {BiomeNode, BiomeTagNode} from "../../../../gravelmon-dynamodb/nodes/minecraft/biomeNode";
+import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { createTestEnv } from "../../../testEnv";
-import { ItemNode } from "../../../../dynamodb-graph/nodes/minecraft/itemNode";
-import { AbilityIdentifier, AbilityNode, MoveCategory, MoveIdentifier, MoveNode } from "../../../../dynamodb-graph/nodes";
-import {MoveRange} from "../../../../dynamodb-graph/models/battle/moveRange";
+import { ItemNode } from "../../../../gravelmon-dynamodb/nodes/minecraft/itemNode";
+import { AbilityIdentifier, AbilityNode, MoveCategory, MoveIdentifier, MoveNode } from "../../../../gravelmon-dynamodb/nodes";
+import {MoveRange} from "../../../../gravelmon-dynamodb/models/battle/moveRange";
 const tableName =
     process.env.DYNAMODB_TABLE ||
     `TestGraphTable-${Date.now()}-${Math.random().toString(36).slice(2)}`;

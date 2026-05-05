@@ -5,7 +5,7 @@ import {
     DescribeTableCommand,
     DynamoDBClientConfig
 } from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../dynamodb-graph/service/dynamoDBGraphService";
+import { DynamoDBGraphService } from "../gravelmon-dynamodb/service/dynamoDBGraphService";
 import { CheckOptionalClientConfig } from "@smithy/types";
 const tableName =
     process.env.DYNAMODB_TABLE ||

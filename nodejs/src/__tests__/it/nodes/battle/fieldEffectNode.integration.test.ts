@@ -1,12 +1,12 @@
 import { createTestEnv } from "../../../testEnv";
-import { DynamoDBGraphService } from "../../../../dynamodb-graph/service/dynamoDBGraphService";
+import { DynamoDBGraphService } from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
 import {
     FieldEffectNode,
     FieldEffectIdentifier,
     FieldEffectEntity,
     FieldEffectData
-} from "../../../../dynamodb-graph/nodes/battle/fieldEffectNode";
-import { MoveRange } from "../../../../dynamodb-graph/models/battle/moveRange";
+} from "../../../../gravelmon-dynamodb/nodes/battle/fieldEffectNode";
+import { MoveRange } from "../../../../gravelmon-dynamodb/models/battle/moveRange";
 
 let service: DynamoDBGraphService;
 let env: ReturnType<typeof createTestEnv>;

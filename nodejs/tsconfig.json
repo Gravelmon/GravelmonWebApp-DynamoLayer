@@ -7,7 +7,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "paths": {
-      "@graph/*": ["./nodejs/dynamodb-graph/*"]
+      "@graph/*": ["./nodejs/gravelmon-dynamodb/*"]
     },
     "strict": true,
     "isolatedModules": true,
