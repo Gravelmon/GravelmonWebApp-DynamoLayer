@@ -4,20 +4,13 @@ import {
     DeleteTableCommand,
     DescribeTableCommand,
 } from "@aws-sdk/client-dynamodb";
-import { GravelmonDynamoDBService } from "../gravelmon-dynamodb";
+import {getDynamoConfig, GravelmonDynamoDBService} from "../gravelmon-dynamodb";
 
 
 export function createTestEnv(testName: string) {
     const tableName = `TestGraphTable_${testName}_${Date.now()}`;
 
-    const client = new DynamoDBClient({
-        endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000",
-        region: "us-east-1",
-        credentials: {
-            accessKeyId: "dummy",
-            secretAccessKey: "dummy"
-        }
-    });
+    const client = new DynamoDBClient(getDynamoConfig());
 
     async function createTable() {
         await client.send(

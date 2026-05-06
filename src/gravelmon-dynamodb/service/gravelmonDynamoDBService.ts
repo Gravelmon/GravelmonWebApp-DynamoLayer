@@ -11,21 +11,30 @@ import {
 import {DynamoEdge, DynamoItem, DynamoNode, ItemType, PK, SK} from "./dynamoNodes";
 import {deserializerRegistry} from "./deserializerRegistry";
 
+export function getDynamoConfig() {
+    const isLocal =
+        process.env.IS_LOCAL === "true" ||
+        process.env.AWS_SAM_LOCAL === "true";
+
+    if (!isLocal) return {};
+
+    return {
+        endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000",
+        region: "localhost",
+        credentials: {
+            accessKeyId: "dummy",
+            secretAccessKey: "dummy",
+        },
+    };
+}
+
 export class GravelmonDynamoDBService {
     private baseClient: DynamoDBClient;
     private documentClient: DynamoDBDocumentClient;
     private tableName: string;
 
     constructor(tableName: string) {
-        let config = process.env.isLocal ? {
-                endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000",
-                region: "us-east-1",
-                credentials: {
-                    accessKeyId: "dummy",
-                    secretAccessKey: "dummy"
-                }
-            }
-            : {}
+        let config = getDynamoConfig()
         this.baseClient = new DynamoDBClient(config);
         this.documentClient = DynamoDBDocumentClient.from(this.baseClient, {
             marshallOptions: {
