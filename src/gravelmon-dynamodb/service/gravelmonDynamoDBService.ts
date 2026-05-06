@@ -20,11 +20,11 @@ export function getDynamoConfig() {
 
     return {
         endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000",
-        region: "localhost",
+        region: "us-east-1",
         credentials: {
             accessKeyId: "dummy",
-            secretAccessKey: "dummy",
-        },
+            secretAccessKey: "dummy"
+        }
     };
 }
 
