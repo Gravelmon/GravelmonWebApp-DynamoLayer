@@ -1,4 +1,4 @@
-import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../../testEnv";
 import {
@@ -10,7 +10,7 @@ import {ResourceLocation} from "../../../../gravelmon-dynamodb/models/minecraft/
 import {LabelMode, SpawnCondition} from "../../../../gravelmon-dynamodb/models/spawning/spawnCondition";
 import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
 import {Time} from "../../../../gravelmon-dynamodb/models/properties/time";
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

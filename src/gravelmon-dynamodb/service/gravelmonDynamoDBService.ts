@@ -11,7 +11,7 @@ import {
 import {DynamoEdge, DynamoItem, DynamoNode, ItemType, PK, SK} from "./dynamoNodes";
 import {deserializerRegistry} from "./deserializerRegistry";
 
-export class DynamoDBGraphService {
+export class GravelmonDynamoDBService {
     private baseClient: DynamoDBClient;
     private documentClient: DynamoDBDocumentClient;
     private tableName: string;

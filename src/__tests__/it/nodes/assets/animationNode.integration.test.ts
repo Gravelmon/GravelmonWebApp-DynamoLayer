@@ -1,8 +1,8 @@
-import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { createTestEnv } from "../../../testEnv";
 import {AnimationEntity, AnimationNode, createAnimationNode } from "../../../../gravelmon-dynamodb/nodes/assets/animationNode";
 
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

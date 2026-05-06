@@ -1,5 +1,5 @@
 import { createTestEnv } from "../../../testEnv";
-import { DynamoDBGraphService } from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { GravelmonDynamoDBService } from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import {
     FieldEffectNode,
     FieldEffectIdentifier,
@@ -8,7 +8,7 @@ import {
 } from "../../../../gravelmon-dynamodb/nodes/battle/fieldEffectNode";
 import { MoveRange } from "../../../../gravelmon-dynamodb/models/battle/moveRange";
 
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

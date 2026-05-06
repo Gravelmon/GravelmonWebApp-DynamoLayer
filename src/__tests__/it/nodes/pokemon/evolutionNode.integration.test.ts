@@ -1,4 +1,4 @@
-import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb";
 import {createTestEnv} from "../../../testEnv";
 import {getNodePK} from "../../../../gravelmon-dynamodb";
 
@@ -33,7 +33,7 @@ import {MoveIdentifier} from "../../../../gravelmon-dynamodb";
 import {TimeRange} from "../../../../gravelmon-dynamodb";
 import {TimeCondition} from "../../../../gravelmon-dynamodb";
 
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

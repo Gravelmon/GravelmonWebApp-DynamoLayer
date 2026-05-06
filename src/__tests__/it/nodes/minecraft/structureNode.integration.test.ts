@@ -1,8 +1,8 @@
 import { ResourceLocation } from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
 import {StructureNode, StructureTagNode} from "../../../../gravelmon-dynamodb/nodes/minecraft/structureNode";
-import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { createTestEnv } from "../../../testEnv";
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

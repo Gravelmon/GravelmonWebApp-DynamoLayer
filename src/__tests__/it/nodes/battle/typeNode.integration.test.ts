@@ -1,9 +1,9 @@
 
-import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { createTestEnv } from "../../../testEnv";
 import { createTypeNode, TypeNode } from "../../../../gravelmon-dynamodb/nodes";
 
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

@@ -1,10 +1,10 @@
-import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { GravelmonDynamoDBService } from "../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { createGameNode } from "../../../gravelmon-dynamodb/nodes/gameNode";
 import { GameData } from "../../../gravelmon-dynamodb/models/gameData";
 import {createTestEnv} from "../../testEnv";
 import {createEggGroupNode} from "../../../gravelmon-dynamodb/nodes";
 
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

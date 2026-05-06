@@ -1,4 +1,4 @@
-import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { GravelmonDynamoDBService } from "../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { createGameNode, GameEntity } from "../../../gravelmon-dynamodb/nodes/gameNode";
 import { getNodePK } from "../../../gravelmon-dynamodb/service/dynamoNodes";
 import { PokemonIdentifier } from "../../../gravelmon-dynamodb/nodes";
@@ -7,7 +7,7 @@ import { ResourceLocation } from "../../../gravelmon-dynamodb/models/minecraft/r
 import { GameData } from "../../../gravelmon-dynamodb/models/gameData";
 import {createTestEnv} from "../../testEnv";
 
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

@@ -1,9 +1,9 @@
-import { DynamoDBGraphService } from "../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { GravelmonDynamoDBService } from "../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { getNodePK } from "../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../testEnv";
 import {SoundData} from "../../../gravelmon-dynamodb/models/soundData";
 import {createSoundNode, SoundEntity} from "../../../gravelmon-dynamodb/nodes/soundNode";
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

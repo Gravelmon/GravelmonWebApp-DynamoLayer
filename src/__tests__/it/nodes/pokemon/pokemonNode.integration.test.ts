@@ -1,4 +1,4 @@
-import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../../testEnv";
 import {
@@ -23,7 +23,7 @@ import {PoseType} from "../../../../gravelmon-dynamodb/models/assets/posing/pose
 
 import {Stats} from "../../../../gravelmon-dynamodb/models/properties/stats";
 import {MoveSet} from "../../../../gravelmon-dynamodb/models/battle/moveset";
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

@@ -1,4 +1,4 @@
-import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import {createTestEnv} from "../../../testEnv";
 import {
     AspectEntity,
@@ -8,7 +8,7 @@ import {
     FlagAspectNode
 } from "../../../../gravelmon-dynamodb/nodes/properties/aspectNode";
 
-let service: DynamoDBGraphService;
+let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
 beforeAll(async () => {

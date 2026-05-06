@@ -4,7 +4,7 @@ import {
     DeleteTableCommand,
     DescribeTableCommand,
 } from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../gravelmon-dynamodb";
+import { GravelmonDynamoDBService } from "../gravelmon-dynamodb";
 
 
 export function createTestEnv(testName: string) {
@@ -66,7 +66,7 @@ export function createTestEnv(testName: string) {
             new DeleteTableCommand({ TableName: tableName })
         );
     }
-    const service = new DynamoDBGraphService(tableName);
+    const service = new GravelmonDynamoDBService(tableName);
 
     return {
         tableName,
