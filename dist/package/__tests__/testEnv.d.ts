@@ -1,5 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { DynamoDBGraphService } from "../gravelmon-dynamodb";
 export declare function createTestEnv(testName: string): {
     tableName: string;
     client: DynamoDBClient;

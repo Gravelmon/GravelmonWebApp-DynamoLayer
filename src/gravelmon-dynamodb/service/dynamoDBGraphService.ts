@@ -21,14 +21,7 @@ export class DynamoDBGraphService {
     private tableName: string;
 
     constructor(tableName: string, config?: CheckOptionalClientConfig<DynamoDBClientConfig>) {
-        this.baseClient = new DynamoDBClient(config ? config : {
-            endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000",
-            region: "us-east-1",
-            credentials: {
-                accessKeyId: "dummy",
-                secretAccessKey: "dummy"
-            }
-        });
+        this.baseClient = new DynamoDBClient(config ? config : {});
         this.documentClient = DynamoDBDocumentClient.from(this.baseClient, {
             marshallOptions: {
                 removeUndefinedValues: true

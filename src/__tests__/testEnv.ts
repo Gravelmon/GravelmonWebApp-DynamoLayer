@@ -4,7 +4,7 @@ import {
     DeleteTableCommand,
     DescribeTableCommand,
 } from "@aws-sdk/client-dynamodb";
-import { DynamoDBGraphService } from "../gravelmon-dynamodb/service/dynamoDBGraphService";
+import { DynamoDBGraphService } from "../gravelmon-dynamodb";
 
 export function createTestEnv(testName: string) {
     const tableName = `TestGraphTable_${testName}_${Date.now()}`;
