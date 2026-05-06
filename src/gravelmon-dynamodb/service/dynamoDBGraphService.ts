@@ -5,13 +5,11 @@ import {
 import {
     BatchGetCommand,
     DynamoDBDocumentClient,
-    PutCommand,
     QueryCommand,
-    QueryCommandInput
+    QueryCommandInput, TransactWriteCommand
 } from "@aws-sdk/lib-dynamodb";
 import {DynamoEdge, DynamoItem, DynamoNode, ItemType, PK, SK} from "./dynamoNodes";
 import {deserializerRegistry} from "./deserializerRegistry";
-import {BatchWriteCommand} from "@aws-sdk/lib-dynamodb";
 
 export class DynamoDBGraphService {
     private baseClient: DynamoDBClient;
@@ -59,7 +57,8 @@ export class DynamoDBGraphService {
             KeyConditionExpression: "PK = :pk",
             ExpressionAttributeValues: {
                 ":pk": pk
-            }
+            },
+            ConsistentRead: true
         };
 
         const result = await this.documentClient.send(new QueryCommand(input));
@@ -155,52 +154,50 @@ export class DynamoDBGraphService {
 
     // ---------- Writes ----------
 
-    async putItem(item: DynamoItem): Promise<void> {
+    async putItem(item: DynamoItem): Promise<DynamoItem> {
         await this.documentClient.send(
-            new PutCommand({
-                TableName: this.tableName,
-                Item: item.serialize()
+            new TransactWriteCommand({
+                TransactItems: [
+                    {
+                        Put: {
+                            TableName: this.tableName,
+                            Item: item.serialize()
+                        }
+                    }
+                ]
             })
         );
+
+        return item;
     }
 
-    async batchPutItems(items: DynamoItem[]): Promise<void> {
-        const MAX_BATCH_SIZE = 25;
+    async batchPutItems(items: DynamoItem[]): Promise<DynamoItem[]> {
+        const MAX_TRANSACTION_SIZE = 25;
+        const successful: DynamoItem[] = [];
 
-        // Split into chunks of 25
         const chunks: DynamoItem[][] = [];
-        for (let i = 0; i < items.length; i += MAX_BATCH_SIZE) {
-            chunks.push(items.slice(i, i + MAX_BATCH_SIZE));
+        for (let i = 0; i < items.length; i += MAX_TRANSACTION_SIZE) {
+            chunks.push(items.slice(i, i + MAX_TRANSACTION_SIZE));
         }
 
         for (const chunk of chunks) {
-            let requestItems: Record<string, any> = {
-                [this.tableName]: chunk.map(item => ({
-                    PutRequest: {
-                        Item: item.serialize()
-                    }
-                }))
-            };
-
-            do {
-                const response = await this.documentClient.send(
-                    new BatchWriteCommand({
-                        RequestItems: requestItems
-                    })
-                );
-
-                requestItems = response.UnprocessedItems ?? {};
-
-                // Optional but recommended: small delay to avoid hot looping
-                let attempt = 0;
-
-                if (Object.keys(requestItems).length > 0) {
-                    const delay = Math.min(1000, 50 * Math.pow(2, attempt++));
-                    await new Promise(res => setTimeout(res, delay));
+            const transactItems = chunk.map(item => ({
+                Put: {
+                    TableName: this.tableName,
+                    Item: item.serialize()
                 }
+            }));
 
-            } while (Object.keys(requestItems).length > 0);
+            await this.documentClient.send(
+                new TransactWriteCommand({
+                    TransactItems: transactItems
+                })
+            );
+
+            successful.push(...chunk);
         }
+
+        return successful;
     }
 
     // ---------- Deserialization ----------

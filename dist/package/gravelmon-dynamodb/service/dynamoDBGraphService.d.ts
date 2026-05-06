@@ -1,11 +1,9 @@
-import { DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoEdge, DynamoItem, DynamoNode, PK, SK } from "./dynamoNodes";
-import { CheckOptionalClientConfig } from "@smithy/types/dist-types/client";
 export declare class DynamoDBGraphService {
     private baseClient;
     private documentClient;
     private tableName;
-    constructor(tableName: string, config?: CheckOptionalClientConfig<DynamoDBClientConfig>);
+    constructor(tableName: string);
     tableExists(): Promise<boolean>;
     queryPartition(pk: PK): Promise<any[]>;
     queryByPKAndSKPrefix(pk: PK, skPrefix: string): Promise<any[]>;
@@ -15,8 +13,8 @@ export declare class DynamoDBGraphService {
     batchGetNodes(pks: PK[]): Promise<DynamoNode[]>;
     getEdges<T extends DynamoEdge>(pk: PK): Promise<T[]>;
     getEdgesByType(pk: PK, edgeType: string): Promise<DynamoEdge[]>;
-    putItem(item: DynamoItem): Promise<void>;
-    batchPutItems(items: DynamoItem[]): Promise<void>;
+    putItem(item: DynamoItem): Promise<DynamoItem>;
+    batchPutItems(items: DynamoItem[]): Promise<DynamoItem[]>;
     private deserializeItems;
     private deserializeItem;
 }
