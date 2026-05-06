@@ -19,7 +19,12 @@ export function getDynamoConfig() {
     if (!isLocal) return {};
 
     return {
-        endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000",
+        endpoint: {
+            protocol: "http:",
+            hostname: "host.docker.internal",
+            port: 8000,
+            path: "/",
+        },
         region: "us-east-1",
         credentials: {
             accessKeyId: "dummy",

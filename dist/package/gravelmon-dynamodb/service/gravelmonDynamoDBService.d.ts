@@ -4,7 +4,12 @@ export declare function getDynamoConfig(): {
     region?: undefined;
     credentials?: undefined;
 } | {
-    endpoint: string;
+    endpoint: {
+        protocol: string;
+        hostname: string;
+        port: number;
+        path: string;
+    };
     region: string;
     credentials: {
         accessKeyId: string;
