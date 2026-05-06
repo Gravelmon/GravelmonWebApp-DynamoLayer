@@ -8,7 +8,7 @@
     "build": "tsc",
     "build-layer": "esbuild --bundle --platform=node --sourcemap ./src/gravelmon-dynamodb --outdir=dist/layer/nodejs/node_modules",
     "test": "jest --runInBand",
-    "test:integration": "cross-env NODE_OPTIONS=--experimental-vm-modules jest lib/__tests__/it --testMatch='**/*.integration.test.ts' --runInBand",
+    "test:integration": "cross-env NODE_OPTIONS=--experimental-vm-modules jest src/__tests__/it --testMatch='**/*.integration.test.ts' --runInBand",
     "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch --runInBand"
   },
   "devDependencies": {
@@ -23,9 +23,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.358.0",
+    "@aws-sdk/credential-providers": "^3.1043.0",
     "@aws-sdk/lib-dynamodb": "^3.1040.0",
-    "@aws-sdk/util-dynamodb": "^3.358.0",
-    "aws-cdk-lib": "^2.252.0",
-    "constructs": "^10.0.0"
+    "@aws-sdk/util-dynamodb": "^3.358.0"
   }
 }

@@ -6,10 +6,18 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { DynamoDBGraphService } from "../gravelmon-dynamodb";
 
+
 export function createTestEnv(testName: string) {
     const tableName = `TestGraphTable_${testName}_${Date.now()}`;
 
-    const client = new DynamoDBClient();
+    const client = new DynamoDBClient({
+        endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000",
+        region: "us-east-1",
+        credentials: {
+            accessKeyId: "dummy",
+            secretAccessKey: "dummy"
+        }
+    });
 
     async function createTable() {
         await client.send(

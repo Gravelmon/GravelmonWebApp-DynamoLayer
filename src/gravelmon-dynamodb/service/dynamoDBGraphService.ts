@@ -1,7 +1,6 @@
 import {
     DynamoDBClient,
-    DescribeTableCommand,
-    DynamoDBClientConfig
+    DescribeTableCommand
 } from "@aws-sdk/client-dynamodb";
 import {
     BatchGetCommand,
@@ -11,17 +10,25 @@ import {
     QueryCommandInput
 } from "@aws-sdk/lib-dynamodb";
 import {DynamoEdge, DynamoItem, DynamoNode, ItemType, PK, SK} from "./dynamoNodes";
-import { deserializerRegistry } from "./deserializerRegistry";
-import {CheckOptionalClientConfig} from "@smithy/types/dist-types/client";
-import { BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
+import {deserializerRegistry} from "./deserializerRegistry";
+import {BatchWriteCommand} from "@aws-sdk/lib-dynamodb";
 
 export class DynamoDBGraphService {
     private baseClient: DynamoDBClient;
     private documentClient: DynamoDBDocumentClient;
     private tableName: string;
 
-    constructor(tableName: string, config?: CheckOptionalClientConfig<DynamoDBClientConfig>) {
-        this.baseClient = new DynamoDBClient(config ? config : {});
+    constructor(tableName: string) {
+        let config = process.env.isLocal ? {
+                endpoint: process.env.DYNAMODB_ENDPOINT || "http://localhost:8000",
+                region: "us-east-1",
+                credentials: {
+                    accessKeyId: "dummy",
+                    secretAccessKey: "dummy"
+                }
+            }
+            : {}
+        this.baseClient = new DynamoDBClient(config);
         this.documentClient = DynamoDBDocumentClient.from(this.baseClient, {
             marshallOptions: {
                 removeUndefinedValues: true
@@ -30,11 +37,11 @@ export class DynamoDBGraphService {
         this.tableName = tableName;
     }
 
-    public async tableExists(): Promise < boolean > {
+    public async tableExists(): Promise<boolean> {
         try {
             const command = new DescribeTableCommand({TableName: this.tableName});
             await this.baseClient.send(command);
-        } catch(error: any) {
+        } catch (error: any) {
             if (error.name === "ResourceNotFoundException") {
                 return false;
             } else {
@@ -43,6 +50,7 @@ export class DynamoDBGraphService {
         }
         return true;
     }
+
     // ---------- Core Queries ----------
 
     async queryPartition(pk: PK): Promise<any[]> {
@@ -108,14 +116,14 @@ export class DynamoDBGraphService {
         }));
 
         let requestItems: Record<string, any> = {
-            [this.tableName]: { Keys: keys }
+            [this.tableName]: {Keys: keys}
         };
 
         const results: DynamoNode[] = [];
 
         do {
             const response = await this.documentClient.send(
-                new BatchGetCommand({ RequestItems: requestItems })
+                new BatchGetCommand({RequestItems: requestItems})
             );
 
             const items = response.Responses?.[this.tableName] ?? [];

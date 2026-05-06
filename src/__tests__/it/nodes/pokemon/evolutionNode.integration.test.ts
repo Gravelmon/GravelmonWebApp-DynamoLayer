@@ -1,15 +1,15 @@
-import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb/service/dynamoDBGraphService";
+import {DynamoDBGraphService} from "../../../../gravelmon-dynamodb";
 import {createTestEnv} from "../../../testEnv";
-import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
+import {getNodePK} from "../../../../gravelmon-dynamodb";
 
-import {PokemonIdentifier} from "../../../../gravelmon-dynamodb/nodes";
-import {ResourceLocation} from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
+import {PokemonIdentifier} from "../../../../gravelmon-dynamodb";
+import {ResourceLocation} from "../../../../gravelmon-dynamodb";
 import {
     createEvolutionNode,
     EvolutionEntity,
     EvolutionIdentifier, EvolutionNode,
     EvolutionType
-} from "../../../../gravelmon-dynamodb/nodes";
+} from "../../../../gravelmon-dynamodb";
 import {
     LevelCondition,
     RatioCondition,
@@ -26,12 +26,12 @@ import {
     StatRatio,
     Gender,
     EvolutionConditionType
-} from "../../../../gravelmon-dynamodb/models/properties/evolutionCondition";
+} from "../../../../gravelmon-dynamodb";
 
-import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
-import {MoveIdentifier} from "../../../../gravelmon-dynamodb/nodes";
-import {TimeRange} from "../../../../gravelmon-dynamodb/models/properties/time";
-import {TimeCondition} from "../../../../gravelmon-dynamodb/models/properties/evolutionCondition";
+import {NumberRange} from "../../../../gravelmon-dynamodb";
+import {MoveIdentifier} from "../../../../gravelmon-dynamodb";
+import {TimeRange} from "../../../../gravelmon-dynamodb";
+import {TimeCondition} from "../../../../gravelmon-dynamodb";
 
 let service: DynamoDBGraphService;
 let env: ReturnType<typeof createTestEnv>;
@@ -223,7 +223,7 @@ describe("EvolutionNode Integration Tests", () => {
         expect(move).toBeInstanceOf(HasMoveCondition);
         expect(move.type).toBe(EvolutionConditionType.HAS_MOVE);
         expect(move.condition).toBe("move");
-        expect(move.value).toBe("tackle");
+        expect(move.value).toEqual(new MoveIdentifier("pokemon_red", "tackle"));
 
         // --------------------
         // HELD_ITEM
