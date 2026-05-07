@@ -92,7 +92,7 @@ export function deserializeMoveSet(data: any): MoveSet {
     }
 }
 
-class MoveSetEdge extends DynamoEdge {
+export class MoveSetEdge extends DynamoEdge {
 
     constructor(moveName: MoveIdentifier, pokemonName: PokemonIdentifier, relationship: MoveSetLearnType) {
         super(getNodePK(MoveEntity, moveName.toString()), relationship, PokemonEntity, pokemonName.toString());
@@ -113,7 +113,7 @@ class MoveSetEdge extends DynamoEdge {
     }
 }
 
-class MoveSetLevelUpEdge extends MoveSetEdge {
+export class MoveSetLevelUpEdge extends MoveSetEdge {
     level: number;
 
     constructor(moveName: MoveIdentifier, pokemonName: PokemonIdentifier, level: number) {

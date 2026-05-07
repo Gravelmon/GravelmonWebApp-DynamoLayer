@@ -17,7 +17,7 @@ export function deserializeGameNode(data: Record<string, any>): GameNode {
     return new GameNode(data.gameData);
 }
 
-class GameNode extends DynamoNode {
+export class GameNode extends DynamoNode {
     gameData: GameData;
     static version = 1;
 
@@ -32,7 +32,7 @@ class GameNode extends DynamoNode {
             name: rawGameData.name,
             namespace: rawGameData.namespace,
             developer: rawGameData.developer,
-            wikiPage: rawGameData.wikiPage,
+            websiteURL: rawGameData.websiteURL,
             isPermitted: rawGameData.isPermitted,
             s3LogoLocation: rawGameData.s3LogoLocation,
                 introducesPokemon: Object.fromEntries(
@@ -60,7 +60,7 @@ class GameNode extends DynamoNode {
                 name: this.gameData.name,
                 namespace: this.gameData.namespace,
                 developer: this.gameData.developer,
-                wikiPage: this.gameData.wikiPage,
+                websiteURL: this.gameData.websiteURL,
                 isPermitted: this.gameData.isPermitted,
                 s3LogoLocation: this.gameData.s3LogoLocation,
                 introducesPokemon: Object.fromEntries(

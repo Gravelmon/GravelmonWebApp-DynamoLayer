@@ -40,7 +40,7 @@ describe("GameNode Integration Tests", () => {
         const gameData : GameData = {
             name: "Pokemon Red",
             developer: "Game Freak",
-            wikiPage: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
+            websiteURL: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
             isPermitted: true,
             s3LogoLocation: "pokemon-logos/red.png",
             introducesPokemon: introducedPokemon,
@@ -69,7 +69,7 @@ describe("GameNode Integration Tests", () => {
         // Verify it's a GameNode with proper data
         if (readNode && 'gameData' in readNode) {
             expect((readNode as any).gameData.developer).toBe(gameData.developer);
-            expect((readNode as any).gameData.wikiPage).toBe(gameData.wikiPage);
+            expect((readNode as any).gameData.wikiPage).toBe(gameData.websiteURL);
             expect((readNode as any).gameData.isPermitted).toBe(true);
             expect((readNode as any).gameData.introducesTypes).toEqual(["Normal", "Fire", "Water", "Grass"]);
             expect((readNode as any).gameData.introducesPokemon).toEqual(introducedPokemon);

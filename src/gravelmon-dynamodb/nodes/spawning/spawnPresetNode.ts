@@ -13,7 +13,7 @@ export interface SpawnPresetOptions {
     antiCondition?: SpawnCondition;
 }
 
-class SpawnPresetNode extends DynamoNode {
+export class SpawnPresetNode extends DynamoNode {
     spawnPresetOptions: SpawnPresetOptions;
     static version = 1;
 

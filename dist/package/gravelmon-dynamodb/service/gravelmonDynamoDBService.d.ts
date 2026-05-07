@@ -21,7 +21,6 @@ export declare class GravelmonDynamoDBService {
     private documentClient;
     private tableName;
     constructor(tableName: string);
-    tableExists(): Promise<boolean>;
     queryPartition(pk: PK): Promise<any[]>;
     queryByPKAndSKPrefix(pk: PK, skPrefix: string): Promise<any[]>;
     queryByEntityType(entityType: string): Promise<any[]>;

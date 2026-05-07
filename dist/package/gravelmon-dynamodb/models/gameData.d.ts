@@ -4,7 +4,7 @@ export interface GameData {
     name: string;
     namespace?: string;
     developer: string;
-    wikiPage: string;
+    websiteURL: string;
     isPermitted: boolean;
     s3LogoLocation?: string;
     introducesPokemon: Record<number, PokemonIdentifier>;
@@ -14,4 +14,8 @@ export interface GameData {
     introducesAspects: string[];
     introducesMechanics: string[];
     introducesTypes: string[];
+    starterPokemon?: StarterPokemon;
+}
+export interface StarterPokemon {
+    pokemon: PokemonIdentifier[];
 }

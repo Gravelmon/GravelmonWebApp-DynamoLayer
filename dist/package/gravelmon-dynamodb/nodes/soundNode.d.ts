@@ -3,7 +3,7 @@ import { DynamoEdge, DynamoNode } from '../service/dynamoNodes';
 import { PokemonIdentifier } from './pokemon/pokemonNode';
 export declare const SoundEntity = "Sound";
 export declare const SoundUsedByEdgeType = "UsedBy";
-declare class SoundNode extends DynamoNode {
+export declare class SoundNode extends DynamoNode {
     soundData: SoundData;
     static version: number;
     constructor(soundData: SoundData, lastEdited?: number);
@@ -13,4 +13,3 @@ declare class SoundNode extends DynamoNode {
 export declare function createSoundNode(soundData: SoundData): SoundNode;
 export declare function createSoundUsedByPokemonEdge(soundName: string, pokemonIdentifier: PokemonIdentifier): DynamoEdge;
 export declare function createSoundUsedByFormEdge(soundName: string, formIdentifier: PokemonIdentifier): DynamoEdge;
-export {};

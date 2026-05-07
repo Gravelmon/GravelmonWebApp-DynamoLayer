@@ -70,6 +70,7 @@ export interface FormData {
     posingData?: PosingData;
     aspects: string[];
     spawnData?: SpawnData[];
+    revivesFromFossil?: string
 }
 
 export class FormNode extends PokemonNode {
@@ -120,7 +121,8 @@ export function serializeFormData(formData: FormData): any {
         resolverData: formData.resolverData ? serializeResolverData(formData.resolverData) : undefined,
         posingData: formData.posingData ? serializePosingData(formData.posingData) : undefined,
         aspects: formData.aspects,
-        spawnData: formData.spawnData ? formData.spawnData.map(serializeSpawnData) : undefined
+        spawnData: formData.spawnData ? formData.spawnData.map(serializeSpawnData) : undefined,
+        revivesFromFossil: formData.revivesFromFossil
     };
 }
 
@@ -141,7 +143,8 @@ export function deserializeFormData(data: any): FormData {
         resolverData: deserializeResolverData(data.resolverData),
         posingData: deserializePosingData(data.posingData),
         aspects: data.aspects,
-        spawnData: data.spawnData ? data.spawnData.map(deserializeSpawnData) : undefined
+        spawnData: data.spawnData ? data.spawnData.map(deserializeSpawnData) : undefined,
+        revivesFromFossil: data.revivesFromFossil
     };
 }
 

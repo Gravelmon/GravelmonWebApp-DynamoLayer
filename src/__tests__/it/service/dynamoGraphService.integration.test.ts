@@ -21,7 +21,7 @@ test("should query nodes by entityType using GSI", async () => {
     const redGameData: GameData = {
         name: "Pokemon Red",
         developer: "Game Freak",
-        wikiPage: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
+        websiteURL: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
         isPermitted: true,
         s3LogoLocation: "pokemon-logos/red.png",
         introducesPokemon: {},
@@ -35,7 +35,7 @@ test("should query nodes by entityType using GSI", async () => {
     const blueGameData: GameData = {
         name: "Pokemon Blue",
         developer: "Game Freak",
-        wikiPage: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
+        websiteURL: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
         isPermitted: true,
         s3LogoLocation: "pokemon-logos/red.png",
         introducesPokemon: {},

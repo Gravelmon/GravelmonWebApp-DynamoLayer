@@ -32,6 +32,7 @@ export interface FormData {
     posingData?: PosingData;
     aspects: string[];
     spawnData?: SpawnData[];
+    revivesFromFossil?: string;
 }
 export declare class FormNode extends PokemonNode {
     formData: FormData;

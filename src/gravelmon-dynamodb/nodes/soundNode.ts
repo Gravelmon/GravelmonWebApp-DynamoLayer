@@ -8,7 +8,7 @@ export const SoundEntity = "Sound";
 
 export const SoundUsedByEdgeType = "UsedBy";
 
-class SoundNode extends DynamoNode {
+export class SoundNode extends DynamoNode {
     soundData: SoundData;
     static version = 1;
     constructor(soundData: SoundData, lastEdited: number = Date.now()) {

@@ -1,6 +1,5 @@
 import {
     DynamoDBClient,
-    DescribeTableCommand
 } from "@aws-sdk/client-dynamodb";
 import {
     BatchGetCommand,
@@ -47,20 +46,6 @@ export class GravelmonDynamoDBService {
             }
         });
         this.tableName = tableName;
-    }
-
-    public async tableExists(): Promise<boolean> {
-        try {
-            const command = new DescribeTableCommand({TableName: this.tableName});
-            await this.baseClient.send(command);
-        } catch (error: any) {
-            if (error.name === "ResourceNotFoundException") {
-                return false;
-            } else {
-                throw error;
-            }
-        }
-        return true;
     }
 
     // ---------- Core Queries ----------

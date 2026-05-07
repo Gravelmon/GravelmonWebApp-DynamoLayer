@@ -2,7 +2,7 @@ import {DynamoEdge, DynamoNode, ItemType} from "./dynamoNodes";
 
 export type Deserializer<T> = (data: Record<string, any>) => T;
 
-class DeserializerRegistry {
+export class DeserializerRegistry {
     private map = new Map<string, Deserializer<any>>();
 
     register<T>(type: string, fn: Deserializer<T>) {

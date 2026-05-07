@@ -7,7 +7,7 @@ export interface SpawnPresetOptions {
     condition?: SpawnCondition;
     antiCondition?: SpawnCondition;
 }
-declare class SpawnPresetNode extends DynamoNode {
+export declare class SpawnPresetNode extends DynamoNode {
     spawnPresetOptions: SpawnPresetOptions;
     static version: number;
     constructor(spawnPresetOptions: SpawnPresetOptions, lastEdited?: number);
@@ -23,4 +23,3 @@ export declare function createSpawnPresetSpawnsInStructureEdge(spawnPresetName: 
 export declare function createSpawnPresetSpawnsInStructureTagEdge(spawnPresetName: string, StructureTagName: string): DynamoEdge;
 export declare function createSpawnPresetDoesNotSpawnInStructureEdge(spawnPresetName: string, StructureName: string): DynamoEdge;
 export declare function createSpawnPresetDoesNotSpawnInStructureTagEdge(spawnPresetName: string, StructureTagName: string): DynamoEdge;
-export {};
