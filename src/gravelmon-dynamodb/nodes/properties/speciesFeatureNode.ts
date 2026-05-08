@@ -64,9 +64,6 @@ abstract class SpeciesFeatureNode extends DynamoNode {
             const choices: string[] = data.choices;
             return new ChoiceSpeciesFeatureNode(name, speciesFeatureName, choices, defaultOption as string, isPrimarySpeciesFeature, introducedByGame, data.lastEdited);
         } else if(speciesFeatureType === SpeciesFeatureType.Integer) {
-            if(!data.min || !data.max) {
-                throw new Error("Invalid data for deserializing ChoiceSpeciesFeatureNode: missing choices property");
-            }
             const range = NumberRange.deserialize(data.numberRange);
             return new IntegerSpeciesFeatureNode(
                 name,
