@@ -22,7 +22,7 @@ export class GameNode extends DynamoNode {
     static version = 1;
 
     constructor(gameData: GameData, lastEdited: number = Date.now()) {
-        super(GameEntity, gameData.name, GameNode.version, lastEdited);
+        super(GameEntity, gameData.namespace, GameNode.version, lastEdited);
         this.gameData = gameData;
     }
 

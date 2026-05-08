@@ -5,9 +5,10 @@ export declare enum AspectType {
     Flag = 0,
     Choice = 1
 }
-export declare function createFlagAspectNode(name: string, defaultValue: boolean | undefined, isPrimaryAspect: boolean | undefined, introducedByGame: string, lastEdited?: number): AspectNode;
-export declare function createChoiceAspectNode(name: string, choices: string[], defaultValue: string | "random" | undefined, isPrimaryAspect: boolean | undefined, introducedByGame: string, lastEdited?: number): AspectNode;
+export declare function createFlagAspectNode(id: string, aspectName: string, defaultValue: boolean | undefined, isPrimaryAspect: boolean | undefined, introducedByGame: string, lastEdited?: number): AspectNode;
+export declare function createChoiceAspectNode(id: string, aspectName: string, choices: string[], defaultValue: string | "random" | undefined, isPrimaryAspect: boolean | undefined, introducedByGame: string, lastEdited?: number): AspectNode;
 declare abstract class AspectNode extends DynamoNode {
+    aspectName: string;
     aspectType: AspectType;
     isAspect: boolean;
     defaultOption?: boolean | "random" | string;
@@ -16,17 +17,16 @@ declare abstract class AspectNode extends DynamoNode {
     isPrimaryAspect: boolean;
     introducedByGame: string;
     static version: number;
-    protected constructor(name: string, aspectType: AspectType, defaultValue: boolean | "random" | string, isPrimaryAspect: boolean, introducedByGame: string, lastEdited?: number);
+    protected constructor(id: string, aspectName: string, aspectType: AspectType, defaultValue: boolean | "random" | string, isPrimaryAspect: boolean, introducedByGame: string, lastEdited?: number);
     static deserialize(data: Record<string, any>): AspectNode;
     serialize(): Record<string, any>;
 }
 export declare class FlagAspectNode extends AspectNode {
-    constructor(name: string, defaultValue: boolean | undefined, isPrimaryAspect: boolean | undefined, introducedByGame: string, lastEdited?: number);
+    constructor(id: string, aspectName: string, defaultValue: boolean | undefined, isPrimaryAspect: boolean | undefined, introducedByGame: string, lastEdited?: number);
 }
 export declare class ChoiceAspectNode extends AspectNode {
     choices: string[];
-    constructor(name: string, choices: string[], defaultValue: string | "random" | undefined, isPrimaryAspect: boolean | undefined, introducedByGame: string, lastEdited?: number);
-    static deserialize(data: Record<string, any>): ChoiceAspectNode;
+    constructor(id: string, aspectName: string, choices: string[], defaultValue: string | "random" | undefined, isPrimaryAspect: boolean | undefined, introducedByGame: string, lastEdited?: number);
     serialize(): Record<string, any>;
 }
 export {};

@@ -2,7 +2,7 @@ import { MoveIdentifier, PokemonIdentifier } from "../nodes";
 import { ResourceLocation } from "./minecraft/resourceLocation";
 export interface GameData {
     name: string;
-    namespace?: string;
+    namespace: string;
     developer: string;
     websiteURL: string;
     isPermitted: boolean;

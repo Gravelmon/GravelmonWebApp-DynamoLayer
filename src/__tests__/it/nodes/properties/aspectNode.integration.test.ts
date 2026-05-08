@@ -26,6 +26,7 @@ describe("AspectNode - FlagAspectNode", () => {
         // Arrange
         const flagAspectNode = createFlagAspectNode(
             "shiny",
+            "shiny",
             true,
             true,
             "pokemon_red",
@@ -54,6 +55,7 @@ describe("AspectNode - ChoiceAspectNode", () => {
     it("should serialize and deserialize a ChoiceAspectNode correctly", async () => {
         // Arrange
         const choiceAspectNode = createChoiceAspectNode(
+            "form",
             "form",
             ["kanto", "galar", "hisui"],
             "galar",

@@ -9,15 +9,16 @@ export enum AspectType {
     Choice
 }
 
-export function createFlagAspectNode(name: string, defaultValue: boolean = false, isPrimaryAspect: boolean = true, introducedByGame: string, lastEdited: number = Date.now()): AspectNode {
-    return new FlagAspectNode(name, defaultValue, isPrimaryAspect, introducedByGame, lastEdited);
+export function createFlagAspectNode(id: string, aspectName: string, defaultValue: boolean = false, isPrimaryAspect: boolean = true, introducedByGame: string, lastEdited: number = Date.now()): AspectNode {
+    return new FlagAspectNode(id, aspectName, defaultValue, isPrimaryAspect, introducedByGame, lastEdited);
 }
 
-export function createChoiceAspectNode(name: string, choices: string[], defaultValue: string | "random" = "random", isPrimaryAspect: boolean = false, introducedByGame: string, lastEdited: number = Date.now()): AspectNode {
-    return new ChoiceAspectNode(name, choices, defaultValue, isPrimaryAspect, introducedByGame, lastEdited);
+export function createChoiceAspectNode(id: string, aspectName: string, choices: string[], defaultValue: string | "random" = "random", isPrimaryAspect: boolean = false, introducedByGame: string, lastEdited: number = Date.now()): AspectNode {
+    return new ChoiceAspectNode(id, aspectName, choices, defaultValue, isPrimaryAspect, introducedByGame, lastEdited);
 }
 
 abstract class AspectNode extends DynamoNode {
+    aspectName: string;
     aspectType: AspectType;
     isAspect: boolean = true;
     defaultOption?: boolean | "random" | string;
@@ -27,8 +28,9 @@ abstract class AspectNode extends DynamoNode {
     introducedByGame: string;
     static version = 1;
     
-    protected constructor(name: string, aspectType: AspectType, defaultValue: boolean | "random" | string, isPrimaryAspect: boolean, introducedByGame: string, lastEdited: number = Date.now()) {
-        super(AspectEntity+aspectType, name, AspectNode.version, lastEdited);
+    protected constructor(id: string, aspectName: string, aspectType: AspectType, defaultValue: boolean | "random" | string, isPrimaryAspect: boolean, introducedByGame: string, lastEdited: number = Date.now()) {
+        super(AspectEntity+aspectType, id, AspectNode.version, lastEdited);
+        this.aspectName = aspectName;
         this.aspectType = aspectType;
         this.defaultOption = defaultValue;
         this.isPrimaryAspect = isPrimaryAspect;
@@ -45,18 +47,19 @@ abstract class AspectNode extends DynamoNode {
             throw new Error("Invalid data for deserializing AspectNode: missing required properties");
         }
         const aspectType: AspectType = data.aspectType;
+        const aspectName: string = data.aspectName;
         const defaultOption: boolean | "random" | string = data.defaultOption;
         const isPrimaryAspect: boolean = data.isPrimaryAspect;
         const introducedByGame: string = data.introducedByGame;
         const name: string = data.name;
         if(aspectType === AspectType.Flag) {
-            return new FlagAspectNode(name, defaultOption as boolean, isPrimaryAspect, introducedByGame, data.lastEdited);
+            return new FlagAspectNode(name, aspectName, defaultOption as boolean, isPrimaryAspect, introducedByGame, data.lastEdited);
         } else if(aspectType === AspectType.Choice) {
             if(!data.choices) {
                 throw new Error("Invalid data for deserializing ChoiceAspectNode: missing choices property");
             }
             const choices: string[] = data.choices;
-            return new ChoiceAspectNode(name, choices, defaultOption as string, isPrimaryAspect, introducedByGame, data.lastEdited);
+            return new ChoiceAspectNode(name, aspectName, choices, defaultOption as string, isPrimaryAspect, introducedByGame, data.lastEdited);
         } else {
             throw new Error("Invalid aspect type for deserializing AspectNode");
         }
@@ -65,6 +68,7 @@ abstract class AspectNode extends DynamoNode {
     public serialize(): Record<string, any> {
         return {
             ...super.serialize(),
+            aspectName: this.aspectName,
             aspectType: this.aspectType,
             isAspect: this.isAspect,
             defaultOption: this.defaultOption,
@@ -75,24 +79,16 @@ abstract class AspectNode extends DynamoNode {
 }
 
 export class FlagAspectNode extends AspectNode {
-    constructor(name: string, defaultValue: boolean = false, isPrimaryAspect: boolean = true, introducedByGame: string, lastEdited: number = Date.now()) {
-        super(name, AspectType.Flag, defaultValue, isPrimaryAspect, introducedByGame, lastEdited);
+    constructor(id: string, aspectName: string, defaultValue: boolean = false, isPrimaryAspect: boolean = true, introducedByGame: string, lastEdited: number = Date.now()) {
+        super(id, aspectName, AspectType.Flag, defaultValue, isPrimaryAspect, introducedByGame, lastEdited);
     }
 }
 
 export class ChoiceAspectNode extends AspectNode {
     choices: string[];
-    constructor(name: string, choices: string[], defaultValue: string | "random" = "random", isPrimaryAspect: boolean = false, introducedByGame: string, lastEdited: number = Date.now()) {
-        super(name, AspectType.Choice, defaultValue, isPrimaryAspect, introducedByGame, lastEdited);
+    constructor(id: string, aspectName: string, choices: string[], defaultValue: string | "random" = "random", isPrimaryAspect: boolean = false, introducedByGame: string, lastEdited: number = Date.now()) {
+        super(id, aspectName, AspectType.Choice, defaultValue, isPrimaryAspect, introducedByGame, lastEdited);
         this.choices = choices;
-    }
-
-    static deserialize(data: Record<string, any>): ChoiceAspectNode {
-        if(!data.choices) {
-            throw new Error("Invalid data for deserializing ChoiceAspectNode: missing choices property");
-        }
-        const choices: string[] = data.choices;
-        return new ChoiceAspectNode(data.name, choices, data.defaultOption, data.isPrimaryAspect, data.introducedByGame, data.lastEdited);
     }
 
     public serialize(): Record<string, any> {

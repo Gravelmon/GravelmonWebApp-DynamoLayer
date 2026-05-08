@@ -20,6 +20,7 @@ afterAll(async () => {
 test("should query nodes by entityType using GSI", async () => {
     const redGameData: GameData = {
         name: "Pokemon Red",
+        namespace: "Pokemon Red",
         developer: "Game Freak",
         websiteURL: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
         isPermitted: true,
@@ -34,6 +35,7 @@ test("should query nodes by entityType using GSI", async () => {
     };
     const blueGameData: GameData = {
         name: "Pokemon Blue",
+        namespace: "Pokemon Blue",
         developer: "Game Freak",
         websiteURL: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
         isPermitted: true,

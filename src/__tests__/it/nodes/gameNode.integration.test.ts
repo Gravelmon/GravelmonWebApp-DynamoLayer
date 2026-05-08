@@ -39,6 +39,7 @@ describe("GameNode Integration Tests", () => {
         // Arrange: Create sample game data
         const gameData : GameData = {
             name: "Pokemon Red",
+            namespace: "Pokemon Red",
             developer: "Game Freak",
             websiteURL: "https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Red",
             isPermitted: true,
