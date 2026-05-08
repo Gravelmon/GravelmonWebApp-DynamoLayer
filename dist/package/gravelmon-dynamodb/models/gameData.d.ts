@@ -11,7 +11,7 @@ export interface GameData {
     introducesItem: ResourceLocation[];
     introducesMoves: MoveIdentifier[];
     introducesAbilities: string[];
-    introducesAspects: string[];
+    introducesSpeciesFeatures: string[];
     introducesMechanics: string[];
     introducesTypes: string[];
     starterPokemon?: StarterPokemon;

@@ -59,7 +59,7 @@ export interface PokemonData {
         primaryType: string;
         secondaryType?: string;
     };
-    aspects: string[];
+    speciesFeatures: string[];
     labels: string[];
     eggGroups: string[];
     experienceGroup: string;

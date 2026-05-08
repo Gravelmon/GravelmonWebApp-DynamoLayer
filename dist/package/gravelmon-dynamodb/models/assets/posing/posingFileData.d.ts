@@ -5,7 +5,7 @@ import { PoseType } from "./poseType";
 import { NumberRange } from "../../properties/numberRange";
 import { Animation } from '../../../nodes/assets/animationNode';
 export declare const PosingDataEntity = "PosingData";
-export declare const PosingForAspectEdgeType = "PosingForAspect";
+export declare const PosingForSpeciesFeatureEdgeType = "PosingForSpeciesFeature";
 export declare const PosingForFormEdgeType = "PosingForForm";
 export declare const OverridesPosingDataEdgeType = "Overrides";
 export declare enum NamedAnimationTypes {

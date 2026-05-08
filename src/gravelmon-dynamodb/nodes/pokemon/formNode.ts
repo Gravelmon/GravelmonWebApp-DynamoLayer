@@ -6,7 +6,7 @@ import {
     PokemonIdentifier,
     PokemonNode
 } from './pokemonNode';
-import { AspectEntity, HasAspectEdgeType } from '../properties/aspectNode';
+import { SpeciesFeatureEntity, HasSpeciesFeatureEdgeType } from '../properties/speciesFeatureNode';
 import {HasLabelEdgeType, LabelEntity} from "../properties/labelNode";
 import {TypeEntity} from "../battle/typeNode";
 import {AbilityEntity, AbilityIdentifier} from "../battle/abilityNode";
@@ -36,8 +36,8 @@ export function createFormSecondaryTypeEdge(formName: PokemonIdentifier, typeNam
     return new FormSecondaryTypeEdge(formName, typeName, isRebalanced, lastEdited);
 }
 
-export function createFormHasAspectEdge(formName: PokemonIdentifier, aspectName: string, lastEdited: number = Date.now()): DynamoEdge {
-    return new DynamoEdge(getNodePK(AspectEntity, aspectName), HasAspectEdgeType, FormEntity, formName.toString(), lastEdited);
+export function createFormHasSpeciesFeatureEdge(formName: PokemonIdentifier, speciesFeatureName: string, lastEdited: number = Date.now()): DynamoEdge {
+    return new DynamoEdge(getNodePK(SpeciesFeatureEntity, speciesFeatureName), HasSpeciesFeatureEdgeType, FormEntity, formName.toString(), lastEdited);
 }
 
 export function createFormHasLabelEdge(formName: PokemonIdentifier, labelName: string, lastEdited: number = Date.now()): DynamoEdge {
@@ -68,7 +68,7 @@ export interface FormData {
     affectedByMechanics?: string[];
     resolverData?: ResolverData;
     posingData?: PosingData;
-    aspects: string[];
+    speciesFeatures: string[];
     spawnData?: SpawnData[];
     revivesFromFossil?: string
 }
@@ -120,7 +120,7 @@ export function serializeFormData(formData: FormData): any {
         affectedByMechanics: formData.affectedByMechanics,
         resolverData: formData.resolverData ? serializeResolverData(formData.resolverData) : undefined,
         posingData: formData.posingData ? serializePosingData(formData.posingData) : undefined,
-        aspects: formData.aspects,
+        speciesFeatures: formData.speciesFeatures,
         spawnData: formData.spawnData ? formData.spawnData.map(serializeSpawnData) : undefined,
         revivesFromFossil: formData.revivesFromFossil
     };
@@ -142,7 +142,7 @@ export function deserializeFormData(data: any): FormData {
         affectedByMechanics: data.affectedByMechanics,
         resolverData: deserializeResolverData(data.resolverData),
         posingData: deserializePosingData(data.posingData),
-        aspects: data.aspects,
+        speciesFeatures: data.speciesFeatures,
         spawnData: data.spawnData ? data.spawnData.map(deserializeSpawnData) : undefined,
         revivesFromFossil: data.revivesFromFossil
     };

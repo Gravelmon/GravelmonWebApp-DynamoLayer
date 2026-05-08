@@ -137,7 +137,7 @@ export interface PokemonData {
         primaryType: string;
         secondaryType?: string;
     }
-    aspects: string[];
+    speciesFeatures: string[];
     labels: string[];
     eggGroups: string[];
     experienceGroup: string;
@@ -183,7 +183,7 @@ export function deserializePokemonData(rawData: any): PokemonData {
             primaryType: rawData.rebalancedTyping.primaryType,
             secondaryType: rawData.rebalancedTyping.secondaryType
         },
-        aspects: rawData.aspects,
+        speciesFeatures: rawData.speciesFeatures,
         labels: rawData.labels,
         eggGroups: rawData.eggGroups,
         experienceGroup: rawData.experienceGroup,
@@ -230,7 +230,7 @@ export class PokemonNode extends DynamoNode {
             behaviourOptions: this.pokemonData.behaviourOptions ? serializeBehaviourOptions(this.pokemonData.behaviourOptions) : undefined,
             typing: {...this.pokemonData.typing},
             rebalancedTyping: {...this.pokemonData.rebalancedTyping},
-            aspects: this.pokemonData.aspects,
+            speciesFeatures: this.pokemonData.speciesFeatures,
             labels: this.pokemonData.labels,
             eggGroups: this.pokemonData.eggGroups,
             experienceGroup: this.pokemonData.experienceGroup,

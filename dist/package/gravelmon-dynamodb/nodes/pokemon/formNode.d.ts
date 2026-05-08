@@ -14,7 +14,7 @@ export declare const DropsItemEdgeType = "DropsItem";
 export declare function createFormNode(pokemonData: PokemonData, formData: FormData, lastEdited?: number): FormNode;
 export declare function createFormPrimaryTypeEdge(formName: PokemonIdentifier, typeName: string, isRebalanced?: boolean, lastEdited?: number): FormTypeEdge;
 export declare function createFormSecondaryTypeEdge(formName: PokemonIdentifier, typeName: string, isRebalanced?: boolean, lastEdited?: number): FormTypeEdge;
-export declare function createFormHasAspectEdge(formName: PokemonIdentifier, aspectName: string, lastEdited?: number): DynamoEdge;
+export declare function createFormHasSpeciesFeatureEdge(formName: PokemonIdentifier, speciesFeatureName: string, lastEdited?: number): DynamoEdge;
 export declare function createFormHasLabelEdge(formName: PokemonIdentifier, labelName: string, lastEdited?: number): DynamoEdge;
 export declare function createFormHasAbilityEdge(formName: PokemonIdentifier, abilityName: AbilityIdentifier, isHidden?: boolean, isPlaceholder?: boolean, isRebalanced?: boolean, lastEdited?: number): DynamoEdge;
 export declare function createFormDropsItemEdge(formName: PokemonIdentifier, itemName: ResourceLocation, dropChance: number, quantityRange: NumberRange, lastEdited?: number): FormDropsItemEdge;
@@ -30,7 +30,7 @@ export interface FormData {
     affectedByMechanics?: string[];
     resolverData?: ResolverData;
     posingData?: PosingData;
-    aspects: string[];
+    speciesFeatures: string[];
     spawnData?: SpawnData[];
     revivesFromFossil?: string;
 }

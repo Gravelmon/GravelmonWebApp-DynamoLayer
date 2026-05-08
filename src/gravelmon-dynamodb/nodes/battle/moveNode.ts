@@ -77,6 +77,7 @@ export interface MoveData {
     moveCategory: MoveCategory;
     description?: string;
     zMoveEffect?: string;
+    //string used here must be a resource location
     typeGemCost: Record<string, number>
     associatedWeathers?: string[];
     associatedTerrain?: string[];

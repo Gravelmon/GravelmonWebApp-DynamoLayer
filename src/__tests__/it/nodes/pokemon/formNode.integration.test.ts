@@ -133,7 +133,7 @@ describe("FormNode Integration Tests", () => {
             typing: { primaryType: "electric" },
             rebalancedTyping: { primaryType: "electric" },
 
-            aspects: [],
+            speciesFeatures: [],
             labels: [],
             eggGroups: [],
             experienceGroup: "medium_fast",
@@ -154,7 +154,7 @@ describe("FormNode Integration Tests", () => {
         const formData: FormData = {
             isFormOf: new PokemonIdentifier("pokemon", "pikachu"),
 
-            aspects: ["galarian"],
+            speciesFeatures: ["galarian"],
 
             lightingData: {
                 lightLevel: 10,
@@ -172,8 +172,8 @@ describe("FormNode Integration Tests", () => {
                         loops: true
                     }
                 ],
-                variationForAspectChoice: {
-                    aspect: "form",
+                variationForSpeciesFeatureChoice: {
+                    speciesFeature: "form",
                     choice: "galar"
                 }
             },
@@ -250,7 +250,7 @@ describe("FormNode Integration Tests", () => {
         expect(data.isFormOf.toString())
             .toBe("pokemon#pikachu");
 
-        expect(data.aspects).toEqual(["galarian"]);
+        expect(data.speciesFeatures).toEqual(["galarian"]);
 
         expect(data.affectedByMechanics).toEqual(["weather"]);
 
@@ -270,8 +270,8 @@ describe("FormNode Integration Tests", () => {
         expect(layer.loops).toBe(true);
 
 // variation
-        expect(data.resolverData?.variationForAspectChoice).toEqual({
-            aspect: "form",
+        expect(data.resolverData?.variationForSpeciesFeatureChoice).toEqual({
+            speciesFeature: "form",
             choice: "galar"
         });
 

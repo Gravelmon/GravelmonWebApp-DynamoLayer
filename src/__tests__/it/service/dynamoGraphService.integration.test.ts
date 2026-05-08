@@ -29,7 +29,7 @@ test("should query nodes by entityType using GSI", async () => {
         introducesItem: [],
         introducesMoves: [],
         introducesAbilities: [],
-        introducesAspects: [],
+        introducesSpeciesFeatures: [],
         introducesMechanics: [],
         introducesTypes: []
     };
@@ -44,7 +44,7 @@ test("should query nodes by entityType using GSI", async () => {
         introducesItem: [],
         introducesMoves: [],
         introducesAbilities: [],
-        introducesAspects: [],
+        introducesSpeciesFeatures: [],
         introducesMechanics: [],
         introducesTypes: []
     };

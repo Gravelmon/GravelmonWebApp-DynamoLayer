@@ -7,7 +7,7 @@ import {Animation, deserializeAnimation, serializeAnimation} from '../../../node
 
 export const PosingDataEntity = "PosingData";
 
-export const PosingForAspectEdgeType = "PosingForAspect";
+export const PosingForSpeciesFeatureEdgeType = "PosingForSpeciesFeature";
 export const PosingForFormEdgeType = "PosingForForm";
 export const OverridesPosingDataEdgeType = "Overrides";
 

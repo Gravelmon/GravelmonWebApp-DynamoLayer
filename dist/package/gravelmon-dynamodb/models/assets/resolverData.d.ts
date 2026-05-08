@@ -18,8 +18,8 @@ export interface ResolverLayer {
 }
 export interface ResolverData {
     layers: ResolverLayer[];
-    variationForAspectChoice?: {
-        aspect: string;
+    variationForSpeciesFeatureChoice?: {
+        speciesFeature: string;
         choice: string;
     };
 }
@@ -33,8 +33,8 @@ export declare function serializeResolverData(resolverData: ResolverData): {
         loops: boolean;
         numberOfFrames: number | undefined;
     }[];
-    variationForAspectChoice: {
-        aspect: string;
+    variationForSpeciesFeatureChoice: {
+        speciesFeature: string;
         choice: string;
     } | undefined;
 };

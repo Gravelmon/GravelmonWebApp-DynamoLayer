@@ -46,7 +46,7 @@ export class GameNode extends DynamoNode {
             introducesItem: rawGameData.introducesItem.map((item: any) => new ResourceLocation(item.namespace, item.path)),
             introducesMoves: rawGameData.introducesMoves.map((move: any) => new MoveIdentifier(move.game, move.move)),
             introducesAbilities: rawGameData.introducesAbilities,
-            introducesAspects: rawGameData.introducesAspects,
+            introducesSpeciesFeatures: rawGameData.introducesSpeciesFeatures,
             introducesMechanics: rawGameData.introducesMechanics,
             introducesTypes: rawGameData.introducesTypes
         };
@@ -72,7 +72,7 @@ export class GameNode extends DynamoNode {
                 introducesItem: this.gameData.introducesItem.map(item => item.serialize()),
                 introducesMoves: this.gameData.introducesMoves.map(move => move.serialize()),
                 introducesAbilities: this.gameData.introducesAbilities,
-                introducesAspects: this.gameData.introducesAspects,
+                introducesSpeciesFeatures: this.gameData.introducesSpeciesFeatures,
                 introducesMechanics: this.gameData.introducesMechanics,
                 introducesTypes: this.gameData.introducesTypes
             }

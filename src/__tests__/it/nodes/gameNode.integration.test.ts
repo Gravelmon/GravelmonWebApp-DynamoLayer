@@ -48,7 +48,7 @@ describe("GameNode Integration Tests", () => {
             introducesItem: introducedItems,
             introducesMoves: introducedMoves,
             introducesAbilities: ["Overgrow", "Blaze"],
-            introducesAspects: ["Pokemon"],
+            introducesSpeciesFeatures: ["Pokemon"],
             introducesMechanics: ["Experience", "Leveling"],
             introducesTypes: ["Normal", "Fire", "Water", "Grass"]
         };

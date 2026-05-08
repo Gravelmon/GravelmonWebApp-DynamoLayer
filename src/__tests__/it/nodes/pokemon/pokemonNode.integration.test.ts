@@ -130,7 +130,7 @@ describe("PokemonNode Integration Tests", () => {
 
         riding: {
             landRidingBehaviour: {
-                key: RidingKey.Standard,
+                key: RidingKey.Horse,
                 stats: {
                     ACCELERATION: new NumberRange(0.1, 0.3),
                     JUMP: new NumberRange(0.5, 1.0),
@@ -201,7 +201,7 @@ describe("PokemonNode Integration Tests", () => {
                 primaryType: "Electric"
             },
 
-            aspects: ["shiny"],
+            speciesFeatures: ["shiny"],
             labels: ["starter"],
             eggGroups: ["field"],
 
@@ -249,7 +249,7 @@ describe("PokemonNode Integration Tests", () => {
             expect(data.typing.primaryType).toBe("Electric");
 
             expect(data.labels).toEqual(["starter"]);
-            expect(data.aspects).toEqual(["shiny"]);
+            expect(data.speciesFeatures).toEqual(["shiny"]);
 
             expect(data.abilities[0].name).toBe("static");
 

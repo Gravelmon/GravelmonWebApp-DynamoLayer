@@ -11,7 +11,7 @@ export * from './minecraft/structureNode';
 export * from './pokemon/evolutionNode';
 export * from './pokemon/formNode';
 export * from './pokemon/pokemonNode';
-export * from './properties/aspectNode';
+export * from './properties/speciesFeatureNode';
 export * from './properties/eggGroupNode';
 export * from './properties/experienceGroupNode';
 export * from './properties/labelNode';

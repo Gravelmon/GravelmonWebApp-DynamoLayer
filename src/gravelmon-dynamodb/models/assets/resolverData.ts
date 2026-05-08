@@ -21,8 +21,8 @@ export interface ResolverLayer {
 
 export interface ResolverData {
     layers: ResolverLayer[];
-    variationForAspectChoice?: {
-        aspect: string;
+    variationForSpeciesFeatureChoice?: {
+        speciesFeature: string;
         choice: string;
     };
 }
@@ -54,9 +54,9 @@ function deserializeResolverLayer(data: any) : ResolverLayer {
 export function serializeResolverData(resolverData: ResolverData) {
     return {
         layers: resolverData.layers.map(layer => serializeResolverLayer(layer)),
-        variationForAspectChoice: resolverData.variationForAspectChoice ? {
-            aspect: resolverData.variationForAspectChoice.aspect,
-            choice: resolverData.variationForAspectChoice.choice
+        variationForSpeciesFeatureChoice: resolverData.variationForSpeciesFeatureChoice ? {
+            speciesFeature: resolverData.variationForSpeciesFeatureChoice.speciesFeature,
+            choice: resolverData.variationForSpeciesFeatureChoice.choice
         } : undefined
     }
 }
@@ -64,9 +64,9 @@ export function serializeResolverData(resolverData: ResolverData) {
 export function deserializeResolverData(data: any) : ResolverData {
     return {
         layers: data.layers.map((layer: any) => deserializeResolverLayer(layer)),
-        variationForAspectChoice: data.variationForAspectChoice ? {
-            aspect: data.variationForAspectChoice.aspect,
-            choice: data.variationForAspectChoice.choice
+        variationForSpeciesFeatureChoice: data.variationForSpeciesFeatureChoice ? {
+            speciesFeature: data.variationForSpeciesFeatureChoice.speciesFeature,
+            choice: data.variationForSpeciesFeatureChoice.choice
         } : undefined
     }
 }
