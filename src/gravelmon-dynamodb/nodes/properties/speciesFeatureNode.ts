@@ -1,12 +1,14 @@
 import { deserializerRegistry } from '../../service/deserializerRegistry';
 import { DynamoNode } from '../../service/dynamoNodes';
+import {deserializeVector, NumberRange, ResourceLocation, serializeVector, Vector} from "../../models";
 
 export const SpeciesFeatureEntity = "SpeciesFeature";
 export const HasSpeciesFeatureEdgeType = "HasSpeciesFeature";
 
 export enum SpeciesFeatureType {
     Flag,
-    Choice
+    Choice,
+    Integer
 }
 
 export function createFlagSpeciesFeatureNode(id: string, speciesFeatureName: string, defaultValue: boolean = false, isPrimarySpeciesFeature: boolean = true, introducedByGame: string, lastEdited: number = Date.now()): SpeciesFeatureNode {
@@ -20,15 +22,16 @@ export function createChoiceSpeciesFeatureNode(id: string, speciesFeatureName: s
 abstract class SpeciesFeatureNode extends DynamoNode {
     speciesFeatureName: string;
     speciesFeatureType: SpeciesFeatureType;
-    isSpeciesFeature: boolean = true;
-    defaultOption?: boolean | "random" | string;
+    isAspect: boolean = true;
+    defaultOption?: boolean | "random" | string | number;
     /** Indicates that this speciesFeature governs the form of the pokemon (e.g. Galarian vs Hisuian)
     non primary speciesFeatures include female form, gigantamax form, mega form etc. It is possible for a pokemon to have multiple primary speciesFeatures*/
     isPrimarySpeciesFeature: boolean;
     introducedByGame: string;
     static version = 1;
     
-    protected constructor(id: string, speciesFeatureName: string, speciesFeatureType: SpeciesFeatureType, defaultValue: boolean | "random" | string, isPrimarySpeciesFeature: boolean, introducedByGame: string, lastEdited: number = Date.now()) {
+    protected constructor(id: string, speciesFeatureName: string, speciesFeatureType: SpeciesFeatureType, defaultValue: boolean | "random" | string | number,
+                          isPrimarySpeciesFeature: boolean, introducedByGame: string, lastEdited: number = Date.now()) {
         super(SpeciesFeatureEntity+speciesFeatureType, id, SpeciesFeatureNode.version, lastEdited);
         this.speciesFeatureName = speciesFeatureName;
         this.speciesFeatureType = speciesFeatureType;
@@ -48,7 +51,7 @@ abstract class SpeciesFeatureNode extends DynamoNode {
         }
         const speciesFeatureType: SpeciesFeatureType = data.speciesFeatureType;
         const speciesFeatureName: string = data.speciesFeatureName;
-        const defaultOption: boolean | "random" | string = data.defaultOption;
+        const defaultOption: boolean | "random" | string | number = data.defaultOption;
         const isPrimarySpeciesFeature: boolean = data.isPrimarySpeciesFeature;
         const introducedByGame: string = data.introducedByGame;
         const name: string = data.name;
@@ -60,6 +63,30 @@ abstract class SpeciesFeatureNode extends DynamoNode {
             }
             const choices: string[] = data.choices;
             return new ChoiceSpeciesFeatureNode(name, speciesFeatureName, choices, defaultOption as string, isPrimarySpeciesFeature, introducedByGame, data.lastEdited);
+        } else if(speciesFeatureType === SpeciesFeatureType.Integer) {
+            if(!data.min || !data.max) {
+                throw new Error("Invalid data for deserializing ChoiceSpeciesFeatureNode: missing choices property");
+            }
+            const range = NumberRange.deserialize(data.numberRange);
+            return new IntegerSpeciesFeatureNode(
+                name,
+                speciesFeatureName,
+                range,
+                defaultOption as number,
+                data.isVisible,
+                data.itemPoints.map((itemPoint : any) => {
+                    return {
+                            resourceLocation: ResourceLocation.deserialize(itemPoint.resourceLocation),
+                            amount: itemPoint.amount
+                    }
+                }),
+                introducedByGame,
+                data.display ? {
+                    uiName: data.display.uiName,
+                    color: deserializeVector(data.display.color),
+                    underlay: data.display.underlay.serialize(),
+                    overlay: data.display.overlay.serialize(),
+                } : undefined, data.lastEdited);
         } else {
             throw new Error("Invalid speciesFeature type for deserializing SpeciesFeatureNode");
         }
@@ -70,7 +97,7 @@ abstract class SpeciesFeatureNode extends DynamoNode {
             ...super.serialize(),
             speciesFeatureName: this.speciesFeatureName,
             speciesFeatureType: this.speciesFeatureType,
-            isSpeciesFeature: this.isSpeciesFeature,
+            isAspect: this.isAspect,
             defaultOption: this.defaultOption,
             isPrimarySpeciesFeature: this.isPrimarySpeciesFeature,
             introducedByGame: this.introducedByGame
@@ -95,6 +122,60 @@ export class ChoiceSpeciesFeatureNode extends SpeciesFeatureNode {
         return {
             ...super.serialize(),
             choices: this.choices
+        }
+    }
+}
+
+export interface IntegerSpeciesFeatureDisplay {
+    uiName: string,
+    color: Vector,
+    underlay: ResourceLocation,
+    overlay: ResourceLocation,
+}
+
+export class IntegerSpeciesFeatureNode extends SpeciesFeatureNode {
+    numberRange: NumberRange;
+    visible: boolean;
+    itemPoints: {
+        resourceLocation: ResourceLocation,
+        amount: number
+    }[]
+    display?: IntegerSpeciesFeatureDisplay;
+
+    constructor(id: string,
+                speciesFeatureName: string,
+                numberRange: NumberRange,
+                defaultValue: number,
+                isVisible: boolean,
+                itemPoints: {
+                    resourceLocation: ResourceLocation,
+                    amount: number
+                }[],
+                introducedByGame: string,
+                display?: IntegerSpeciesFeatureDisplay, lastEdited: number = Date.now()) {
+        super(id, speciesFeatureName, SpeciesFeatureType.Choice, defaultValue, false, introducedByGame, lastEdited);
+        this.numberRange = numberRange;
+        this.visible = isVisible;
+        this.itemPoints = itemPoints;
+        this.display = display;
+    }
+
+    public serialize(): Record<string, any> {
+        return {
+            ...super.serialize(),
+            numberRange: this.numberRange.serialize(),
+            visible: this.visible,
+            itemPoints: this.itemPoints.map(itemPoint=> {
+                return {
+                    resourceLocation: itemPoint.resourceLocation.serialize(),
+                    amount: itemPoint.amount
+                }}),
+            display: this.display && {
+                uiName: this.display.uiName,
+                color: serializeVector(this.display.color),
+                underlay: this.display.underlay.serialize(),
+                overlay: this.display.overlay.serialize(),
+            }
         }
     }
 }

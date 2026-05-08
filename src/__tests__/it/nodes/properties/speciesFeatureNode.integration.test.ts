@@ -47,7 +47,7 @@ describe("SpeciesFeatureNode - FlagSpeciesFeatureNode", () => {
         expect(readNode?.defaultOption).toBe(true);
         expect(readNode?.isPrimarySpeciesFeature).toBe(true);
         expect(readNode?.introducedByGame).toBe("pokemon_red");
-        expect(readNode?.isSpeciesFeature).toBe(true);
+        expect(readNode?.isAspect).toBe(true);
     });
 });
 
