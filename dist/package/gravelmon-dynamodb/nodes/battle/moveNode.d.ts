@@ -1,10 +1,10 @@
 import { DynamoEdge, DynamoNode } from '../../service/dynamoNodes';
 import { MoveRange } from "../../models/battle/moveRange";
 export declare const MoveEntity = "Move";
-export declare const MoveLabelEntity = "MoveLabel";
+export declare const MoveFlagEntity = "MoveFlag";
 export declare const enum MoveEdgeType {
     IsType = "IsType",
-    WithLabel = "WithLabel"
+    WithFlag = "WithFlag"
 }
 export declare enum MoveCategory {
     Physical = "Physical",
@@ -21,9 +21,9 @@ export declare class MoveIdentifier {
     serialize(): any;
     static deserialize(data: any): MoveIdentifier;
 }
-export declare function createMoveLabelNode(name: string): DynamoNode;
+export declare function createMoveFlagNode(name: string): DynamoNode;
 export declare function createMoveIsTypeEdge(moveName: MoveIdentifier, typeName: string): DynamoEdge;
-export declare function createMoveWithLabelEdge(moveName: MoveIdentifier, labelName: string): DynamoEdge;
+export declare function createMoveWithFlagEdge(moveName: MoveIdentifier, flagName: string): DynamoEdge;
 export interface MoveData {
     moveTypes: string[];
     powerPoints: number;
@@ -44,8 +44,8 @@ export declare class MoveNode extends DynamoNode {
     displayName: string;
     moveData: MoveData;
     rebalancedMoveData?: MoveData;
-    moveLabels: string[];
-    constructor(displayName: string, name: MoveIdentifier, moveData: MoveData, rebalancedMoveData?: MoveData, moveLabels?: string[]);
+    moveFlags: string[];
+    constructor(displayName: string, name: MoveIdentifier, moveData: MoveData, rebalancedMoveData?: MoveData, moveFlags?: string[]);
     static deserialize(data: Record<string, any>): MoveNode;
     static deserializeMoveData(data: any): MoveData;
     private serializeMoveData;

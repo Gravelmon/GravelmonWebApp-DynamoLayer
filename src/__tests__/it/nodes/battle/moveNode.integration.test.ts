@@ -17,7 +17,7 @@ afterAll(async () => {
 });
 
 describe("MoveNode", () => {
-    test("MoveNode should persist moveIdentifier, moveLabels and rebalancedMoveData", async () => {
+    test("MoveNode should persist moveIdentifier, moveFlags and rebalancedMoveData", async () => {
         const moveId = new MoveIdentifier("pokemon_scarlet", "flamethrower");
 
         const moveData = {
@@ -53,8 +53,8 @@ describe("MoveNode", () => {
         expect(read.moveIdentifier).toBeInstanceOf(MoveIdentifier);
         expect(read.moveIdentifier.toString()).toBe("pokemon_scarlet#flamethrower");
 
-        // labels
-        expect(read.moveLabels).toEqual(["tm", "special"]);
+        // flags
+        expect(read.moveFlags).toEqual(["tm", "special"]);
 
         // rebalanced data exists
         expect(read.rebalancedMoveData).toBeDefined();
@@ -88,7 +88,7 @@ describe("MoveNode", () => {
         expect(read.moveData.itemRecipeCost).toEqual({ ice: 2 });
     });
 
-    test("MoveNode should default moveLabels to empty array", () => {
+    test("MoveNode should default moveFlags to empty array", () => {
         const moveId = new MoveIdentifier("game", "tackle");
 
         const node = new MoveNode("", moveId, {
@@ -103,7 +103,7 @@ describe("MoveNode", () => {
             itemRecipeCost: {}
         });
 
-        expect(node.moveLabels).toEqual([]);
+        expect(node.moveFlags).toEqual([]);
     });
 });
 

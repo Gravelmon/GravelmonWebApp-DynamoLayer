@@ -4,11 +4,11 @@ import {MoveRange} from "../../models/battle/moveRange";
 import { deserializerRegistry } from '../../service/deserializerRegistry';
 
 export const MoveEntity = "Move";
-export const MoveLabelEntity = "MoveLabel";
+export const MoveFlagEntity = "MoveFlag";
 
 export const enum MoveEdgeType {
     IsType = "IsType",
-    WithLabel = "WithLabel"
+    WithFlag = "WithFlag"
 }
 
 export enum MoveCategory {
@@ -50,16 +50,16 @@ export class MoveIdentifier {
     }
 }
 
-export function createMoveLabelNode(name: string): DynamoNode {
-    return new DynamoNode(MoveLabelEntity, name);
+export function createMoveFlagNode(name: string): DynamoNode {
+    return new DynamoNode(MoveFlagEntity, name);
 }
 
 export function createMoveIsTypeEdge(moveName: MoveIdentifier, typeName: string): DynamoEdge {
     return new DynamoEdge(getNodePK(MoveEntity, moveName.toString()), MoveEdgeType.IsType, TypeEntity, typeName);
 }
 
-export function createMoveWithLabelEdge(moveName: MoveIdentifier, labelName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(MoveEntity, moveName.toString()), MoveEdgeType.WithLabel, MoveLabelEntity, labelName);
+export function createMoveWithFlagEdge(moveName: MoveIdentifier, flagName: string): DynamoEdge {
+    return new DynamoEdge(getNodePK(MoveEntity, moveName.toString()), MoveEdgeType.WithFlag, MoveFlagEntity, flagName);
 }
 
 export interface MoveData {
@@ -84,18 +84,18 @@ export class MoveNode extends DynamoNode {
     displayName: string;
     moveData: MoveData;
     rebalancedMoveData?: MoveData;
-    moveLabels: string[];
+    moveFlags: string[];
 
     constructor(displayName: string, name: MoveIdentifier,
                 moveData: MoveData,
                 rebalancedMoveData?: MoveData,
-                moveLabels: string[] = []) {
+                moveFlags: string[] = []) {
         super(MoveEntity, name.toString());
         this.displayName = displayName;
         this.moveIdentifier = name;
         this.moveData = moveData;
         this.rebalancedMoveData = rebalancedMoveData;
-        this.moveLabels = moveLabels;
+        this.moveFlags = moveFlags;
     }
 
     static deserialize(data: Record<string, any>): MoveNode {
@@ -104,7 +104,7 @@ export class MoveNode extends DynamoNode {
             MoveIdentifier.deserialize(data.moveIdentifier),
             MoveNode.deserializeMoveData(data.moveData),
             data.rebalancedMoveData ? MoveNode.deserializeMoveData(data.rebalancedMoveData) : undefined,
-            data.moveLabels || []
+            data.moveFlags || []
         );
     }
 
@@ -151,7 +151,7 @@ export class MoveNode extends DynamoNode {
             moveIdentifier: this.moveIdentifier.serialize(),
             moveData: this.serializeMoveData(this.moveData),
             rebalancedMoveData: this.rebalancedMoveData ? this.serializeMoveData(this.rebalancedMoveData) : undefined,
-            moveLabels: this.moveLabels
+            moveFlags: this.moveFlags
         }
     }
 }
