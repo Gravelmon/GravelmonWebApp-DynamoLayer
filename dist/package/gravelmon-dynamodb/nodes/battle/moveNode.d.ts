@@ -11,10 +11,6 @@ export declare enum MoveCategory {
     Special = "Special",
     Status = "Status"
 }
-export interface MoveType {
-    type: string;
-    isRebalanced: boolean;
-}
 export declare class MoveIdentifier {
     game: string;
     move: string;
@@ -29,7 +25,7 @@ export declare function createMoveLabelNode(name: string): DynamoNode;
 export declare function createMoveIsTypeEdge(moveName: MoveIdentifier, typeName: string): DynamoEdge;
 export declare function createMoveWithLabelEdge(moveName: MoveIdentifier, labelName: string): DynamoEdge;
 export interface MoveData {
-    moveTypes: MoveType[];
+    moveTypes: string[];
     powerPoints: number;
     basePower: number;
     priority: number;
@@ -38,17 +34,18 @@ export interface MoveData {
     moveCategory: MoveCategory;
     description?: string;
     zMoveEffect?: string;
-    typeGemCost: Record<string, number>;
+    itemRecipeCost: Record<string, number>;
     associatedWeathers?: string[];
     associatedTerrain?: string[];
     associatedFieldEffects?: string[];
 }
 export declare class MoveNode extends DynamoNode {
     moveIdentifier: MoveIdentifier;
+    displayName: string;
     moveData: MoveData;
     rebalancedMoveData?: MoveData;
     moveLabels: string[];
-    constructor(name: MoveIdentifier, moveData: MoveData, rebalancedMoveData?: MoveData, moveLabels?: string[]);
+    constructor(displayName: string, name: MoveIdentifier, moveData: MoveData, rebalancedMoveData?: MoveData, moveLabels?: string[]);
     static deserialize(data: Record<string, any>): MoveNode;
     static deserializeMoveData(data: any): MoveData;
     private serializeMoveData;

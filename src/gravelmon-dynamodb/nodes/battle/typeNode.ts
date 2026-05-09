@@ -3,40 +3,40 @@ import { DynamoNode } from '../../service/dynamoNodes';
 
 export const TypeEntity = "Type";
 
-export function createTypeNode(name: string, resists?: string[], immunities?: string[], weaknesses?: string[], introducedByGames?: string[]): TypeNode {
-    return new TypeNode(name, resists, immunities, weaknesses, introducedByGames);
+export function createTypeNode(name: string, typeInteractions: TypeInteractions, rebalancedTypeInteractions?: TypeInteractions, introducedByGames?: string[]): TypeNode {
+    return new TypeNode(name, typeInteractions, rebalancedTypeInteractions, introducedByGames);
+}
+
+export interface TypeInteractions {
+    resists: string[];
+    immunities: string[];
+    weaknesses: string[];
+    secondaryEffect?: string;
 }
 
 export class TypeNode extends DynamoNode {
-    private resists?: string[];
-    private immunities?: string[];
-    private weaknesses?: string[];
     private introducedByGames?: string[];
+    private typeInteractions: TypeInteractions;
+    private rebalancedTypeInteractions: TypeInteractions;
 
-    constructor(name: string, resists?: string[], immunities?: string[], weaknesses?: string[], introducedByGames?: string[]) {
+    constructor(name: string, typeInteractions: TypeInteractions, rebalancedTypeInteractions?: TypeInteractions, introducedByGames?: string[]) {
         super(TypeEntity, name);
-        this.resists = resists;
-        this.immunities = immunities;
-        this.weaknesses = weaknesses;
         this.introducedByGames = introducedByGames;
+        this.typeInteractions = typeInteractions;
+        this.rebalancedTypeInteractions = rebalancedTypeInteractions ?? typeInteractions;
     }
 
     public serialize(): Record<string, any> {
         return {
             ...super.serialize(),
-            resists: this.resists,
-            immunities: this.immunities,
-            weaknesses: this.weaknesses,
-            introducedByGames: this.introducedByGames
+            typeInteractions: this.typeInteractions,
+            rebalancedTypeInteractions: this.rebalancedTypeInteractions,
+            introducedByGames: this.introducedByGames,
         }
     }
 
     static deserialize(data: Record<string, any>): DynamoNode {
-        const typeNode = new TypeNode(data.name);
-        typeNode.resists = data.resists;
-        typeNode.immunities = data.immunities;
-        typeNode.weaknesses = data.weaknesses;
-        typeNode.introducedByGames = data.introducedByGames;
+        const typeNode = new TypeNode(data.name, data.typeInteractions, data.rebalancedTypeInteractions, data.introducedByGames);
         return typeNode;
     }
 }

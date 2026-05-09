@@ -21,7 +21,7 @@ describe("MoveNode", () => {
         const moveId = new MoveIdentifier("pokemon_scarlet", "flamethrower");
 
         const moveData = {
-            moveTypes: [{ type: "fire", isRebalanced: false }],
+            moveTypes: [ "fire" ],
             powerPoints: 15,
             basePower: 90,
             priority: 0,
@@ -29,7 +29,7 @@ describe("MoveNode", () => {
             moveRange: MoveRange.AllAllies,
             moveCategory: MoveCategory.Special,
             description: "Burns the target",
-            typeGemCost: { fire: 1 }
+            itemRecipeCost: { fire: 1 }
         };
 
         const rebalanced = {
@@ -37,7 +37,7 @@ describe("MoveNode", () => {
             basePower: 85
         };
 
-        const node = new MoveNode(
+        const node = new MoveNode("",
             moveId,
             moveData,
             rebalanced,
@@ -65,10 +65,7 @@ describe("MoveNode", () => {
         const moveId = new MoveIdentifier("test_game", "ice_beam");
 
         const moveData = {
-            moveTypes: [
-                { type: "ice", isRebalanced: true },
-                { type: "water", isRebalanced: false }
-            ],
+            moveTypes: [ "ice" ],
             powerPoints: 10,
             basePower: 90,
             priority: 0,
@@ -76,28 +73,25 @@ describe("MoveNode", () => {
             moveRange: MoveRange.AllAllies,
             moveCategory: MoveCategory.Special,
             description: "Freezes target",
-            typeGemCost: { ice: 2 }
+            itemRecipeCost: { ice: 2 }
         };
 
-        const node = new MoveNode(moveId, moveData, undefined, ["hm"]);
+        const node = new MoveNode("", moveId, moveData, undefined, ["hm"]);
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MoveNode;
 
         expect(read.moveData.moveTypes).toHaveLength(2);
-        expect(read.moveData.moveTypes[0]).toEqual({
-            type: "ice",
-            isRebalanced: true
-        });
+        expect(read.moveData.moveTypes[0]).toEqual("ice");
 
         expect(read.moveData.powerPoints).toBe(10);
-        expect(read.moveData.typeGemCost).toEqual({ ice: 2 });
+        expect(read.moveData.itemRecipeCost).toEqual({ ice: 2 });
     });
 
     test("MoveNode should default moveLabels to empty array", () => {
         const moveId = new MoveIdentifier("game", "tackle");
 
-        const node = new MoveNode(moveId, {
+        const node = new MoveNode("", moveId, {
             moveTypes: [],
             powerPoints: 35,
             basePower: 40,
@@ -106,7 +100,7 @@ describe("MoveNode", () => {
             moveRange: MoveRange.AllAllies,
             moveCategory: MoveCategory.Physical,
             description: "",
-            typeGemCost: {}
+            itemRecipeCost: {}
         });
 
         expect(node.moveLabels).toEqual([]);

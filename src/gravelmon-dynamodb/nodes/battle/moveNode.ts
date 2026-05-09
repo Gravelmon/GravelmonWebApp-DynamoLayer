@@ -17,11 +17,6 @@ export enum MoveCategory {
     Status = "Status"
 }
 
-export interface MoveType {
-    type : string;
-    isRebalanced: boolean;
-}
-
 export class MoveIdentifier {
     game: string;
     move: string;
@@ -68,7 +63,7 @@ export function createMoveWithLabelEdge(moveName: MoveIdentifier, labelName: str
 }
 
 export interface MoveData {
-    moveTypes: MoveType[];
+    moveTypes: string[];
     powerPoints: number;
     basePower: number;
     priority: number;
@@ -78,7 +73,7 @@ export interface MoveData {
     description?: string;
     zMoveEffect?: string;
     //string used here must be a resource location
-    typeGemCost: Record<string, number>
+    itemRecipeCost: Record<string, number>
     associatedWeathers?: string[];
     associatedTerrain?: string[];
     associatedFieldEffects?: string[];
@@ -86,15 +81,17 @@ export interface MoveData {
 
 export class MoveNode extends DynamoNode {
     moveIdentifier: MoveIdentifier;
+    displayName: string;
     moveData: MoveData;
     rebalancedMoveData?: MoveData;
     moveLabels: string[];
 
-    constructor(name: MoveIdentifier, 
+    constructor(displayName: string, name: MoveIdentifier,
                 moveData: MoveData,
                 rebalancedMoveData?: MoveData,
                 moveLabels: string[] = []) {
         super(MoveEntity, name.toString());
+        this.displayName = displayName;
         this.moveIdentifier = name;
         this.moveData = moveData;
         this.rebalancedMoveData = rebalancedMoveData;
@@ -103,6 +100,7 @@ export class MoveNode extends DynamoNode {
 
     static deserialize(data: Record<string, any>): MoveNode {
         return new MoveNode(
+            data.displayName,
             MoveIdentifier.deserialize(data.moveIdentifier),
             MoveNode.deserializeMoveData(data.moveData),
             data.rebalancedMoveData ? MoveNode.deserializeMoveData(data.rebalancedMoveData) : undefined,
@@ -112,7 +110,7 @@ export class MoveNode extends DynamoNode {
 
     static deserializeMoveData(data: any): MoveData {
         return {
-            moveTypes: data.moveTypes.map((moveType: any) => ({ type: moveType.type, isRebalanced: moveType.isRebalanced })),
+            moveTypes: data.moveTypes,
             powerPoints: data.powerPoints,
             basePower: data.basePower,
             priority: data.priority,
@@ -121,7 +119,7 @@ export class MoveNode extends DynamoNode {
             moveCategory: data.moveCategory,
             description: data.description,
             zMoveEffect: data.zMoveEffect,
-            typeGemCost: data.typeGemCost,
+            itemRecipeCost: data.itemRecipeCost,
             associatedWeathers: data.associatedWeathers,
             associatedTerrain: data.associatedTerrain,
             associatedFieldEffects: data.associatedFieldEffects
@@ -139,7 +137,7 @@ export class MoveNode extends DynamoNode {
             moveCategory: moveData.moveCategory,
             description: moveData.description,
             zMoveEffect: moveData.zMoveEffect,
-            typeGemCost: moveData.typeGemCost,
+            itemRecipeCost: moveData.itemRecipeCost,
             associatedWeathers: moveData.associatedWeathers,
             associatedTerrain: moveData.associatedTerrain,
             associatedFieldEffects: moveData.associatedFieldEffects
@@ -149,6 +147,7 @@ export class MoveNode extends DynamoNode {
     public serialize(): Record<string, any> {
         return {
             ...super.serialize(),
+            displayName: this.displayName,
             moveIdentifier: this.moveIdentifier.serialize(),
             moveData: this.serializeMoveData(this.moveData),
             rebalancedMoveData: this.rebalancedMoveData ? this.serializeMoveData(this.rebalancedMoveData) : undefined,
