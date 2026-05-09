@@ -1,10 +1,12 @@
 import { DynamoEdge, DynamoNode } from '../../service/dynamoNodes';
 import { MoveRange } from "../../models/battle/moveRange";
+import { FieldEffectIdentifier } from "./fieldEffectNode";
 export declare const MoveEntity = "Move";
 export declare const MoveFlagEntity = "MoveFlag";
 export declare const enum MoveEdgeType {
     IsType = "IsType",
-    WithFlag = "WithFlag"
+    WithFlag = "WithFlag",
+    AssociatedWithFieldEffect = "AssociatedWithFieldEffect"
 }
 export declare enum MoveCategory {
     Physical = "Physical",
@@ -24,6 +26,7 @@ export declare class MoveIdentifier {
 export declare function createMoveFlagNode(name: string): DynamoNode;
 export declare function createMoveIsTypeEdge(moveName: MoveIdentifier, typeName: string): DynamoEdge;
 export declare function createMoveWithFlagEdge(moveName: MoveIdentifier, flagName: string): DynamoEdge;
+export declare function createMoveAssociatedWithFieldEffectEdge(moveName: MoveIdentifier, fieldEffect: FieldEffectIdentifier): DynamoEdge;
 export interface MoveData {
     moveTypes: string[];
     powerPoints: number;
@@ -35,9 +38,9 @@ export interface MoveData {
     description?: string;
     zMoveEffect?: string;
     itemRecipeCost: Record<string, number>;
-    associatedWeathers?: string[];
-    associatedTerrain?: string[];
-    associatedFieldEffects?: string[];
+    associatedWeathers?: FieldEffectIdentifier[];
+    associatedTerrain?: FieldEffectIdentifier[];
+    associatedFieldEffects?: FieldEffectIdentifier[];
 }
 export declare class MoveNode extends DynamoNode {
     moveIdentifier: MoveIdentifier;

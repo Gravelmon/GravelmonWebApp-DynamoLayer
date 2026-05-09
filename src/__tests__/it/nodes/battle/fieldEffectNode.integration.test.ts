@@ -53,8 +53,8 @@ describe("FieldEffectNode Integration Tests", () => {
         expect(read.fieldEffectData.fieldEffectRange).toBe(MoveRange.AllPokemon);
         expect(read.fieldEffectData.description).toBe("Reverses turn order");
 
-        // labels
-        expect(read.fieldEffectLabels).toEqual(["speed", "priority"]);
+        // flags
+        expect(read.fieldEffectFlags).toEqual(["speed", "priority"]);
     });
 
     test("should handle rebalancedFieldEffectData correctly", async () => {
@@ -87,7 +87,7 @@ describe("FieldEffectNode Integration Tests", () => {
         expect(read.rebalancedFieldEffectData!.description).toBe("Shortened duration");
     });
 
-    test("should default fieldEffectLabels to empty array", async () => {
+    test("should default fieldEffectFlags to empty array", async () => {
         const identifier = new FieldEffectIdentifier("pokemon", "rain");
 
         const node = new FieldEffectNode({
@@ -101,7 +101,7 @@ describe("FieldEffectNode Integration Tests", () => {
         await service.putItem(node);
         const read = await service.getNode(pk) as FieldEffectNode;
 
-        expect(read.fieldEffectLabels).toEqual([]);
+        expect(read.fieldEffectFlags).toEqual([]);
     });
 
     test("should correctly persist nested identifier structure", async () => {

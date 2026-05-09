@@ -4,16 +4,11 @@ import { deserializerRegistry } from '../../service/deserializerRegistry';
 import {MoveRange} from "../../models/battle/moveRange";
 
 export const FieldEffectEntity = "FieldEffect";
-export const FieldEffectLabelEntity = "FieldEffectLabel";
+export const FieldEffectFlagEntity = "FieldEffectFlag";
 
 export const enum FieldEffectEdgeType {
     IsType = "IsType",
-    WithLabel = "WithLabel"
-}
-
-export interface FieldEffectType {
-    type : string;
-    isRebalanced: boolean;
+    WithFlag = "WithFlag"
 }
 
 export class FieldEffectIdentifier {
@@ -49,19 +44,20 @@ export class FieldEffectIdentifier {
     }
 }
 
-export function createFieldEffectLabelNode(name: string): DynamoNode {
-    return new DynamoNode(FieldEffectLabelEntity, name);
+export function createFieldEffectFlagNode(name: string): DynamoNode {
+    return new DynamoNode(FieldEffectFlagEntity, name);
 }
 
 export function createFieldEffectIsTypeEdge(fieldEffectName: FieldEffectIdentifier, typeName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(FieldEffectEntity, fieldEffectName.toString()), FieldEffectEdgeType.IsType, TypeEntity, typeName);
+    return new DynamoEdge(getNodePK(TypeEntity, typeName), FieldEffectEdgeType.IsType, FieldEffectEntity, fieldEffectName.toString());
 }
 
-export function createFieldEffectWithLabelEdge(fieldEffectName: FieldEffectIdentifier, labelName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(FieldEffectEntity, fieldEffectName.toString()), FieldEffectEdgeType.WithLabel, FieldEffectLabelEntity, labelName);
+export function createFieldEffectWithFlagEdge(fieldEffectName: FieldEffectIdentifier, flagName: string): DynamoEdge {
+    return new DynamoEdge(getNodePK(FieldEffectFlagEntity, flagName), FieldEffectEdgeType.WithFlag, FieldEffectEntity, fieldEffectName.toString());
 }
 
 export interface FieldEffectData {
+    associatedTypes?: string[];
     identifier: FieldEffectIdentifier;
     durationInTurns: number;
     fieldEffectRange: MoveRange.AllAllies | MoveRange.AllOpponents | MoveRange.AllPokemon;
@@ -71,15 +67,15 @@ export interface FieldEffectData {
 export class FieldEffectNode extends DynamoNode {
     fieldEffectData: FieldEffectData;
     rebalancedFieldEffectData?: FieldEffectData;
-    fieldEffectLabels: string[];
+    fieldEffectFlags: string[];
 
     constructor(fieldEffectData: FieldEffectData,
                 rebalancedFieldEffectData?: FieldEffectData,
-                fieldEffectLabels: string[] = []) {
+                fieldEffectFlags: string[] = []) {
         super(FieldEffectEntity, fieldEffectData.identifier.toString());
         this.fieldEffectData = fieldEffectData;
         this.rebalancedFieldEffectData = rebalancedFieldEffectData;
-        this.fieldEffectLabels = fieldEffectLabels;
+        this.fieldEffectFlags = fieldEffectFlags;
     }
 
     static deserialize(data: Record<string, any>): FieldEffectNode {
@@ -87,7 +83,7 @@ export class FieldEffectNode extends DynamoNode {
         return new FieldEffectNode(
             fieldEffectData,
             data.rebalancedFieldEffectData ? FieldEffectNode.deserializeFieldEffectData(data.rebalancedFieldEffectData) : undefined,
-            data.fieldEffectLabels || []
+            data.fieldEffectFlags || []
         );
     }
 
@@ -114,7 +110,7 @@ export class FieldEffectNode extends DynamoNode {
             ...super.serialize(),
             fieldEffectData: this.serializeFieldEffectData(this.fieldEffectData),
             rebalancedFieldEffectData: this.rebalancedFieldEffectData ? this.serializeFieldEffectData(this.rebalancedFieldEffectData) : undefined,
-            fieldEffectLabels: this.fieldEffectLabels
+            fieldEffectFlags: this.fieldEffectFlags
         }
     }
 }

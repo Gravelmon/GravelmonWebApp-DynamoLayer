@@ -2,13 +2,15 @@ import { DynamoEdge, DynamoNode, getNodePK } from '../../service/dynamoNodes';
 import { TypeEntity } from './typeNode';
 import {MoveRange} from "../../models/battle/moveRange";
 import { deserializerRegistry } from '../../service/deserializerRegistry';
+import {FieldEffectEntity, FieldEffectIdentifier} from "./fieldEffectNode";
 
 export const MoveEntity = "Move";
 export const MoveFlagEntity = "MoveFlag";
 
 export const enum MoveEdgeType {
     IsType = "IsType",
-    WithFlag = "WithFlag"
+    WithFlag = "WithFlag",
+    AssociatedWithFieldEffect = "AssociatedWithFieldEffect",
 }
 
 export enum MoveCategory {
@@ -55,11 +57,15 @@ export function createMoveFlagNode(name: string): DynamoNode {
 }
 
 export function createMoveIsTypeEdge(moveName: MoveIdentifier, typeName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(MoveEntity, moveName.toString()), MoveEdgeType.IsType, TypeEntity, typeName);
+    return new DynamoEdge(getNodePK(TypeEntity, typeName), MoveEdgeType.IsType, MoveEntity, moveName.toString());
 }
 
 export function createMoveWithFlagEdge(moveName: MoveIdentifier, flagName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(MoveEntity, moveName.toString()), MoveEdgeType.WithFlag, MoveFlagEntity, flagName);
+    return new DynamoEdge(getNodePK(MoveFlagEntity, flagName), MoveEdgeType.WithFlag, MoveEntity, moveName.toString());
+}
+
+export function createMoveAssociatedWithFieldEffectEdge(moveName: MoveIdentifier, fieldEffect: FieldEffectIdentifier): DynamoEdge {
+    return new DynamoEdge(getNodePK(FieldEffectEntity, fieldEffect.toString()), MoveEdgeType.AssociatedWithFieldEffect, MoveEntity, moveName.toString());
 }
 
 export interface MoveData {
@@ -74,9 +80,9 @@ export interface MoveData {
     zMoveEffect?: string;
     //string used here must be a resource location
     itemRecipeCost: Record<string, number>
-    associatedWeathers?: string[];
-    associatedTerrain?: string[];
-    associatedFieldEffects?: string[];
+    associatedWeathers?: FieldEffectIdentifier[];
+    associatedTerrain?: FieldEffectIdentifier[];
+    associatedFieldEffects?: FieldEffectIdentifier[];
 }
 
 export class MoveNode extends DynamoNode {
