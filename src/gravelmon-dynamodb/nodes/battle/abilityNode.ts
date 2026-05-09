@@ -41,12 +41,14 @@ export class AbilityNode extends DynamoNode {
     description?: string;
     rebalancedDescription?: string;
     identifier: AbilityIdentifier;
+    implemented: boolean = false;
 
-    constructor(name: AbilityIdentifier, description?: string, rebalancedDescription?: string) {
+    constructor(name: AbilityIdentifier, description?: string, rebalancedDescription?: string, implemented: boolean = false) {
         super(AbilityEntity, name.toString());
         this.description = description;
         this.identifier = name;
         this.rebalancedDescription = rebalancedDescription;
+        this.implemented = implemented;
     }
 
     public serialize(): Record<string, any> {
@@ -54,12 +56,13 @@ export class AbilityNode extends DynamoNode {
             ...super.serialize(),
             description: this.description,
             rebalancedDescription: this.rebalancedDescription,
-            identifier: this.identifier.serialize()
+            identifier: this.identifier.serialize(),
+            implemented: this.implemented
         }
     }
 
     static deserialize(data: Record<string, any>): DynamoNode {
-        return new AbilityNode(AbilityIdentifier.deserialize(data.identifier), data.description, data.rebalancedDescription);
+        return new AbilityNode(AbilityIdentifier.deserialize(data.identifier), data.description, data.rebalancedDescription, data.implemented);
     }
 }
 

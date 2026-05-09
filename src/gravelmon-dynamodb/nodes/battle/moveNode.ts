@@ -91,17 +91,19 @@ export class MoveNode extends DynamoNode {
     moveData: MoveData;
     rebalancedMoveData?: MoveData;
     moveFlags: string[];
+    implemented: boolean;
 
     constructor(displayName: string, name: MoveIdentifier,
                 moveData: MoveData,
                 rebalancedMoveData?: MoveData,
-                moveFlags: string[] = []) {
+                moveFlags: string[] = [], implemented: boolean = false) {
         super(MoveEntity, name.toString());
         this.displayName = displayName;
         this.moveIdentifier = name;
         this.moveData = moveData;
         this.rebalancedMoveData = rebalancedMoveData;
         this.moveFlags = moveFlags;
+        this.implemented = implemented;
     }
 
     static deserialize(data: Record<string, any>): MoveNode {
@@ -110,7 +112,8 @@ export class MoveNode extends DynamoNode {
             MoveIdentifier.deserialize(data.moveIdentifier),
             MoveNode.deserializeMoveData(data.moveData),
             data.rebalancedMoveData ? MoveNode.deserializeMoveData(data.rebalancedMoveData) : undefined,
-            data.moveFlags || []
+            data.moveFlags || [],
+            data.implemented
         );
     }
 
@@ -157,7 +160,8 @@ export class MoveNode extends DynamoNode {
             moveIdentifier: this.moveIdentifier.serialize(),
             moveData: this.serializeMoveData(this.moveData),
             rebalancedMoveData: this.rebalancedMoveData ? this.serializeMoveData(this.rebalancedMoveData) : undefined,
-            moveFlags: this.moveFlags
+            moveFlags: this.moveFlags,
+            implemented: this.implemented
         }
     }
 }

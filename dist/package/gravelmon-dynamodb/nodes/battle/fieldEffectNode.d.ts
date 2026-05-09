@@ -32,7 +32,8 @@ export declare class FieldEffectNode extends DynamoNode {
     rebalancedFieldEffectData?: FieldEffectData;
     fieldEffectFlags: string[];
     introducedByGames: string[];
-    constructor(displayName: string, identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData, rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[], fieldEffectFlags?: string[]);
+    implemented: boolean;
+    constructor(displayName: string, identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData, rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[], fieldEffectFlags?: string[], implemented?: boolean);
     static deserialize(data: Record<string, any>): FieldEffectNode;
     static deserializeFieldEffectData(data: any): FieldEffectData;
     private serializeFieldEffectData;

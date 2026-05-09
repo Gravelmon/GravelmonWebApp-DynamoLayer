@@ -14,7 +14,8 @@ export declare class AbilityNode extends DynamoNode {
     description?: string;
     rebalancedDescription?: string;
     identifier: AbilityIdentifier;
-    constructor(name: AbilityIdentifier, description?: string, rebalancedDescription?: string);
+    implemented: boolean;
+    constructor(name: AbilityIdentifier, description?: string, rebalancedDescription?: string, implemented?: boolean);
     serialize(): Record<string, any>;
     static deserialize(data: Record<string, any>): DynamoNode;
 }

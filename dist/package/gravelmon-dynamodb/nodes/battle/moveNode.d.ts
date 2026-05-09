@@ -48,7 +48,8 @@ export declare class MoveNode extends DynamoNode {
     moveData: MoveData;
     rebalancedMoveData?: MoveData;
     moveFlags: string[];
-    constructor(displayName: string, name: MoveIdentifier, moveData: MoveData, rebalancedMoveData?: MoveData, moveFlags?: string[]);
+    implemented: boolean;
+    constructor(displayName: string, name: MoveIdentifier, moveData: MoveData, rebalancedMoveData?: MoveData, moveFlags?: string[], implemented?: boolean);
     static deserialize(data: Record<string, any>): MoveNode;
     static deserializeMoveData(data: any): MoveData;
     private serializeMoveData;
