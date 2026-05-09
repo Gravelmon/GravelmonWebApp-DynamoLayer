@@ -1,4 +1,4 @@
-import { DynamoEdge, DynamoNode, getNodePK } from '../../service/dynamoNodes';
+import { DynamoEdge, DynamoNode, getNodePK } from '../../service';
 import { TypeEntity } from './typeNode';
 import {MoveRange} from "../../models";
 import { deserializerRegistry } from '../../service';
@@ -79,7 +79,6 @@ export interface MoveData {
     description?: string;
     zMoveEffect?: string;
     //string used here must be a resource location
-    itemRecipeCost: Record<string, number>
     associatedWeathers?: FieldEffectIdentifier[];
     associatedTerrain?: FieldEffectIdentifier[];
     associatedFieldEffects?: FieldEffectIdentifier[];
@@ -92,11 +91,12 @@ export class MoveNode extends DynamoNode {
     rebalancedMoveData?: MoveData;
     moveFlags: string[];
     implemented: boolean;
+    itemRecipeCost: Record<string, number>
 
     constructor(displayName: string, name: MoveIdentifier,
                 moveData: MoveData,
                 rebalancedMoveData?: MoveData,
-                moveFlags: string[] = [], implemented: boolean = false) {
+                moveFlags: string[] = [], implemented: boolean = false, itemRecipeCost?: Record<string, number>) {
         super(MoveEntity, name.toString());
         this.displayName = displayName;
         this.moveIdentifier = name;
@@ -104,6 +104,7 @@ export class MoveNode extends DynamoNode {
         this.rebalancedMoveData = rebalancedMoveData;
         this.moveFlags = moveFlags;
         this.implemented = implemented;
+        this.itemRecipeCost = itemRecipeCost ?? {};
     }
 
     static deserialize(data: Record<string, any>): MoveNode {
@@ -113,7 +114,8 @@ export class MoveNode extends DynamoNode {
             MoveNode.deserializeMoveData(data.moveData),
             data.rebalancedMoveData ? MoveNode.deserializeMoveData(data.rebalancedMoveData) : undefined,
             data.moveFlags || [],
-            data.implemented
+            data.implemented,
+            data.itemRecipeCost
         );
     }
 
@@ -128,7 +130,6 @@ export class MoveNode extends DynamoNode {
             moveCategory: data.moveCategory,
             description: data.description,
             zMoveEffect: data.zMoveEffect,
-            itemRecipeCost: data.itemRecipeCost,
             associatedWeathers: data.associatedWeathers,
             associatedTerrain: data.associatedTerrain,
             associatedFieldEffects: data.associatedFieldEffects
@@ -146,7 +147,6 @@ export class MoveNode extends DynamoNode {
             moveCategory: moveData.moveCategory,
             description: moveData.description,
             zMoveEffect: moveData.zMoveEffect,
-            itemRecipeCost: moveData.itemRecipeCost,
             associatedWeathers: moveData.associatedWeathers,
             associatedTerrain: moveData.associatedTerrain,
             associatedFieldEffects: moveData.associatedFieldEffects
@@ -161,7 +161,8 @@ export class MoveNode extends DynamoNode {
             moveData: this.serializeMoveData(this.moveData),
             rebalancedMoveData: this.rebalancedMoveData ? this.serializeMoveData(this.rebalancedMoveData) : undefined,
             moveFlags: this.moveFlags,
-            implemented: this.implemented
+            implemented: this.implemented,
+            itemRecipeCost: this.itemRecipeCost,
         }
     }
 }

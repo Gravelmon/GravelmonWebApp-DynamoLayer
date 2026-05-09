@@ -1,7 +1,7 @@
 import { PokemonIdentifier } from '../../nodes/pokemon/pokemonNode';
 import { NumberRange } from '../properties/numberRange';
 import { RidingBehaviourOptions as BehaviourRidingOptions } from './riding';
-import { TimeRange } from '../properties/time';
+import { TimeRange } from "../properties";
 export declare enum SleepDepth {
     Normal = "normal",
     Comatose = "comatose"

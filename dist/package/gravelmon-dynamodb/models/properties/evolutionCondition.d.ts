@@ -1,7 +1,7 @@
 import { ResourceLocation } from "../minecraft/resourceLocation";
 import { PokemonIdentifier } from "../../nodes/pokemon/pokemonNode";
-import { TimeRange } from "./time";
 import { MoveIdentifier } from "../../nodes";
+import { Time } from "./time";
 export declare enum EvolutionConditionType {
     LEVEL = 0,
     TIME = 1,
@@ -29,7 +29,7 @@ export declare enum Gender {
 export declare abstract class EvolutionCondition {
     name: string;
     condition: string;
-    value: string | number | boolean | ResourceLocation | TimeRange | StatRatio | Gender | PokemonIdentifier | MoveIdentifier;
+    value: string | number | boolean | ResourceLocation | Time | StatRatio | Gender | PokemonIdentifier | MoveIdentifier;
     type: EvolutionConditionType;
     constructor(name: string, type: EvolutionConditionType, condition: string, value: any);
     serialize(): Record<string, any>;
@@ -41,8 +41,7 @@ export declare class LevelCondition extends EvolutionCondition {
     constructor(value: number);
 }
 export declare class TimeCondition extends EvolutionCondition {
-    constructor(value: TimeRange);
-    serialize(): Record<string, any>;
+    constructor(value: Time);
 }
 export declare class RatioCondition extends EvolutionCondition {
     constructor(value: StatRatio);

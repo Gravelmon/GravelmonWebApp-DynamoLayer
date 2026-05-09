@@ -1,4 +1,4 @@
-import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb";
+import {GravelmonDynamoDBService, Time} from "../../../../gravelmon-dynamodb";
 import {createTestEnv} from "../../../testEnv";
 import {getNodePK} from "../../../../gravelmon-dynamodb";
 
@@ -28,9 +28,7 @@ import {
     EvolutionConditionType
 } from "../../../../gravelmon-dynamodb";
 
-import {NumberRange} from "../../../../gravelmon-dynamodb";
 import {MoveIdentifier} from "../../../../gravelmon-dynamodb";
-import {TimeRange} from "../../../../gravelmon-dynamodb";
 import {TimeCondition} from "../../../../gravelmon-dynamodb";
 
 let service: GravelmonDynamoDBService;
@@ -53,10 +51,7 @@ describe("EvolutionNode Integration Tests", () => {
         new LevelCondition(36),
 
         // TIME
-        new TimeCondition({
-            type: "range",
-            value: new NumberRange(1000, 2000)
-        } as TimeRange),
+        new TimeCondition(Time.Night),
 
         // RATIO
         new RatioCondition(StatRatio.ATTACK_HIGHER),
@@ -197,14 +192,6 @@ describe("EvolutionNode Integration Tests", () => {
 
         expect(time).toBeInstanceOf(TimeCondition);
         expect(time.type).toBe(EvolutionConditionType.TIME);
-
-        // narrow the union properly
-        expect((time.value as TimeRange).type).toBe("range");
-
-        const range = (time.value as TimeRange).value as NumberRange;
-
-        expect(range.min).toBe(1000);
-        expect(range.max).toBe(2000);
 
         // --------------------
         // RATIO

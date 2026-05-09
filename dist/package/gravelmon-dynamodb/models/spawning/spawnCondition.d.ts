@@ -1,6 +1,6 @@
 import { ResourceLocation } from "../minecraft/resourceLocation";
 import { NumberRange } from "../properties/numberRange";
-import { TimeRange } from "../properties/time";
+import { Time } from "../properties";
 export declare enum LabelMode {
     ANY = 0,
     ALL = 1
@@ -19,7 +19,7 @@ export interface SpawnConditionOptions {
     maxLight?: number;
     minSkyLight?: number;
     maxSkyLight?: number;
-    timeRange?: TimeRange;
+    timeRange?: Time;
     isRaining?: boolean;
     isThundering?: boolean;
     isSlimeChunk?: boolean;
@@ -31,9 +31,7 @@ export interface SpawnConditionOptions {
     maxLength?: number;
     neededNearbyBlocks?: ResourceLocation[];
     neededBaseBlocks?: ResourceLocation[];
-    doesNotSpawnInBiomes?: ResourceLocation[];
     spawnsInBiomes?: ResourceLocation[];
-    doesNotSpawnInStructures?: ResourceLocation[];
     spawnsInStructures?: ResourceLocation[];
     minDepth?: number;
     maxDepth?: number;

@@ -1,7 +1,7 @@
 import { ResourceLocation } from "../minecraft/resourceLocation";
 import { PokemonIdentifier } from "../../nodes/pokemon/pokemonNode";
-import { deserializeTimeRange, isTimeRange, serializeTimeRange, TimeRange } from "./time";
 import { MoveIdentifier } from "../../nodes";
+import {Time} from "./time";
 
 export enum EvolutionConditionType {
     LEVEL,
@@ -33,7 +33,7 @@ export enum Gender {
 export abstract class EvolutionCondition {
     name: string;
     condition: string;
-    value: string | number | boolean | ResourceLocation | TimeRange | StatRatio | Gender | PokemonIdentifier | MoveIdentifier;
+    value: string | number | boolean | ResourceLocation | Time | StatRatio | Gender | PokemonIdentifier | MoveIdentifier;
     type: EvolutionConditionType;
 
     constructor(name: string, type: EvolutionConditionType, condition: string, value: any) {
@@ -62,9 +62,6 @@ export abstract class EvolutionCondition {
         if (this.value instanceof MoveIdentifier) {
             return this.value.serialize();
         }
-        if (isTimeRange(this.value)) {
-            return serializeTimeRange(this.value);
-        }
         return this.value;
     }
 
@@ -73,8 +70,6 @@ export abstract class EvolutionCondition {
             return ResourceLocation.deserialize(value);
         } else if (type === EvolutionConditionType.PARTY_MEMBER) {
             return PokemonIdentifier.deserialize(value);
-        } else if (type === EvolutionConditionType.TIME) {
-            return deserializeTimeRange(value);
         }
         return value;
     }
@@ -91,7 +86,7 @@ export abstract class EvolutionCondition {
             case EvolutionConditionType.LEVEL:
                 return new LevelCondition(evolutionConditionData.value as number);
             case EvolutionConditionType.TIME:
-                return new TimeCondition(evolutionConditionData.value as TimeRange);
+                return new TimeCondition(evolutionConditionData.value as Time);
             case EvolutionConditionType.RATIO:
                 return new RatioCondition(evolutionConditionData.value as StatRatio);
             case EvolutionConditionType.HAS_MOVE:
@@ -126,17 +121,8 @@ export class LevelCondition extends EvolutionCondition {
 }
 
 export class TimeCondition extends EvolutionCondition {
-    constructor(value: TimeRange) {
+    constructor(value: Time) {
         super("time_range", EvolutionConditionType.TIME, "range", value);
-    }
-
-    serialize(): Record<string, any> {
-        return {
-            name: this.name,
-            type: this.type,
-            condition: this.condition,
-            value: serializeTimeRange(this.value as TimeRange)
-        }
     }
 }
 

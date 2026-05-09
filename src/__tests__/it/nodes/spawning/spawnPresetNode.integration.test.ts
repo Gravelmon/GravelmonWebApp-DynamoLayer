@@ -42,10 +42,7 @@ describe("SpawnPresetNode Integration Tests", () => {
         minSkyLight: 0,
         maxSkyLight: 10,
 
-        timeRange: {
-            type: "time", // night
-            value: Time.Day
-        },
+        timeRange: Time.Twilight,
 
         isRaining: false,
         isThundering: false,
@@ -68,18 +65,9 @@ describe("SpawnPresetNode Integration Tests", () => {
             new ResourceLocation("minecraft", "dirt")
         ],
 
-        doesNotSpawnInBiomes: [
-            new ResourceLocation("minecraft", "desert"),
-            new ResourceLocation("minecraft", "ocean")
-        ],
-
         spawnsInBiomes: [
             new ResourceLocation("minecraft", "plains"),
             new ResourceLocation("minecraft", "forest")
-        ],
-
-        doesNotSpawnInStructures: [
-            new ResourceLocation("minecraft", "village")
         ],
 
         spawnsInStructures: [

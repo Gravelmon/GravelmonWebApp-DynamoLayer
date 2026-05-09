@@ -1,4 +1,4 @@
-import { DynamoEdge, DynamoNode } from '../../service/dynamoNodes';
+import { DynamoEdge, DynamoNode } from '../../service';
 import { MoveRange } from "../../models";
 import { FieldEffectIdentifier } from "./fieldEffectNode";
 export declare const MoveEntity = "Move";
@@ -37,7 +37,6 @@ export interface MoveData {
     moveCategory: MoveCategory;
     description?: string;
     zMoveEffect?: string;
-    itemRecipeCost: Record<string, number>;
     associatedWeathers?: FieldEffectIdentifier[];
     associatedTerrain?: FieldEffectIdentifier[];
     associatedFieldEffects?: FieldEffectIdentifier[];
@@ -49,7 +48,8 @@ export declare class MoveNode extends DynamoNode {
     rebalancedMoveData?: MoveData;
     moveFlags: string[];
     implemented: boolean;
-    constructor(displayName: string, name: MoveIdentifier, moveData: MoveData, rebalancedMoveData?: MoveData, moveFlags?: string[], implemented?: boolean);
+    itemRecipeCost: Record<string, number>;
+    constructor(displayName: string, name: MoveIdentifier, moveData: MoveData, rebalancedMoveData?: MoveData, moveFlags?: string[], implemented?: boolean, itemRecipeCost?: Record<string, number>);
     static deserialize(data: Record<string, any>): MoveNode;
     static deserializeMoveData(data: any): MoveData;
     private serializeMoveData;

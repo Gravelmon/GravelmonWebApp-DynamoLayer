@@ -1,6 +1,6 @@
 import { ResourceLocation } from "../minecraft/resourceLocation";
 import { NumberRange } from "../properties/numberRange";
-import { deserializeTimeRange, serializeTimeRange, TimeRange } from "../properties/time";
+import {Time} from "../properties";
 
 export enum LabelMode {
     ANY, ALL
@@ -23,7 +23,7 @@ export interface SpawnConditionOptions {
     minSkyLight?: number;
     maxSkyLight?: number;
 
-    timeRange?: TimeRange;
+    timeRange?: Time;
     isRaining?: boolean;
     isThundering?: boolean;
     isSlimeChunk?: boolean;
@@ -37,9 +37,7 @@ export interface SpawnConditionOptions {
 
     neededNearbyBlocks?: ResourceLocation[];
     neededBaseBlocks?: ResourceLocation[];
-    doesNotSpawnInBiomes?: ResourceLocation[];
     spawnsInBiomes?: ResourceLocation[];
-    doesNotSpawnInStructures?: ResourceLocation[];
     spawnsInStructures?: ResourceLocation[];
 
     minDepth?: number;
@@ -76,7 +74,7 @@ export class SpawnCondition {
                 maxLight: this.spawnConditionOptions.maxLight,
                 minSkyLight: this.spawnConditionOptions.minSkyLight,
                 maxSkyLight: this.spawnConditionOptions.maxSkyLight,
-                timeRange: this.spawnConditionOptions.timeRange ? serializeTimeRange(this.spawnConditionOptions.timeRange) : undefined,
+                timeRange: this.spawnConditionOptions.timeRange,
                 isRaining: this.spawnConditionOptions.isRaining,
                 isThundering: this.spawnConditionOptions.isThundering,
                 isSlimeChunk: this.spawnConditionOptions.isSlimeChunk,
@@ -90,9 +88,7 @@ export class SpawnCondition {
 
                 neededNearbyBlocks: this.spawnConditionOptions.neededNearbyBlocks ? this.spawnConditionOptions.neededNearbyBlocks.map(item => item.serialize()) : undefined,
                 neededBaseBlocks: this.spawnConditionOptions.neededBaseBlocks ? this.spawnConditionOptions.neededBaseBlocks.map(item => item.serialize()) : undefined,
-                doesNotSpawnInBiomes: this.spawnConditionOptions.doesNotSpawnInBiomes ? this.spawnConditionOptions.doesNotSpawnInBiomes.map(item => item.serialize()) : undefined,
                 spawnsInBiomes: this.spawnConditionOptions.spawnsInBiomes ? this.spawnConditionOptions.spawnsInBiomes.map(item => item.serialize()) : undefined,
-                doesNotSpawnInStructures: this.spawnConditionOptions.doesNotSpawnInStructures ? this.spawnConditionOptions.doesNotSpawnInStructures.map(item => item.serialize()) : undefined,
                 spawnsInStructures: this.spawnConditionOptions.spawnsInStructures ? this.spawnConditionOptions.spawnsInStructures.map(item => item.serialize()) : undefined,
                 minDepth: this.spawnConditionOptions.minDepth,
                 maxDepth: this.spawnConditionOptions.maxDepth,
@@ -121,7 +117,7 @@ export class SpawnCondition {
             maxLight: data.spawnConditionOptions.maxLight,
             minSkyLight: data.spawnConditionOptions.minSkyLight,
             maxSkyLight: data.spawnConditionOptions.maxSkyLight,
-            timeRange: data.spawnConditionOptions.timeRange ? deserializeTimeRange(data.spawnConditionOptions.timeRange) : undefined,
+            timeRange: data.spawnConditionOptions.timeRange,
             isRaining: data.spawnConditionOptions.isRaining,
             isThundering: data.spawnConditionOptions.isThundering,
             isSlimeChunk: data.spawnConditionOptions.isSlimeChunk,
@@ -135,9 +131,7 @@ export class SpawnCondition {
 
             neededNearbyBlocks: data.spawnConditionOptions.neededNearbyBlocks ? data.spawnConditionOptions.neededNearbyBlocks.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
             neededBaseBlocks: data.spawnConditionOptions.neededBaseBlocks ? data.spawnConditionOptions.neededBaseBlocks.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
-            doesNotSpawnInBiomes: data.spawnConditionOptions.doesNotSpawnInBiomes ? data.spawnConditionOptions.doesNotSpawnInBiomes.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
             spawnsInBiomes: data.spawnConditionOptions.spawnsInBiomes ? data.spawnConditionOptions.spawnsInBiomes.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
-            doesNotSpawnInStructures: data.spawnConditionOptions.doesNotSpawnInStructures ? data.spawnConditionOptions.doesNotSpawnInStructures.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
             spawnsInStructures: data.spawnConditionOptions.spawnsInStructures ? data.spawnConditionOptions.spawnsInStructures.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
             minDepth: data.spawnConditionOptions.minDepth,
             maxDepth: data.spawnConditionOptions.maxDepth,

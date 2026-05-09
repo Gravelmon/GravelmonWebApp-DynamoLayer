@@ -72,8 +72,7 @@ describe("MoveNode", () => {
             accuracy: 100,
             moveRange: MoveRange.AllAllies,
             moveCategory: MoveCategory.Special,
-            description: "Freezes target",
-            itemRecipeCost: { ice: 2 }
+            description: "Freezes target"
         };
 
         const node = new MoveNode("", moveId, moveData, undefined, ["hm"]);
@@ -85,7 +84,7 @@ describe("MoveNode", () => {
         expect(read.moveData.moveTypes[0]).toEqual("ice");
 
         expect(read.moveData.powerPoints).toBe(10);
-        expect(read.moveData.itemRecipeCost).toEqual({ ice: 2 });
+        expect(read.itemRecipeCost).toEqual({ ice: 2 });
     });
 
     test("MoveNode should default moveFlags to empty array", () => {
@@ -99,8 +98,7 @@ describe("MoveNode", () => {
             accuracy: 100,
             moveRange: MoveRange.AllAllies,
             moveCategory: MoveCategory.Physical,
-            description: "",
-            itemRecipeCost: {}
+            description: ""
         });
 
         expect(node.moveFlags).toEqual([]);
