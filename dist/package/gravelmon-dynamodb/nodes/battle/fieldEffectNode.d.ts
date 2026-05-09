@@ -21,16 +21,17 @@ export declare function createFieldEffectIsTypeEdge(fieldEffectName: FieldEffect
 export declare function createFieldEffectWithFlagEdge(fieldEffectName: FieldEffectIdentifier, flagName: string): DynamoEdge;
 export interface FieldEffectData {
     associatedTypes?: string[];
-    identifier: FieldEffectIdentifier;
     durationInTurns: number;
     fieldEffectRange: MoveRange.AllAllies | MoveRange.AllOpponents | MoveRange.AllPokemon;
     description?: string;
 }
 export declare class FieldEffectNode extends DynamoNode {
+    identifier: FieldEffectIdentifier;
     fieldEffectData: FieldEffectData;
     rebalancedFieldEffectData?: FieldEffectData;
     fieldEffectFlags: string[];
-    constructor(fieldEffectData: FieldEffectData, rebalancedFieldEffectData?: FieldEffectData, fieldEffectFlags?: string[]);
+    introducedByGames: string[];
+    constructor(identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData, rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[], fieldEffectFlags?: string[]);
     static deserialize(data: Record<string, any>): FieldEffectNode;
     static deserializeFieldEffectData(data: any): FieldEffectData;
     private serializeFieldEffectData;

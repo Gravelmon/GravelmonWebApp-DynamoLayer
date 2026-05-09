@@ -58,29 +58,33 @@ export function createFieldEffectWithFlagEdge(fieldEffectName: FieldEffectIdenti
 
 export interface FieldEffectData {
     associatedTypes?: string[];
-    identifier: FieldEffectIdentifier;
     durationInTurns: number;
     fieldEffectRange: MoveRange.AllAllies | MoveRange.AllOpponents | MoveRange.AllPokemon;
     description?: string;
 }
 
 export class FieldEffectNode extends DynamoNode {
+    identifier: FieldEffectIdentifier;
     fieldEffectData: FieldEffectData;
     rebalancedFieldEffectData?: FieldEffectData;
     fieldEffectFlags: string[];
+    introducedByGames: string[];
 
-    constructor(fieldEffectData: FieldEffectData,
-                rebalancedFieldEffectData?: FieldEffectData,
+    constructor(identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData,
+                rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[],
                 fieldEffectFlags: string[] = []) {
-        super(FieldEffectEntity, fieldEffectData.identifier.toString());
+        super(FieldEffectEntity, identifier.toString());
+        this.identifier = identifier;
         this.fieldEffectData = fieldEffectData;
         this.rebalancedFieldEffectData = rebalancedFieldEffectData;
+        this.introducedByGames = introducedByGames ?? [];
         this.fieldEffectFlags = fieldEffectFlags;
     }
 
     static deserialize(data: Record<string, any>): FieldEffectNode {
         const fieldEffectData = FieldEffectNode.deserializeFieldEffectData(data.fieldEffectData);
         return new FieldEffectNode(
+            FieldEffectIdentifier.deserialize(data.identifier),
             fieldEffectData,
             data.rebalancedFieldEffectData ? FieldEffectNode.deserializeFieldEffectData(data.rebalancedFieldEffectData) : undefined,
             data.fieldEffectFlags || []
@@ -89,7 +93,7 @@ export class FieldEffectNode extends DynamoNode {
 
     static deserializeFieldEffectData(data: any): FieldEffectData {
         return {
-            identifier: FieldEffectIdentifier.deserialize(data.identifier),
+            associatedTypes: data.associatedTypes,
             durationInTurns: data.durationInTurns,
             fieldEffectRange: data.fieldEffectRange,
             description: data.description,
@@ -98,7 +102,7 @@ export class FieldEffectNode extends DynamoNode {
 
     private serializeFieldEffectData(data: FieldEffectData): any {
         return {
-            identifier: data.identifier.serialize(),
+            associatedTypes: data.associatedTypes,
             durationInTurns: data.durationInTurns,
             fieldEffectRange: data.fieldEffectRange,
             description: data.description,
@@ -108,8 +112,10 @@ export class FieldEffectNode extends DynamoNode {
     public serialize(): Record<string, any> {
         return {
             ...super.serialize(),
+            identifier: this.identifier.serialize(),
             fieldEffectData: this.serializeFieldEffectData(this.fieldEffectData),
             rebalancedFieldEffectData: this.rebalancedFieldEffectData ? this.serializeFieldEffectData(this.rebalancedFieldEffectData) : undefined,
+            introducedByGames: this.introducedByGames,
             fieldEffectFlags: this.fieldEffectFlags
         }
     }

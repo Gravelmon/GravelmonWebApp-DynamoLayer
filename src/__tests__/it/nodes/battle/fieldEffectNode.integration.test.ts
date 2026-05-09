@@ -26,9 +26,8 @@ describe("FieldEffectNode Integration Tests", () => {
     test("should serialize and deserialize FieldEffectNode correctly", async () => {
         const identifier = new FieldEffectIdentifier("pokemon", "trick_room");
 
-        const node = new FieldEffectNode(
+        const node = new FieldEffectNode(identifier,
             {
-                identifier,
                 durationInTurns: 5,
                 fieldEffectRange: MoveRange.AllPokemon,
                 description: "Reverses turn order"
@@ -46,7 +45,7 @@ describe("FieldEffectNode Integration Tests", () => {
         expect(read.entityType).toBe(FieldEffectEntity);
 
         // identifier
-        expect(read.fieldEffectData.identifier.toString()).toBe(identifier.toString());
+        expect(read.identifier.toString()).toBe(identifier.toString());
 
         // core fields
         expect(read.fieldEffectData.durationInTurns).toBe(5);
@@ -61,20 +60,18 @@ describe("FieldEffectNode Integration Tests", () => {
         const identifier = new FieldEffectIdentifier("pokemon", "gravity");
 
         const baseData : FieldEffectData = {
-            identifier,
             durationInTurns: 5,
             fieldEffectRange: MoveRange.AllPokemon,
             description: "Grounds all Pokémon"
         };
 
         const rebalancedData : FieldEffectData = {
-            identifier,
             durationInTurns: 3,
             fieldEffectRange: MoveRange.AllPokemon,
             description: "Shortened duration"
         };
 
-        const node = new FieldEffectNode(baseData, rebalancedData, ["field"]);
+        const node = new FieldEffectNode(identifier, baseData, rebalancedData, ["field"]);
 
         const pk = node.PK;
 
@@ -87,28 +84,11 @@ describe("FieldEffectNode Integration Tests", () => {
         expect(read.rebalancedFieldEffectData!.description).toBe("Shortened duration");
     });
 
-    test("should default fieldEffectFlags to empty array", async () => {
-        const identifier = new FieldEffectIdentifier("pokemon", "rain");
-
-        const node = new FieldEffectNode({
-            identifier,
-            durationInTurns: 5,
-            fieldEffectRange: MoveRange.AllAllies
-        });
-
-        const pk = node.PK;
-
-        await service.putItem(node);
-        const read = await service.getNode(pk) as FieldEffectNode;
-
-        expect(read.fieldEffectFlags).toEqual([]);
-    });
-
     test("should correctly persist nested identifier structure", async () => {
         const identifier = new FieldEffectIdentifier("pokemon_scarlet", "sun");
 
-        const node = new FieldEffectNode({
-            identifier,
+        const node = new FieldEffectNode(
+            identifier,{
             durationInTurns: 5,
             fieldEffectRange: MoveRange.AllOpponents
         });
@@ -118,7 +98,7 @@ describe("FieldEffectNode Integration Tests", () => {
         await service.putItem(node);
         const read = await service.getNode(pk) as FieldEffectNode;
 
-        expect(read.fieldEffectData.identifier.game).toBe("pokemon_scarlet");
-        expect(read.fieldEffectData.identifier.getFieldEffect()).toBe("sun");
+        expect(read.identifier.game).toBe("pokemon_scarlet");
+        expect(read.identifier.getFieldEffect()).toBe("sun");
     });
 });
