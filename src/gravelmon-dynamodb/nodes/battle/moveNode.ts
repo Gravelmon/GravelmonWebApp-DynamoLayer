@@ -1,7 +1,7 @@
 import { DynamoEdge, DynamoNode, getNodePK } from '../../service/dynamoNodes';
 import { TypeEntity } from './typeNode';
-import {MoveRange} from "../../models/battle/moveRange";
-import { deserializerRegistry } from '../../service/deserializerRegistry';
+import {MoveRange} from "../../models";
+import { deserializerRegistry } from '../../service';
 import {FieldEffectEntity, FieldEffectIdentifier} from "./fieldEffectNode";
 
 export const MoveEntity = "Move";
@@ -10,7 +10,7 @@ export const MoveFlagEntity = "MoveFlag";
 export const enum MoveEdgeType {
     IsType = "IsType",
     WithFlag = "WithFlag",
-    AssociatedWithFieldEffect = "AssociatedWithFieldEffect",
+    AssociatedWithFieldEffect = "AssociatedWithFieldEffect"
 }
 
 export enum MoveCategory {

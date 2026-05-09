@@ -26,7 +26,7 @@ describe("FieldEffectNode Integration Tests", () => {
     test("should serialize and deserialize FieldEffectNode correctly", async () => {
         const identifier = new FieldEffectIdentifier("pokemon", "trick_room");
 
-        const node = new FieldEffectNode(identifier,
+        const node = new FieldEffectNode("", identifier,
             {
                 durationInTurns: 5,
                 fieldEffectRange: MoveRange.AllPokemon,
@@ -71,7 +71,7 @@ describe("FieldEffectNode Integration Tests", () => {
             description: "Shortened duration"
         };
 
-        const node = new FieldEffectNode(identifier, baseData, rebalancedData, ["field"]);
+        const node = new FieldEffectNode("", identifier, baseData, rebalancedData, ["field"]);
 
         const pk = node.PK;
 
@@ -87,7 +87,7 @@ describe("FieldEffectNode Integration Tests", () => {
     test("should correctly persist nested identifier structure", async () => {
         const identifier = new FieldEffectIdentifier("pokemon_scarlet", "sun");
 
-        const node = new FieldEffectNode(
+        const node = new FieldEffectNode("",
             identifier,{
             durationInTurns: 5,
             fieldEffectRange: MoveRange.AllOpponents

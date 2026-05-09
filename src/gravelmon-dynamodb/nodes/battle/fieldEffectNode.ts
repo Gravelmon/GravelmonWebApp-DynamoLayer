@@ -64,16 +64,18 @@ export interface FieldEffectData {
 }
 
 export class FieldEffectNode extends DynamoNode {
+    displayName: string;
     identifier: FieldEffectIdentifier;
     fieldEffectData: FieldEffectData;
     rebalancedFieldEffectData?: FieldEffectData;
     fieldEffectFlags: string[];
     introducedByGames: string[];
 
-    constructor(identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData,
+    constructor(displayName: string, identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData,
                 rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[],
                 fieldEffectFlags: string[] = []) {
         super(FieldEffectEntity, identifier.toString());
+        this.displayName = displayName;
         this.identifier = identifier;
         this.fieldEffectData = fieldEffectData;
         this.rebalancedFieldEffectData = rebalancedFieldEffectData;
@@ -84,6 +86,7 @@ export class FieldEffectNode extends DynamoNode {
     static deserialize(data: Record<string, any>): FieldEffectNode {
         const fieldEffectData = FieldEffectNode.deserializeFieldEffectData(data.fieldEffectData);
         return new FieldEffectNode(
+            data.displayName,
             FieldEffectIdentifier.deserialize(data.identifier),
             fieldEffectData,
             data.rebalancedFieldEffectData ? FieldEffectNode.deserializeFieldEffectData(data.rebalancedFieldEffectData) : undefined,
@@ -112,6 +115,7 @@ export class FieldEffectNode extends DynamoNode {
     public serialize(): Record<string, any> {
         return {
             ...super.serialize(),
+            displayName: this.displayName,
             identifier: this.identifier.serialize(),
             fieldEffectData: this.serializeFieldEffectData(this.fieldEffectData),
             rebalancedFieldEffectData: this.rebalancedFieldEffectData ? this.serializeFieldEffectData(this.rebalancedFieldEffectData) : undefined,

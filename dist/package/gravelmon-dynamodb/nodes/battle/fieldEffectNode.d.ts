@@ -26,12 +26,13 @@ export interface FieldEffectData {
     description?: string;
 }
 export declare class FieldEffectNode extends DynamoNode {
+    displayName: string;
     identifier: FieldEffectIdentifier;
     fieldEffectData: FieldEffectData;
     rebalancedFieldEffectData?: FieldEffectData;
     fieldEffectFlags: string[];
     introducedByGames: string[];
-    constructor(identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData, rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[], fieldEffectFlags?: string[]);
+    constructor(displayName: string, identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData, rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[], fieldEffectFlags?: string[]);
     static deserialize(data: Record<string, any>): FieldEffectNode;
     static deserializeFieldEffectData(data: any): FieldEffectData;
     private serializeFieldEffectData;

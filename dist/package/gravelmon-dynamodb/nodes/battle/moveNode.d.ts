@@ -1,5 +1,5 @@
 import { DynamoEdge, DynamoNode } from '../../service/dynamoNodes';
-import { MoveRange } from "../../models/battle/moveRange";
+import { MoveRange } from "../../models";
 import { FieldEffectIdentifier } from "./fieldEffectNode";
 export declare const MoveEntity = "Move";
 export declare const MoveFlagEntity = "MoveFlag";
