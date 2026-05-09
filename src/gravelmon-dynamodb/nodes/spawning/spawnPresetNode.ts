@@ -53,36 +53,36 @@ export function createSpawnPresetNode(spawnPresetOptions: SpawnPresetOptions): S
     return new SpawnPresetNode(spawnPresetOptions);
 }
 
-export function createSpawnPresetDoesNotSpawnInBiomeEdge(spawnPresetName: string, biomeName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeEntity, biomeName), DoesNotSpawnInBiomeEdgeType, SpawnPresetEntity, spawnPresetName);
+export function createSpawnPresetDoesNotSpawnInBiomeEdge(spawnPresetName: ResourceLocation, biomeName: ResourceLocation): DynamoEdge {
+    return new DynamoEdge(getNodePK(BiomeEntity, biomeName.toString()), DoesNotSpawnInBiomeEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
-export function createSpawnPresetDoesNotSpawnInBiomeTagEdge(spawnPresetName: string, biomeTagName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeTagEntity, biomeTagName), DoesNotSpawnInBiomeEdgeType, SpawnPresetEntity, spawnPresetName);
+export function createSpawnPresetDoesNotSpawnInBiomeTagEdge(spawnPresetName: ResourceLocation, biomeTagName: ResourceLocation): DynamoEdge {
+    return new DynamoEdge(getNodePK(BiomeTagEntity, biomeTagName.toString()), DoesNotSpawnInBiomeEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
-export function createSpawnPresetSpawnsInBiomeEdge(spawnPresetName: string, biomeName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeEntity, biomeName), SpawnsInBiomeEdgeType, SpawnPresetEntity, spawnPresetName);
+export function createSpawnPresetSpawnsInBiomeEdge(spawnPresetName: ResourceLocation, biomeName: ResourceLocation): DynamoEdge {
+    return new DynamoEdge(getNodePK(BiomeEntity, biomeName.toString()), SpawnsInBiomeEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
-export function createSpawnPresetSpawnsInBiomeTagEdge(spawnPresetName: string, biomeTagName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeTagEntity, biomeTagName), SpawnsInBiomeEdgeType, SpawnPresetEntity, spawnPresetName);
+export function createSpawnPresetSpawnsInBiomeTagEdge(spawnPresetName: ResourceLocation, biomeTagName: ResourceLocation): DynamoEdge {
+    return new DynamoEdge(getNodePK(BiomeTagEntity, biomeTagName.toString()), SpawnsInBiomeEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
-export function createSpawnPresetSpawnsInStructureEdge(spawnPresetName: string, StructureName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(StructureEntity, StructureName), SpawnsInStructureEdgeType, SpawnPresetEntity, spawnPresetName);
+export function createSpawnPresetSpawnsInStructureEdge(spawnPresetName: ResourceLocation, StructureName: ResourceLocation): DynamoEdge {
+    return new DynamoEdge(getNodePK(StructureEntity, StructureName.toString()), SpawnsInStructureEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
-export function createSpawnPresetSpawnsInStructureTagEdge(spawnPresetName: string, StructureTagName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(StructureTagEntity, StructureTagName), SpawnsInStructureEdgeType, SpawnPresetEntity, spawnPresetName);
+export function createSpawnPresetSpawnsInStructureTagEdge(spawnPresetName: ResourceLocation, StructureTagName: ResourceLocation): DynamoEdge {
+    return new DynamoEdge(getNodePK(StructureTagEntity, StructureTagName.toString()), SpawnsInStructureEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
-export function createSpawnPresetDoesNotSpawnInStructureEdge(spawnPresetName: string, StructureName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(StructureEntity, StructureName), DoesNotSpawnInStructureEdgeType, SpawnPresetEntity, spawnPresetName);
+export function createSpawnPresetDoesNotSpawnInStructureEdge(spawnPresetName: ResourceLocation, StructureName: ResourceLocation): DynamoEdge {
+    return new DynamoEdge(getNodePK(StructureEntity, StructureName.toString()), DoesNotSpawnInStructureEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
-export function createSpawnPresetDoesNotSpawnInStructureTagEdge(spawnPresetName: string, StructureTagName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(StructureTagEntity, StructureTagName), DoesNotSpawnInStructureEdgeType, SpawnPresetEntity, spawnPresetName);
+export function createSpawnPresetDoesNotSpawnInStructureTagEdge(spawnPresetName: ResourceLocation, StructureTagName: ResourceLocation): DynamoEdge {
+    return new DynamoEdge(getNodePK(StructureTagEntity, StructureTagName.toString()), DoesNotSpawnInStructureEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
 deserializerRegistry.register(SpawnPresetEntity, SpawnPresetNode.deserialize);
