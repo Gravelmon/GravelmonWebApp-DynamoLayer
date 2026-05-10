@@ -1,6 +1,6 @@
 import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { createTestEnv } from "../../../testEnv";
-import { MoveCategory, MoveIdentifier, MoveNode } from "../../../../gravelmon-dynamodb/nodes";
+import { MoveCategory, MoveIdentifier, MoveNode} from "../../../../gravelmon-dynamodb/nodes";
 import {MoveRange} from "../../../../gravelmon-dynamodb/models/battle/moveRange";
 
 let service: GravelmonDynamoDBService;
@@ -40,7 +40,15 @@ describe("MoveNode", () => {
         const node = new MoveNode("",
             moveId,
             moveData,
+            {
+                levelUp: [],
+                teach: [],
+                egg: [],
+                legacy: [],
+                evolution: []
+            },
             rebalanced,
+            undefined,
             ["tm", "special"]
         );
 
@@ -75,7 +83,14 @@ describe("MoveNode", () => {
             description: "Freezes target"
         };
 
-        const node = new MoveNode("", moveId, moveData, undefined, ["hm"]);
+        const node = new MoveNode("", moveId,  moveData,
+            {
+                levelUp: [],
+                teach: [],
+                egg: [],
+                legacy: [],
+                evolution: []
+            }, undefined, undefined, ["hm"]);
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MoveNode;
@@ -99,7 +114,15 @@ describe("MoveNode", () => {
             moveRange: MoveRange.AllAllies,
             moveCategory: MoveCategory.Physical,
             description: ""
-        });
+        },
+            {
+                levelUp: [],
+                teach: [],
+                egg: [],
+                legacy: [],
+                evolution: []
+            }, undefined, undefined,
+        );
 
         expect(node.moveFlags).toEqual([]);
     });

@@ -1,32 +1,38 @@
-import { DynamoEdge, DynamoNode, getNodePK } from '../../service/dynamoNodes';
-import {BiomeEntity, BiomeTagEntity} from "./biomeNode";
+import { DynamoNode } from '../../service/dynamoNodes';
 import {ResourceLocation} from "../../models/minecraft/resourceLocation";
-import {StructureEntity, StructureTagEntity} from "./structureNode";
-import { ItemEntity } from './itemNode';
 
 export const ModEntity = "Mod";
-export const AddedByModEdgeType = "AddedByMod";
 
-export function createModNode(name: string): DynamoNode {
-    return new DynamoNode(ModEntity, name);
-}
+export class ModNode extends DynamoNode {
+    displayName: string
+    addsBiomes: ResourceLocation[]
+    addsStructures: ResourceLocation[]
+    addsItems: ResourceLocation[]
 
-export function createModAddsBiomeEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(ModEntity, modName), AddedByModEdgeType, BiomeEntity, entityResourceLocation.toString());
-}
+    static version = 1;
+    constructor(displayName: string, nameSpace: string, addsBiomes: ResourceLocation[], addsStructures: ResourceLocation[], addsItems: ResourceLocation[]) {
+        super(ModEntity, nameSpace);
+        this.displayName = displayName;
+        this.version = ModNode.version;
+        this.addsBiomes = addsBiomes;
+        this.addsStructures = addsStructures;
+        this.addsItems = addsItems;
+    }
 
-export function createModAddsBiomeTagEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(ModEntity, modName), AddedByModEdgeType, BiomeTagEntity, entityResourceLocation.toString());
-}
+    public serialize(): Record<string, any> {
+        return {
+            ...super.serialize(),
+            displayName: this.displayName,
+            addsBiomes: this.addsBiomes.map(m => m.serialize()),
+            addsStructures: this.addsStructures.map(m => m.serialize()),
+            addsItems: this.addsItems.map(m => m.serialize()),
+        }
+    }
 
-export function createModAddsStructureEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(ModEntity, modName), AddedByModEdgeType, StructureEntity, entityResourceLocation.toString());
-}
-
-export function createModAddsStructureTagEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(ModEntity, modName), AddedByModEdgeType, StructureTagEntity, entityResourceLocation.toString());
-}
-
-export function createModAddsItemEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(ModEntity, modName), AddedByModEdgeType, ItemEntity, entityResourceLocation.toString());
+    public static deserialize(data: Record<string, any>): ModNode {
+        return new ModNode(data.displayName, data.name,
+            data.addsBiomes.map((m : any) => ResourceLocation.deserialize(m)),
+            data.addsStructures.map((m : any) => ResourceLocation.deserialize(m)),
+            data.addsItems.map((m : any) => ResourceLocation.deserialize(m)));
+    }
 }

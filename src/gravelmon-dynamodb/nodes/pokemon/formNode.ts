@@ -1,4 +1,4 @@
-import {DynamoEdge, getNodePK, getPkName} from '../../service/dynamoNodes';
+import { getNodePK} from '../../service/dynamoNodes';
 import { GenderDifferenceNode as GenderDifference } from '../../models/assets/genderDifference';
 import {
     deserializePokemonData,
@@ -6,12 +6,7 @@ import {
     PokemonIdentifier,
     PokemonNode
 } from './pokemonNode';
-import { SpeciesFeatureEntity, HasSpeciesFeatureEdgeType } from '../properties/speciesFeatureNode';
-import {HasLabelEdgeType, LabelEntity} from "../properties/labelNode";
-import {TypeEntity} from "../battle/typeNode";
-import {AbilityEntity, AbilityIdentifier} from "../battle/abilityNode";
 import {NumberRange} from "../../models/properties/numberRange";
-import {ItemEntity} from "../minecraft/itemNode";
 import {ResourceLocation} from "../../models/minecraft/resourceLocation";
 import { EvolutionIdentifier } from './evolutionNode';
 import {deserializeResolverData, ResolverData, serializeResolverData} from '../../models/assets/resolverData';
@@ -21,43 +16,20 @@ import { deserializerRegistry } from '../../service/deserializerRegistry';
 
 export const FormEntity = "Form";
 
-export const IsFormOfEdgeType = "IsFormOf";
-export const DropsItemEdgeType = "DropsItem";
-
-export function createFormNode(pokemonData: PokemonData, formData: FormData, lastEdited: number = Date.now()): FormNode {
-    return new FormNode(pokemonData, formData, lastEdited);
-}
-
-export function createFormPrimaryTypeEdge(formName: PokemonIdentifier, typeName: string, isRebalanced: boolean = false, lastEdited: number = Date.now()): FormTypeEdge {
-    return new FormPrimaryTypeEdge(formName, typeName, isRebalanced, lastEdited);
-}
-
-export function createFormSecondaryTypeEdge(formName: PokemonIdentifier, typeName: string, isRebalanced: boolean = false, lastEdited: number = Date.now()): FormTypeEdge {
-    return new FormSecondaryTypeEdge(formName, typeName, isRebalanced, lastEdited);
-}
-
-export function createFormHasSpeciesFeatureEdge(formName: PokemonIdentifier, speciesFeatureName: string, lastEdited: number = Date.now()): DynamoEdge {
-    return new DynamoEdge(getNodePK(SpeciesFeatureEntity, speciesFeatureName), HasSpeciesFeatureEdgeType, FormEntity, formName.toString(), lastEdited);
-}
-
-export function createFormHasLabelEdge(formName: PokemonIdentifier, labelName: string, lastEdited: number = Date.now()): DynamoEdge {
-    return new DynamoEdge(getNodePK(LabelEntity, labelName), HasLabelEdgeType, FormEntity, formName.toString(), lastEdited);
-}
-
-export function createFormHasAbilityEdge(
-            formName: PokemonIdentifier, abilityName: AbilityIdentifier,
-            isHidden: boolean = false, isPlaceholder: boolean = false, isRebalanced: boolean = false, lastEdited: number = Date.now()
-        ): DynamoEdge {
-    return new FormHasAbilityEdge(formName, abilityName, isHidden, isPlaceholder, isRebalanced, lastEdited);
-}
-
-export function createFormDropsItemEdge(formName: PokemonIdentifier, itemName: ResourceLocation, dropChance: number, quantityRange: NumberRange, lastEdited: number = Date.now()): FormDropsItemEdge {
-    return new FormDropsItemEdge(formName, itemName, dropChance, quantityRange, lastEdited);
+export interface ItemDrop {
+    dropChance: number;
+    quantityRange: NumberRange;
+    droppedItem: ResourceLocation;
 }
 
 export interface LightingData {
     lightLevel: number;
     liquidGlowMode: undefined | "LAND"
+}
+
+export interface MechanicInteraction {
+    mechanic: string;
+    resultingForm: PokemonIdentifier;
 }
 
 export interface FormData {
@@ -70,7 +42,9 @@ export interface FormData {
     posingData?: PosingData;
     speciesFeatures: string[];
     spawnData?: SpawnData[];
-    revivesFromFossil?: string
+    revivesFromFossil?: string;
+    drops?: ItemDrop[];
+    mechanicInteractions?: MechanicInteraction[];
 }
 
 export class FormNode extends PokemonNode {
@@ -122,7 +96,18 @@ export function serializeFormData(formData: FormData): any {
         posingData: formData.posingData ? serializePosingData(formData.posingData) : undefined,
         speciesFeatures: formData.speciesFeatures,
         spawnData: formData.spawnData ? formData.spawnData.map(serializeSpawnData) : undefined,
-        revivesFromFossil: formData.revivesFromFossil
+        revivesFromFossil: formData.revivesFromFossil,
+        drops: formData.drops?.map(drop => {
+            dropChance: drop.dropChance;
+            quantityRange: drop.quantityRange.serialize();
+            droppedItem: drop.droppedItem.serialize();
+        }),
+        mechanicInteractions: formData.mechanicInteractions?.map(mechanicInteraction => {
+            return {
+                mechanic: mechanicInteraction.mechanic,
+                resultingForm: mechanicInteraction.resultingForm.serialize()
+            }
+        })
     };
 }
 
@@ -144,148 +129,20 @@ export function deserializeFormData(data: any): FormData {
         posingData: deserializePosingData(data.posingData),
         speciesFeatures: data.speciesFeatures,
         spawnData: data.spawnData ? data.spawnData.map(deserializeSpawnData) : undefined,
-        revivesFromFossil: data.revivesFromFossil
+        revivesFromFossil: data.revivesFromFossil,
+        drops: data.drops?.map((drop: any) => {
+            dropChance: drop.dropChance;
+            quantityRange: NumberRange.deserialize(drop.quantityRange);
+            droppedItem: ResourceLocation.deserialize(drop.droppedItem);
+        }),
+        mechanicInteractions: data.mechanicInteractions?.map((mechanicInteraction: any) => {
+            return {
+                mechanic: mechanicInteraction.mechanic,
+                resultingForm: PokemonIdentifier.deserialize(mechanicInteraction.resultingForm)
+            }
+        })
     };
 }
 
-export class FormDropsItemEdge extends DynamoEdge {
-    dropChance: number;
-    quantityRange: NumberRange;
-    droppingPokemon: PokemonIdentifier;
-    droppedItem: ResourceLocation;
-    static version = 1;
 
-    constructor(formName: PokemonIdentifier, itemName: ResourceLocation, dropChance: number, quantityRange: NumberRange, lastEdited: number = Date.now()) {
-        super(getNodePK(ItemEntity, itemName.toString()),
-            DropsItemEdgeType, FormEntity,
-            formName.toString(), FormDropsItemEdge.version, lastEdited);
-        this.dropChance = dropChance;
-        this.quantityRange = quantityRange;
-        this.droppingPokemon = formName;
-        this.droppedItem = itemName;
-    }
-
-    public serialize(): Record<string, any> {
-        return {
-            ...super.serialize(),
-            dropChance: this.dropChance,
-            quantityRange: this.quantityRange.serialize(),
-            droppingPokemon: this.droppingPokemon.serialize(),
-            droppedItem: this.droppedItem.serialize()
-        }
-    }
-
-    public static deserialize(data: Record<string, any>): FormDropsItemEdge {
-        return new FormDropsItemEdge(
-            PokemonIdentifier.deserialize(data.droppingPokemon),
-            ResourceLocation.deserialize(data.droppedItem),
-            data.dropChance,
-            NumberRange.deserialize(data.quantityRange),
-            data.lastEdited
-        );
-    }
-}
-
-abstract class FormTypeEdge extends DynamoEdge {
-    isRebalanced: boolean;
-    static version = 1;
-
-    constructor(pokemonName: PokemonIdentifier, typeName: string, relationship: FormTypeRelationship, isRebalanced: boolean = false, lastEdited: number = Date.now()) {
-        super(
-            getNodePK(TypeEntity, typeName), 
-        relationship,
-        FormEntity, 
-        pokemonName.toString(), FormTypeEdge.version, lastEdited);
-        this.isRebalanced = isRebalanced;
-    }
-    
-        public serialize(): Record<string, any> {
-            return {
-                ...super.serialize(),
-                isRebalanced: this.isRebalanced
-            }
-        }
-    
-        static deserialize(data: Record<string, any>): FormTypeEdge {
-            const relationship = data.entityType as FormTypeRelationship;
-            const pokemonName = PokemonIdentifier.deserialize(data.target);
-            const typeName = getPkName(data.PK);
-            const isRebalanced = data.isRebalanced || false;
-            if(relationship === FormTypeRelationship.PrimaryType) {
-                return new FormPrimaryTypeEdge(pokemonName, typeName, isRebalanced, data.lastEdited);
-            } else if(relationship === FormTypeRelationship.SecondaryType) {
-                return new FormSecondaryTypeEdge(pokemonName, typeName, isRebalanced, data.lastEdited);
-            } else {
-                throw new Error(`Unknown PokemonTypeRelationship: ${relationship}`);
-            }
-        }
-}
-
-export class FormPrimaryTypeEdge extends FormTypeEdge {
-    constructor(pokemonName: PokemonIdentifier, typeName: string, isRebalanced: boolean = false, lastEdited: number = Date.now()) {
-        super(pokemonName, typeName, FormTypeRelationship.PrimaryType, isRebalanced, lastEdited);
-    }
-}
-
-export class FormSecondaryTypeEdge extends FormTypeEdge {
-    constructor(pokemonName: PokemonIdentifier, typeName: string, isRebalanced: boolean = false, lastEdited: number = Date.now()) {
-        super(pokemonName, typeName, FormTypeRelationship.SecondaryType, isRebalanced, lastEdited);
-    }
-}
-
-export class FormHasAbilityEdge extends DynamoEdge {
-    isHidden: boolean;
-    isPlaceholder: boolean;
-    isRebalanced: boolean;
-    static version = 1;
-    recipient: PokemonIdentifier;
-    abilityIdentifier: AbilityIdentifier;
-    
-    constructor(pokemonName: PokemonIdentifier,
-                abilityIdentifier: AbilityIdentifier, isHidden: boolean = false, isPlaceholder: boolean = false,
-                isRebalanced: boolean = false, lastEdited: number = Date.now()) {
-        super(getNodePK(AbilityEntity, abilityIdentifier.toString()),
-        FormHasAbilityEdgeType, FormEntity, 
-        pokemonName.toString(), FormHasAbilityEdge.version, lastEdited);
-        this.isHidden = isHidden;
-        this.isPlaceholder = isPlaceholder;
-        this.isRebalanced = isRebalanced;
-        this.recipient = pokemonName;
-        this.abilityIdentifier = abilityIdentifier;
-    }
-    
-        public serialize(): Record<string, any> {
-            return {
-                ...super.serialize(),
-                isHidden: this.isHidden,
-                isPlaceholder: this.isPlaceholder,
-                isRebalanced: this.isRebalanced,
-                recipient: this.recipient.serialize(),
-                abilityIdentifier: this.abilityIdentifier.serialize()
-            }
-        }
-    
-        static deserialize(data: Record<string, any>): FormHasAbilityEdge {
-            const edge = new FormHasAbilityEdge(
-                PokemonIdentifier.deserialize(data.recipient),
-                AbilityIdentifier.deserialize(data.abilityIdentifier),
-                data.isHidden,
-                data.isPlaceholder,
-                data.isRebalanced,
-                data.lastEdited
-            );
-            return edge;
-        }
-}
-export const FormHasAbilityEdgeType = "FormHasAbility";
-
-export enum FormTypeRelationship {
-    PrimaryType = "FormPrimaryType",
-    SecondaryType = "FormSecondaryType"
-}
-
-deserializerRegistry.register(FormHasAbilityEdgeType, FormHasAbilityEdge.deserialize);
-deserializerRegistry.register(FormTypeRelationship.PrimaryType, FormTypeEdge.deserialize);
-deserializerRegistry.register(FormTypeRelationship.SecondaryType, FormTypeEdge.deserialize);
 deserializerRegistry.register(FormEntity, FormNode.deserialize);
-deserializerRegistry.register(DropsItemEdgeType, FormDropsItemEdge.deserialize);

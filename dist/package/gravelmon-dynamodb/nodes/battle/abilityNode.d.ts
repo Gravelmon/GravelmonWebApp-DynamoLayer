@@ -1,4 +1,5 @@
 import { DynamoNode } from '../../service/dynamoNodes';
+import { PokemonIdentifier } from "../pokemon/pokemonNode";
 export declare const AbilityEntity = "Ability";
 export declare class AbilityIdentifier {
     game: string;
@@ -15,8 +16,9 @@ export declare class AbilityNode extends DynamoNode {
     rebalancedDescription?: string;
     identifier: AbilityIdentifier;
     implemented: boolean;
-    constructor(name: AbilityIdentifier, description?: string, rebalancedDescription?: string, implemented?: boolean);
+    abilityHolders: PokemonIdentifier[];
+    rebalancedAbilityHolders: PokemonIdentifier[];
+    constructor(name: AbilityIdentifier, abilityHolder: PokemonIdentifier[], rebalancedAbilityHolders: PokemonIdentifier[], description?: string, rebalancedDescription?: string, implemented?: boolean);
     serialize(): Record<string, any>;
     static deserialize(data: Record<string, any>): DynamoNode;
 }
-export declare function createAbilityNode(name: AbilityIdentifier, description?: string, rebalancedDescription?: string): AbilityNode;

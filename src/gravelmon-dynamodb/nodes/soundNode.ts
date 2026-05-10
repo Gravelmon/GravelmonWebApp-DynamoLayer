@@ -1,19 +1,18 @@
 import { SoundData } from '../models/soundData';
 import { deserializerRegistry } from '../service/deserializerRegistry';
-import { DynamoEdge, DynamoNode, getNodePK } from '../service/dynamoNodes';
-import { FormEntity } from './pokemon/formNode';
-import { PokemonEntity, PokemonIdentifier } from './pokemon/pokemonNode';
+import { DynamoNode } from '../service/dynamoNodes';
+import { PokemonIdentifier } from './pokemon/pokemonNode';
 
 export const SoundEntity = "Sound";
 
-export const SoundUsedByEdgeType = "UsedBy";
-
 export class SoundNode extends DynamoNode {
     soundData: SoundData;
+    usedBy: PokemonIdentifier[] = [];
     static version = 1;
-    constructor(soundData: SoundData, lastEdited: number = Date.now()) {
+    constructor(soundData: SoundData, usedBy: PokemonIdentifier[], lastEdited: number = Date.now()) {
         super(SoundEntity, soundData.name, SoundNode.version, lastEdited);
         this.soundData = soundData;
+        this.usedBy = usedBy;
     }
 
     static deserialize(data: Record<string, any>): SoundNode {
@@ -22,7 +21,9 @@ export class SoundNode extends DynamoNode {
             s3Location: data.soundData.s3Location,
             madeBy: data.soundData.madeBy
         };
-        return new SoundNode(soundData, data.lastEdited);
+        return new SoundNode(soundData,
+            data.usedBy.map((m : any) => PokemonIdentifier.deserialize(m)),
+            data.lastEdited);
     }
 
     public serialize(): Record<string, any> {
@@ -32,21 +33,10 @@ export class SoundNode extends DynamoNode {
                 name: this.soundData.name,
                 s3Location: this.soundData.s3Location,
                 madeBy: this.soundData.madeBy
-            }
+            },
+            usedBy: this.usedBy.map(m => m.serialize())
         }
     }
-}
-
-export function createSoundNode(soundData: SoundData): SoundNode {
-    return new SoundNode(soundData);
-}
-
-export function createSoundUsedByPokemonEdge(soundName: string, pokemonIdentifier: PokemonIdentifier): DynamoEdge {
-    return new DynamoEdge(getNodePK(SoundEntity, soundName), SoundUsedByEdgeType, PokemonEntity, pokemonIdentifier.toString());
-}
-
-export function createSoundUsedByFormEdge(soundName: string, formIdentifier: PokemonIdentifier): DynamoEdge {
-    return new DynamoEdge(getNodePK(SoundEntity, soundName), SoundUsedByEdgeType, FormEntity, formIdentifier.toString());
 }
 
 deserializerRegistry.register(SoundEntity, SoundNode.deserialize);

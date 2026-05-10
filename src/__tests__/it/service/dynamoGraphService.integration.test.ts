@@ -1,8 +1,7 @@
 import { GravelmonDynamoDBService } from "../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
-import { createGameNode } from "../../../gravelmon-dynamodb/nodes/gameNode";
 import { GameData } from "../../../gravelmon-dynamodb/models/gameData";
 import {createTestEnv} from "../../testEnv";
-import {createEggGroupNode} from "../../../gravelmon-dynamodb/nodes";
+import {EggGroupNode, GameNode} from "../../../gravelmon-dynamodb";
 
 let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
@@ -49,9 +48,9 @@ test("should query nodes by entityType using GSI", async () => {
         introducesTypes: []
     };
 
-    const redGameNode = createGameNode(redGameData);
-    const blueGameNode = createGameNode(blueGameData);
-    const eggGroupNode = createEggGroupNode("test");
+    const redGameNode = new GameNode(redGameData);
+    const blueGameNode = new GameNode(blueGameData);
+    const eggGroupNode = new EggGroupNode("test", []);
 
     await service.putItem(redGameNode);
     await service.putItem(blueGameNode);

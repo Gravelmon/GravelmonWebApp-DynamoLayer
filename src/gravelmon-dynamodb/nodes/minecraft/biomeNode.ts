@@ -1,83 +1,88 @@
-import { DynamoEdge, DynamoNode, getNodePK } from '../../service/dynamoNodes';
-import { ResourceLocation } from '../../models/minecraft/resourceLocation';
-import { deserializerRegistry } from '../../service/deserializerRegistry';
+import { DynamoNode } from '../../service';
+import { ResourceLocation } from '../../models';
+import { deserializerRegistry } from '../../service';
+import {PokemonIdentifier} from "../pokemon/pokemonNode";
 
 export const BiomeEntity = "Biome";
 export const BiomeTagEntity = "BiomeTag";
-export const BiomeTagContainsBiomeEdgeType = "ContainedInBiomeTag";
-
-export const SpawnsInBiomeEdgeType = "SpawnsInBiome";
-export const DoesNotSpawnInBiomeEdgeType = "DoesNotSpawnInBiome";
-
 
 export class BiomeNode extends DynamoNode {
-    resourceLocation: ResourceLocation
+    resourceLocation: ResourceLocation;
+    containedBy: ResourceLocation[];
+    usedInSpawnPresets: ResourceLocation[];
+    canSpawnPokemon: PokemonIdentifier[];
+    static version = 1;
 
-    constructor(resourceLocation: ResourceLocation) {
-        super(BiomeEntity, resourceLocation.toString());
+    constructor(resourceLocation: ResourceLocation, containedBy: ResourceLocation[] = [], usedInSpawnPresets: ResourceLocation[] = [], canSpawnPokemon: PokemonIdentifier[] = []) {
+        super(BiomeTagEntity, resourceLocation.toString());
         this.resourceLocation = resourceLocation;
+        this.containedBy = containedBy;
+        this.usedInSpawnPresets = usedInSpawnPresets;
+        this.canSpawnPokemon = canSpawnPokemon;
+        this.version = BiomeNode.version;
     }
-    
+
     static deserialize(data: Record<string, any>): DynamoNode {
         if(!data.resourceLocation) {
             throw new Error("Invalid data for deserializing BiomeNode: missing resourceLocation");
         }
 
-        return new BiomeNode(ResourceLocation.deserialize(data.resourceLocation));
-    }
-
-    public serialize(): Record<string, any> {
-        return {
-            ...super.serialize(),
-            resourceLocation: this.resourceLocation.serialize()
-        }
-    }
-}
-
-export class BiomeTagNode extends DynamoNode {
-    containsBiomes: ResourceLocation[]
-    resourceLocation: ResourceLocation
-    constructor(resourceLocation: ResourceLocation, containsBiomes?: ResourceLocation[]) {
-        super(BiomeTagEntity, resourceLocation.toString());
-        this.containsBiomes = containsBiomes ?? [];
-        this.resourceLocation = resourceLocation;
-    }   
-
-    static deserialize(data: Record<string, any>): BiomeTagNode {
-        if(!data.resourceLocation) {
-            throw new Error("Invalid data for deserializing BiomeTagNode: missing resourceLocation");
-        }
-        const containsBiomes = (data.containsBiomes ?? []).map((b: any) =>
-            ResourceLocation.deserialize(b)
-        );
-        return new BiomeTagNode(ResourceLocation.deserialize(data.resourceLocation), containsBiomes);
+        return new BiomeNode(ResourceLocation.deserialize(data.resourceLocation),
+            data.containedBy?.map((biomeData: any) => ResourceLocation.deserialize(biomeData)) ?? [],
+            data.usedInSpawnPresets?.map((biomeData: any) => ResourceLocation.deserialize(biomeData)) ?? [],
+            data.canSpawnPokemon?.map((pokemonData: any) => PokemonIdentifier.deserialize(pokemonData)) ?? []);
     }
 
     public serialize(): Record<string, any> {
         return {
             ...super.serialize(),
             resourceLocation: this.resourceLocation.serialize(),
-            containsBiomes: this.containsBiomes?.map(biome => biome.serialize()) ?? []
+            containedBy: this.containedBy.map(Biome => Biome.serialize()),
+            usedInSpawnPresets: this.usedInSpawnPresets.map(Biome => Biome.serialize()),
+            canSpawnPokemon: this.canSpawnPokemon.map(pokemon => pokemon.serialize())
         }
     }
 }
 
-export function createBiomeNode(resourceLocation: ResourceLocation): DynamoNode {
-    return new BiomeNode(resourceLocation);
-}
+export class BiomeTagNode extends DynamoNode {
+    resourceLocation: ResourceLocation;
+    containsBiomes: ResourceLocation[];
+    containedBy: ResourceLocation[];
+    usedInSpawnPresets: ResourceLocation[];
+    canSpawnPokemon: PokemonIdentifier[];
+    static version = 1;
+    constructor(resourceLocation: ResourceLocation, containsBiomes: ResourceLocation[] = [], containedBy: ResourceLocation[] = [],
+                usedInSpawnPresets: ResourceLocation[] = [], canSpawnPokemon: PokemonIdentifier[] = []) {
+        super(BiomeTagEntity, resourceLocation.toString());
+        this.resourceLocation = resourceLocation;
+        this.containsBiomes = containsBiomes;
+        this.containedBy = containedBy;
+        this.usedInSpawnPresets = usedInSpawnPresets;
+        this.canSpawnPokemon = canSpawnPokemon;
+        this.version = BiomeTagNode.version;
+    }
 
-export function createBiomeTagNode(resourceLocation: ResourceLocation, containsBiomes: ResourceLocation[] = []): BiomeTagNode {
-    return new BiomeTagNode(resourceLocation, containsBiomes);
-}
+    static deserialize(data: Record<string, any>): BiomeTagNode {
+        if(!data.resourceLocation) {
+            throw new Error("Invalid data for deserializing BiomeTagNode: missing resourceLocation");
+        }
+        return new BiomeTagNode(ResourceLocation.deserialize(data.resourceLocation),
+            Array.isArray(data.containsBiomes) ? data.containsBiomes.map((biomeData: any) => ResourceLocation.deserialize(biomeData)) : [],
+            data.containedBy?.map((biomeData: any) => ResourceLocation.deserialize(biomeData)) ?? [],
+            data.usedInSpawnPresets?.map((biomeData: any) => ResourceLocation.deserialize(biomeData)) ?? [],
+            data.canSpawnPokemon?.map((pokemonData: any) => PokemonIdentifier.deserialize(pokemonData)) ?? []);
+    }
 
-// Note: The edges between biomes and biome tags are stored in the opposite direction of the edges between structures and structure tags,
-// since the "contains" relationship is more intuitive to traverse from biome tags to biomes than the other way around.
-export function createBiomeTagContainsBiomeEdge(biomeTagName: ResourceLocation, biomeName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeEntity, biomeName.toString()), BiomeTagContainsBiomeEdgeType, BiomeTagEntity, biomeTagName.toString());
-}
-
-export function createBiomeTagContainsBiomeTagEdge(containingBiomeTag: ResourceLocation, subjectBiomeTag: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeTagEntity, subjectBiomeTag.toString()), BiomeTagContainsBiomeEdgeType, BiomeTagEntity, containingBiomeTag.toString());
+    public serialize(): Record<string, any> {
+        return {
+            ...super.serialize(),
+            resourceLocation: this.resourceLocation.serialize(),
+            containsBiomes: this.containsBiomes.map(Biome => Biome.serialize()),
+            containedBy: this.containedBy.map(Biome => Biome.serialize()),
+            usedInSpawnPresets: this.usedInSpawnPresets.map(Biome => Biome.serialize()),
+            canSpawnPokemon: this.canSpawnPokemon.map(pokemon => pokemon.serialize())
+        }
+    }
 }
 
 deserializerRegistry.register(BiomeEntity, BiomeNode.deserialize);

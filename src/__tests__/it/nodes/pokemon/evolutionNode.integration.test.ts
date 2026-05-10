@@ -5,7 +5,6 @@ import {getNodePK} from "../../../../gravelmon-dynamodb";
 import {PokemonIdentifier} from "../../../../gravelmon-dynamodb";
 import {ResourceLocation} from "../../../../gravelmon-dynamodb";
 import {
-    createEvolutionNode,
     EvolutionEntity,
     EvolutionIdentifier, EvolutionNode,
     EvolutionType
@@ -104,7 +103,7 @@ describe("EvolutionNode Integration Tests", () => {
 
         const evolutionIdentifier = new EvolutionIdentifier(source, result);
 
-        const evolutionNode = createEvolutionNode({
+        const evolutionNode = new EvolutionNode({
             identifier: evolutionIdentifier,
             evolutionType: EvolutionType.ItemInteract,
             consumesHeldItem: true,

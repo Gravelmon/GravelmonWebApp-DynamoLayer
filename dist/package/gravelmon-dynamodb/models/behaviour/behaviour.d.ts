@@ -56,6 +56,7 @@ export interface BehaviourOptions {
     sleep?: BehaviourSleepOptions;
     herd?: BehaviorHerdingOptions;
     riding?: BehaviourRidingOptions;
+    combat?: CombatBehaviourOptions;
 }
 export declare function serializeBehaviourOptions(options: BehaviourOptions): any;
 export declare function deserializeBehaviourOptions(data: any): BehaviourOptions;

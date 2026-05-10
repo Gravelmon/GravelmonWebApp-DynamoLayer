@@ -1,6 +1,6 @@
-import { DynamoEdge, DynamoNode } from '../../service/dynamoNodes';
-import { SpawnCondition } from '../../models/spawning/spawnCondition';
-import { ResourceLocation } from '../../models/minecraft/resourceLocation';
+import { DynamoNode } from '../../service';
+import { SpawnCondition } from '../../models';
+import { ResourceLocation } from '../../models';
 export declare const SpawnPresetEntity = "SpawnPreset";
 export interface SpawnPresetOptions {
     name: ResourceLocation;
@@ -14,12 +14,3 @@ export declare class SpawnPresetNode extends DynamoNode {
     static deserialize(data: Record<string, any>): SpawnPresetNode;
     serialize(): Record<string, any>;
 }
-export declare function createSpawnPresetNode(spawnPresetOptions: SpawnPresetOptions): SpawnPresetNode;
-export declare function createSpawnPresetDoesNotSpawnInBiomeEdge(spawnPresetName: ResourceLocation, biomeName: ResourceLocation): DynamoEdge;
-export declare function createSpawnPresetDoesNotSpawnInBiomeTagEdge(spawnPresetName: ResourceLocation, biomeTagName: ResourceLocation): DynamoEdge;
-export declare function createSpawnPresetSpawnsInBiomeEdge(spawnPresetName: ResourceLocation, biomeName: ResourceLocation): DynamoEdge;
-export declare function createSpawnPresetSpawnsInBiomeTagEdge(spawnPresetName: ResourceLocation, biomeTagName: ResourceLocation): DynamoEdge;
-export declare function createSpawnPresetSpawnsInStructureEdge(spawnPresetName: ResourceLocation, StructureName: ResourceLocation): DynamoEdge;
-export declare function createSpawnPresetSpawnsInStructureTagEdge(spawnPresetName: ResourceLocation, StructureTagName: ResourceLocation): DynamoEdge;
-export declare function createSpawnPresetDoesNotSpawnInStructureEdge(spawnPresetName: ResourceLocation, StructureName: ResourceLocation): DynamoEdge;
-export declare function createSpawnPresetDoesNotSpawnInStructureTagEdge(spawnPresetName: ResourceLocation, StructureTagName: ResourceLocation): DynamoEdge;

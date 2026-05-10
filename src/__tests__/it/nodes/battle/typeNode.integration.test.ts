@@ -1,6 +1,6 @@
 import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb";
 import {createTestEnv} from "../../../testEnv";
-import {createTypeNode, TypeNode} from "../../../../gravelmon-dynamodb";
+import {TypeNode} from "../../../../gravelmon-dynamodb";
 
 let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
@@ -17,15 +17,17 @@ afterAll(async () => {
 
 describe("AbilityNode", () => {
     test("TypeNode should persist resists, immunities, weaknesses and introducedByGames", async () => {
-        const node = createTypeNode(
+        const node = new TypeNode(
             "fire",
             {
                 resists: ["grass", "ice", "bug"],
                 immunities: ["fire"],
                 weaknesses: ["water", "ground", "rock"]
             },
-            undefined,
-            ["pokemon_red", "pokemon_gold"]
+            ["pokemon_red", "pokemon_gold"],
+            [],
+            [],
+            [],
         );
 
         await service.putItem(node);

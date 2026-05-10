@@ -7,16 +7,6 @@ import { GameData } from '../models/gameData';
 
 export const GameEntity = "Game";
 
-export const IntroducesEdgeType = "Introduces";
-
-export function createGameNode(gameData: GameData): GameNode {
-    return new GameNode(gameData);
-}
-
-export function deserializeGameNode(data: Record<string, any>): GameNode {
-    return new GameNode(data.gameData);
-}
-
 export class GameNode extends DynamoNode {
     gameData: GameData;
     static version = 1;

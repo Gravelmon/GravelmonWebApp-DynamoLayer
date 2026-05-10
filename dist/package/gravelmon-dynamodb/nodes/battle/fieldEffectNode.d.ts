@@ -1,11 +1,9 @@
-import { DynamoEdge, DynamoNode } from '../../service/dynamoNodes';
+import { DynamoNode } from '../../service/dynamoNodes';
 import { MoveRange } from "../../models/battle/moveRange";
+import { MoveIdentifier } from "./moveNode";
+import { AbilityIdentifier } from "./abilityNode";
 export declare const FieldEffectEntity = "FieldEffect";
 export declare const FieldEffectFlagEntity = "FieldEffectFlag";
-export declare const enum FieldEffectEdgeType {
-    IsType = "IsType",
-    WithFlag = "WithFlag"
-}
 export declare class FieldEffectIdentifier {
     game: string;
     fieldEffect: string;
@@ -16,9 +14,12 @@ export declare class FieldEffectIdentifier {
     serialize(): any;
     static deserialize(data: any): FieldEffectIdentifier;
 }
-export declare function createFieldEffectFlagNode(name: string): DynamoNode;
-export declare function createFieldEffectIsTypeEdge(fieldEffectName: FieldEffectIdentifier, typeName: string): DynamoEdge;
-export declare function createFieldEffectWithFlagEdge(fieldEffectName: FieldEffectIdentifier, flagName: string): DynamoEdge;
+export declare class FieldEffectFlagNode extends DynamoNode {
+    fieldEffects: FieldEffectIdentifier[];
+    constructor(name: string, fieldEffects: FieldEffectIdentifier[]);
+    serialize(): Record<string, any>;
+    static deserialize(data: Record<string, any>): FieldEffectFlagNode;
+}
 export interface FieldEffectData {
     associatedTypes?: string[];
     durationInTurns: number;
@@ -31,9 +32,11 @@ export declare class FieldEffectNode extends DynamoNode {
     fieldEffectData: FieldEffectData;
     rebalancedFieldEffectData?: FieldEffectData;
     fieldEffectFlags: string[];
+    associatedMoves: MoveIdentifier[];
+    associatedAbilities: AbilityIdentifier[];
     introducedByGames: string[];
     implemented: boolean;
-    constructor(displayName: string, identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData, rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[], fieldEffectFlags?: string[], implemented?: boolean);
+    constructor(displayName: string, identifier: FieldEffectIdentifier, fieldEffectData: FieldEffectData, associationMoves: MoveIdentifier[], associatedAbilities: AbilityIdentifier[], rebalancedFieldEffectData?: FieldEffectData, introducedByGames?: string[], fieldEffectFlags?: string[], implemented?: boolean);
     static deserialize(data: Record<string, any>): FieldEffectNode;
     static deserializeFieldEffectData(data: any): FieldEffectData;
     private serializeFieldEffectData;

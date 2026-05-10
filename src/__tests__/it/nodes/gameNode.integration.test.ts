@@ -1,5 +1,5 @@
 import { GravelmonDynamoDBService } from "../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
-import { createGameNode, GameEntity } from "../../../gravelmon-dynamodb/nodes/gameNode";
+import {GameEntity, GameNode} from "../../../gravelmon-dynamodb/nodes/gameNode";
 import { getNodePK } from "../../../gravelmon-dynamodb/service/dynamoNodes";
 import { PokemonIdentifier } from "../../../gravelmon-dynamodb/nodes";
 import { MoveIdentifier } from "../../../gravelmon-dynamodb/nodes";
@@ -53,7 +53,7 @@ describe("GameNode Integration Tests", () => {
             introducesTypes: ["Normal", "Fire", "Water", "Grass"]
         };
 
-        const gameNode = createGameNode(gameData);
+        const gameNode = new GameNode(gameData);
         const pk = getNodePK(GameEntity, gameData.name);
 
         // Act: Write the node to DynamoDB

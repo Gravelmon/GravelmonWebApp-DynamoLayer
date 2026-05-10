@@ -1,22 +1,14 @@
 import { deserializerRegistry } from '../../service/deserializerRegistry';
 import { DynamoNode } from '../../service/dynamoNodes';
 import {deserializeVector, NumberRange, ResourceLocation, serializeVector, Vector} from "../../models";
+import {PokemonIdentifier} from "../pokemon/pokemonNode";
 
 export const SpeciesFeatureEntity = "SpeciesFeature";
-export const HasSpeciesFeatureEdgeType = "HasSpeciesFeature";
 
 export enum SpeciesFeatureType {
     Flag,
     Choice,
     Integer
-}
-
-export function createFlagSpeciesFeatureNode(id: string, speciesFeatureName: string, defaultValue: boolean = false, isPrimarySpeciesFeature: boolean = true, introducedByGame: string, lastEdited: number = Date.now()): SpeciesFeatureNode {
-    return new FlagSpeciesFeatureNode(id, speciesFeatureName, defaultValue, isPrimarySpeciesFeature, introducedByGame, lastEdited);
-}
-
-export function createChoiceSpeciesFeatureNode(id: string, speciesFeatureName: string, choices: string[], defaultValue: string | "random" = "random", isPrimarySpeciesFeature: boolean = false, introducedByGame: string, lastEdited: number = Date.now()): SpeciesFeatureNode {
-    return new ChoiceSpeciesFeatureNode(id, speciesFeatureName, choices, defaultValue, isPrimarySpeciesFeature, introducedByGame, lastEdited);
 }
 
 abstract class SpeciesFeatureNode extends DynamoNode {
@@ -28,16 +20,19 @@ abstract class SpeciesFeatureNode extends DynamoNode {
     non primary speciesFeatures include female form, gigantamax form, mega form etc. It is possible for a pokemon to have multiple primary speciesFeatures*/
     isPrimarySpeciesFeature: boolean;
     introducedByGame: string;
+    recipients: PokemonIdentifier[]
     static version = 1;
     
     protected constructor(id: string, speciesFeatureName: string, speciesFeatureType: SpeciesFeatureType, defaultValue: boolean | "random" | string | number,
-                          isPrimarySpeciesFeature: boolean, introducedByGame: string, lastEdited: number = Date.now()) {
+                          isPrimarySpeciesFeature: boolean, introducedByGame: string, recipients: PokemonIdentifier[],
+                          lastEdited: number = Date.now()) {
         super(SpeciesFeatureEntity+speciesFeatureType, id, SpeciesFeatureNode.version, lastEdited);
         this.speciesFeatureName = speciesFeatureName;
         this.speciesFeatureType = speciesFeatureType;
         this.defaultOption = defaultValue;
         this.isPrimarySpeciesFeature = isPrimarySpeciesFeature;
         this.introducedByGame = introducedByGame;
+        this.recipients = recipients;
     }
 
     static deserialize(data: Record<string, any>): SpeciesFeatureNode {
@@ -54,15 +49,16 @@ abstract class SpeciesFeatureNode extends DynamoNode {
         const defaultOption: boolean | "random" | string | number = data.defaultOption;
         const isPrimarySpeciesFeature: boolean = data.isPrimarySpeciesFeature;
         const introducedByGame: string = data.introducedByGame;
+        const recipients = data.recipients.map((m : any) => PokemonIdentifier.deserialize(m));
         const name: string = data.name;
         if(speciesFeatureType === SpeciesFeatureType.Flag) {
-            return new FlagSpeciesFeatureNode(name, speciesFeatureName, defaultOption as boolean, isPrimarySpeciesFeature, introducedByGame, data.lastEdited);
+            return new FlagSpeciesFeatureNode(name, speciesFeatureName, defaultOption as boolean, isPrimarySpeciesFeature, introducedByGame, recipients, data.lastEdited);
         } else if(speciesFeatureType === SpeciesFeatureType.Choice) {
             if(!data.choices) {
                 throw new Error("Invalid data for deserializing ChoiceSpeciesFeatureNode: missing choices property");
             }
             const choices: string[] = data.choices;
-            return new ChoiceSpeciesFeatureNode(name, speciesFeatureName, choices, defaultOption as string, isPrimarySpeciesFeature, introducedByGame, data.lastEdited);
+            return new ChoiceSpeciesFeatureNode(name, speciesFeatureName, choices, defaultOption as string, isPrimarySpeciesFeature, introducedByGame, recipients, data.lastEdited);
         } else if(speciesFeatureType === SpeciesFeatureType.Integer) {
             const range = NumberRange.deserialize(data.numberRange);
             return new IntegerSpeciesFeatureNode(
@@ -78,6 +74,7 @@ abstract class SpeciesFeatureNode extends DynamoNode {
                     }
                 }),
                 introducedByGame,
+                recipients,
                 data.display ? {
                     uiName: data.display.uiName,
                     color: deserializeVector(data.display.color),
@@ -97,21 +94,24 @@ abstract class SpeciesFeatureNode extends DynamoNode {
             isAspect: this.isAspect,
             defaultOption: this.defaultOption,
             isPrimarySpeciesFeature: this.isPrimarySpeciesFeature,
-            introducedByGame: this.introducedByGame
+            introducedByGame: this.introducedByGame,
+            recipients: this.recipients.map(m => m.serialize()),
         }
     }
 }
 
 export class FlagSpeciesFeatureNode extends SpeciesFeatureNode {
-    constructor(id: string, speciesFeatureName: string, defaultValue: boolean = false, isPrimarySpeciesFeature: boolean = true, introducedByGame: string, lastEdited: number = Date.now()) {
-        super(id, speciesFeatureName, SpeciesFeatureType.Flag, defaultValue, isPrimarySpeciesFeature, introducedByGame, lastEdited);
+    constructor(id: string, speciesFeatureName: string, defaultValue: boolean = false, isPrimarySpeciesFeature: boolean = true, introducedByGame: string, recipients: PokemonIdentifier[],
+                lastEdited: number = Date.now()) {
+        super(id, speciesFeatureName, SpeciesFeatureType.Flag, defaultValue, isPrimarySpeciesFeature, introducedByGame, recipients, lastEdited);
     }
 }
 
 export class ChoiceSpeciesFeatureNode extends SpeciesFeatureNode {
     choices: string[];
-    constructor(id: string, speciesFeatureName: string, choices: string[], defaultValue: string | "random" = "random", isPrimarySpeciesFeature: boolean = false, introducedByGame: string, lastEdited: number = Date.now()) {
-        super(id, speciesFeatureName, SpeciesFeatureType.Choice, defaultValue, isPrimarySpeciesFeature, introducedByGame, lastEdited);
+    constructor(id: string, speciesFeatureName: string, choices: string[], defaultValue: string | "random" = "random", isPrimarySpeciesFeature: boolean = false, introducedByGame: string, recipients: PokemonIdentifier[],
+                lastEdited: number = Date.now()){
+        super(id, speciesFeatureName, SpeciesFeatureType.Choice, defaultValue, isPrimarySpeciesFeature, introducedByGame, recipients, lastEdited);
         this.choices = choices;
     }
 
@@ -148,9 +148,10 @@ export class IntegerSpeciesFeatureNode extends SpeciesFeatureNode {
                     resourceLocation: ResourceLocation,
                     amount: number
                 }[],
-                introducedByGame: string,
-                display?: IntegerSpeciesFeatureDisplay, lastEdited: number = Date.now()) {
-        super(id, speciesFeatureName, SpeciesFeatureType.Choice, defaultValue, false, introducedByGame, lastEdited);
+                introducedByGame: string, recipients: PokemonIdentifier[],
+                display?: IntegerSpeciesFeatureDisplay,
+                lastEdited: number = Date.now()) {
+        super(id, speciesFeatureName, SpeciesFeatureType.Choice, defaultValue, false, introducedByGame, recipients, lastEdited);
         this.numberRange = numberRange;
         this.visible = isVisible;
         this.itemPoints = itemPoints;

@@ -1,21 +1,10 @@
-import { DynamoNode, DynamoEdge } from '../../service/dynamoNodes';
+import { DynamoNode } from '../../service/dynamoNodes';
 import { AbilityIdentifier } from '../battle/abilityNode';
 import { BehaviourOptions } from '../../models/behaviour/behaviour';
 import { Stats } from '../../models/properties/stats';
 import { MoveSet } from '../../models/battle/moveset';
 export declare const PokemonEntity = "Pokemon";
 export declare const HasAbilityEdgeType = "HasAbility";
-export declare enum PokemonTypeRelationship {
-    PrimaryType = "PrimaryType",
-    SecondaryType = "SecondaryType"
-}
-export declare function createPokemonNode(pokemonData: PokemonData, lastEdited?: number): PokemonNode;
-export declare function createPokemonPrimaryTypeEdge(pokemonName: PokemonIdentifier, typeName: string, isRebalanced?: boolean, lastEdited?: number): PokemonTypeEdge;
-export declare function createPokemonSecondaryTypeEdge(pokemonName: PokemonIdentifier, typeName: string, isRebalanced?: boolean, lastEdited?: number): PokemonTypeEdge;
-export declare function createPokemonHasLabelEdge(pokemonName: PokemonIdentifier, labelName: string, lastEdited?: number): DynamoEdge;
-export declare function createPokemonInEggGroupEdge(pokemonName: PokemonIdentifier, eggGroupName: string, lastEdited?: number): DynamoEdge;
-export declare function createPokemonInExperienceGroupEdge(pokemonName: PokemonIdentifier, experienceGroupName: string, lastEdited?: number): DynamoEdge;
-export declare function createPokemonHasAbilityEdge(pokemonName: PokemonIdentifier, abilityName: AbilityIdentifier, isHidden?: boolean, isPlaceholder?: boolean, isRebalanced?: boolean, lastEdited?: number): DynamoEdge;
 export declare class PokemonIdentifier {
     game: string;
     pokemon: string;
@@ -65,9 +54,9 @@ export interface PokemonData {
     experienceGroup: string;
     gameIntroducedIn: string;
     abilities: {
-        name: string;
+        identifier: AbilityIdentifier;
         isHidden: boolean;
-        isRebalance: boolean;
+        isRebalanced: boolean;
         isPlaceholder: boolean;
     }[];
     forms: PokemonIdentifier[];
@@ -84,29 +73,4 @@ export declare class PokemonNode extends DynamoNode {
     serialize(): Record<string, any>;
     static deserialize(data: Record<string, any>): PokemonNode;
 }
-declare abstract class PokemonTypeEdge extends DynamoEdge {
-    isRebalanced: boolean;
-    static version: number;
-    constructor(pokemonName: PokemonIdentifier, typeName: string, relationship: PokemonTypeRelationship, isRebalanced?: boolean, lastEdited?: number);
-    serialize(): Record<string, any>;
-    static deserialize(data: Record<string, any>): PokemonTypeEdge;
-}
-export declare class PokemonPrimaryTypeEdge extends PokemonTypeEdge {
-    constructor(pokemonName: PokemonIdentifier, typeName: string, isRebalanced?: boolean, lastEdited?: number);
-}
-export declare class PokemonSecondaryTypeEdge extends PokemonTypeEdge {
-    constructor(pokemonName: PokemonIdentifier, typeName: string, isRebalanced?: boolean, lastEdited?: number);
-}
-export declare class PokemonHasAbilityEdge extends DynamoEdge {
-    isHidden: boolean;
-    isPlaceholder: boolean;
-    isRebalanced: boolean;
-    static version: number;
-    recipient: PokemonIdentifier;
-    abilityIdentifier: AbilityIdentifier;
-    constructor(pokemonName: PokemonIdentifier, abilityIdentifier: AbilityIdentifier, isHidden?: boolean, isPlaceholder?: boolean, isRebalanced?: boolean, lastEdited?: number);
-    serialize(): Record<string, any>;
-    static deserialize(data: Record<string, any>): PokemonHasAbilityEdge;
-}
 export declare function getPokemonIdentifier(game: string, pokemon: string, formName?: string | string[]): PokemonIdentifier;
-export {};

@@ -64,6 +64,7 @@ export interface BehaviourOptions {
     sleep?: BehaviourSleepOptions;
     herd?: BehaviorHerdingOptions;
     riding?: BehaviourRidingOptions;
+    combat?: CombatBehaviourOptions;
 }
 
 export function serializeBehaviourOptions(options: BehaviourOptions): any {
@@ -90,7 +91,12 @@ export function serializeBehaviourOptions(options: BehaviourOptions): any {
                 leaderEntityType: h.leaderEntityType.serialize()
              })) 
         } : undefined,
-        riding: options.riding ? serializeRidingBehaviourOptions(options.riding) : undefined
+        riding: options.riding ? serializeRidingBehaviourOptions(options.riding) : undefined,
+        combat: options.combat ? {
+            willDefendOwner: options.combat.willDefendOwner,
+            willDefendSelf: options.combat.willDefendSelf,
+            willFlee: options.combat.willFlee
+        } : undefined
     }
 }
 
@@ -118,6 +124,11 @@ export function deserializeBehaviourOptions(data: any): BehaviourOptions {
                 leaderEntityType: PokemonIdentifier.deserialize(h.leaderEntityType)
             }))
         } : undefined,
-        riding: data.riding ? deserializeRidingBehaviourOptions(data.riding) : undefined
+        riding: data.riding ? deserializeRidingBehaviourOptions(data.riding) : undefined,
+        combat: data.combat ? {
+            willDefendOwner: data.combat.willDefendOwner,
+            willDefendSelf: data.combat.willDefendSelf,
+            willFlee: data.combat.willFlee
+        } : undefined
     }
 }

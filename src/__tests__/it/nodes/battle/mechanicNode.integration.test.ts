@@ -1,7 +1,7 @@
 import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { createTestEnv } from "../../../testEnv";
 import { PokemonIdentifier } from "../../../../gravelmon-dynamodb/nodes";
-import {createMechanicNode, MechanicNode} from "../../../../gravelmon-dynamodb/nodes/battle/mechanicNode";
+import { MechanicNode} from "../../../../gravelmon-dynamodb/nodes/battle/mechanicNode";
 import { ResourceLocation } from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
 
 let service: GravelmonDynamoDBService;
@@ -23,7 +23,7 @@ describe("MechanicNode Integration Tests", () => {
     const item1 = new ResourceLocation("minecraft", "mega_stone");
     const item2 = new ResourceLocation("minecraft", "key_stone");
     test("should persist description correctly", async () => {
-        const node = createMechanicNode("mega_evolution", "Transforms Pokémon during battle");
+        const node = new MechanicNode("mega_evolution", "Transforms Pokémon during battle");
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MechanicNode;
@@ -33,7 +33,7 @@ describe("MechanicNode Integration Tests", () => {
 
     test("should persist usesItems correctly", async () => {
 
-        const node = createMechanicNode("mega_evolution", "description", [item1, item2]);
+        const node = new MechanicNode("mega_evolution", "description", [item1, item2]);
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MechanicNode;
@@ -45,7 +45,7 @@ describe("MechanicNode Integration Tests", () => {
 
     test("should persist affectsForms correctly", async () => {
 
-        const node = createMechanicNode("mega_evolution", "description", [item1, item2], [form1, form2]);
+        const node = new MechanicNode("mega_evolution", "description", [item1, item2], [form1, form2]);
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MechanicNode;
@@ -56,7 +56,7 @@ describe("MechanicNode Integration Tests", () => {
     });
 
     test("should handle undefined optional fields", async () => {
-        const node = createMechanicNode("mega_evolution");
+        const node = new MechanicNode("mega_evolution");
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MechanicNode;

@@ -4,29 +4,21 @@ import { getNodePK } from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 
 import {
     FormNode,
-    FormData, FormTypeRelationship, FormPrimaryTypeEdge, FormEntity, FormSecondaryTypeEdge,
-    FormHasAbilityEdge, FormHasAbilityEdgeType, AbilityIdentifier, createFormDropsItemEdge
+    FormData
 } from "../../../../gravelmon-dynamodb/nodes";
 
 import {
     PokemonIdentifier,
     PokemonData
 } from "../../../../gravelmon-dynamodb/nodes";
-
 import { Stats } from "../../../../gravelmon-dynamodb/models/properties/stats";
 import { PoseType } from "../../../../gravelmon-dynamodb/models/assets/posing/poseType";
 import {CommonLayerNames} from "../../../../gravelmon-dynamodb/models/assets/resolverData";
 import { SpawnType, SpawnData } from "../../../../gravelmon-dynamodb/models/spawning/spawnData";
 import { SpawnablePositionType, SpawnBucket } from "../../../../gravelmon-dynamodb/models/spawning/spawning";
 import { SpawnCondition } from "../../../../gravelmon-dynamodb/models/spawning/spawnCondition";
-import {
-    DropsItemEdgeType,
-    FormDropsItemEdge
-} from "../../../../gravelmon-dynamodb/nodes/pokemon/formNode";
-
 import { ResourceLocation } from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
 import { NumberRange } from "../../../../gravelmon-dynamodb/models/properties/numberRange";
-import { ItemEntity } from "../../../../gravelmon-dynamodb/nodes/minecraft/itemNode";
 
 let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
@@ -335,181 +327,3 @@ describe("FormNode Integration Tests", () => {
             .toBe("minecraft:dirt");
     });
 });
-
-describe("FormTypeEdge Integration Test", () => {
-    test("should serialize and deserialize a PrimaryTypeEdge correctly", async () => {
-        // Arrange
-        const pokemon = new PokemonIdentifier("pokemon", "pikachu");
-        const typeName = "electric";
-
-        const edge = new FormPrimaryTypeEdge(
-            pokemon,
-            typeName,
-            true,
-            123456
-        );
-
-        const pk = edge.PK;
-
-        // Act
-        await service.putItem(edge);
-        const read = await service.getEdges(pk);
-
-        // Assert
-        expect(read.length).toBe(1);
-
-        const readEdge = read[0] as FormPrimaryTypeEdge;
-
-        expect(readEdge).toBeInstanceOf(FormPrimaryTypeEdge);
-        expect(readEdge.entityType).toBe(FormTypeRelationship.PrimaryType);
-
-        expect(readEdge.isRebalanced).toBe(true);
-        expect(readEdge.lastEdited).toBe(123456);
-
-        // structural validation (important for your bug class)
-        expect(readEdge.sourceType).toBe("Type");
-        expect(readEdge.targetType).toBe(FormEntity);
-    });
-
-    test("should serialize and deserialize a PrimaryTypeEdge correctly", async () => {
-        // Arrange
-        const pokemon = new PokemonIdentifier("pokemon", "pikachu");
-        const typeName = "electric";
-
-        const edge = new FormSecondaryTypeEdge(
-            pokemon,
-            typeName,
-            true,
-            123456
-        );
-
-        const pk = edge.PK;
-
-        // Act
-        await service.putItem(edge);
-        const read = await service.getEdges(pk);
-
-        // Assert
-        expect(read.length).toBe(2);
-
-        const readEdge = read[0] as FormPrimaryTypeEdge;
-
-        expect(readEdge).toBeInstanceOf(FormPrimaryTypeEdge);
-        expect(readEdge.entityType).toBe(FormTypeRelationship.PrimaryType);
-
-        expect(readEdge.isRebalanced).toBe(true);
-        expect(readEdge.lastEdited).toBe(123456);
-
-        // structural validation (important for your bug class)
-        expect(readEdge.sourceType).toBe("Type");
-        expect(readEdge.targetType).toBe(FormEntity);
-    });
-})
-
-describe("FormHasAbilityEdge Integration Test", () => {
-    test("should serialize and deserialize a FormHasAbilityEdge correctly", async () => {
-        // Arrange
-        const pokemon = new PokemonIdentifier("pokemon", "pikachu");
-        const ability = new AbilityIdentifier("ability", "static");
-
-        const edge = new FormHasAbilityEdge(
-            pokemon,
-            ability,
-            true,   // isHidden
-            false,  // isPlaceholder
-            true,   // isRebalanced
-            123456
-        );
-
-        const pk = edge.PK;
-
-        // Act
-        await service.putItem(edge);
-        const read = await service.getEdges(pk);
-
-        // Assert
-        expect(read.length).toBe(1);
-
-        const readEdge = read[0] as FormHasAbilityEdge;
-
-        expect(readEdge).toBeInstanceOf(FormHasAbilityEdge);
-        expect(readEdge.entityType).toBe(FormHasAbilityEdgeType);
-
-        // flags
-        expect(readEdge.isHidden).toBe(true);
-        expect(readEdge.isPlaceholder).toBe(false);
-        expect(readEdge.isRebalanced).toBe(true);
-        expect(readEdge.lastEdited).toBe(123456);
-
-        // structural integrity (Dynamo layer)
-        expect(readEdge.PK).toBe(edge.PK);
-        expect(readEdge.SK).toBe(edge.SK);
-        expect(readEdge.sourceType).toBe("Ability");
-        expect(readEdge.targetType).toBe(FormEntity);
-
-        // new domain fields
-        expect(readEdge.recipient).toBeInstanceOf(PokemonIdentifier);
-        expect(readEdge.recipient.toString()).toBe(pokemon.toString());
-
-        expect(readEdge.abilityIdentifier).toBeInstanceOf(AbilityIdentifier);
-        expect(readEdge.abilityIdentifier.toString()).toBe(ability.toString());
-
-        // optional safety: ensure serialization round-trip consistency
-        expect(readEdge.serialize().recipient).toEqual(pokemon.serialize());
-        expect(readEdge.serialize().abilityIdentifier).toEqual(ability.serialize());
-    });
-});
-
-describe("FormDropsItemEdge Integration Test", () => {
-    test("should serialize and deserialize a FormDropsItemEdge correctly", async () => {
-        // Arrange
-        const form = new PokemonIdentifier("pokemon", "pikachu");
-        const item = new ResourceLocation("minecraft", "lightning_rod");
-
-        const quantityRange = new NumberRange(1, 3);
-
-        const edge = createFormDropsItemEdge(
-            form,
-            item,
-            0.25,          // dropChance
-            quantityRange,
-            123456
-        );
-
-        const pk = edge.PK;
-
-        // Act
-        await service.putItem(edge);
-        const read = await service.getEdges(pk);
-
-        // Assert
-        expect(read.length).toBe(1);
-
-        const readEdge = read[0] as FormDropsItemEdge;
-
-        expect(readEdge).toBeInstanceOf(FormDropsItemEdge);
-        expect(readEdge.entityType).toBe(DropsItemEdgeType);
-
-        // scalar fields
-        expect(readEdge.dropChance).toBe(0.25);
-        expect(readEdge.lastEdited).toBe(123456);
-
-        // range validation
-        expect(readEdge.quantityRange).toBeInstanceOf(NumberRange);
-        expect(readEdge.quantityRange.min).toBe(1);
-        expect(readEdge.quantityRange.max).toBe(3);
-
-        // structural integrity
-        expect(readEdge.PK).toBe(edge.PK);
-        expect(readEdge.SK).toBe(edge.SK);
-        expect(readEdge.sourceType).toBe(ItemEntity);
-        expect(readEdge.targetType).toBe(FormEntity);
-
-        // ensure correct serialization contract
-        const serialized = readEdge.serialize();
-        expect(serialized.dropChance).toBe(0.25);
-        expect(serialized.quantityRange.min).toBe(1);
-        expect(serialized.quantityRange.max).toBe(3);
-    });
-});
-

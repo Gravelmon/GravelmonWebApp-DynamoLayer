@@ -1,9 +1,7 @@
-import { DynamoEdge, DynamoNode, getNodePK } from '../../service/dynamoNodes';
-import { BiomeEntity, BiomeTagEntity, DoesNotSpawnInBiomeEdgeType, SpawnsInBiomeEdgeType } from '../minecraft/biomeNode';
-import { DoesNotSpawnInStructureEdgeType, SpawnsInStructureEdgeType, StructureEntity, StructureTagEntity } from '../minecraft/structureNode';
-import { SpawnCondition } from '../../models/spawning/spawnCondition';
-import { ResourceLocation } from '../../models/minecraft/resourceLocation';
-import { deserializerRegistry } from '../../service/deserializerRegistry';
+import { DynamoNode } from '../../service';
+import { SpawnCondition } from '../../models';
+import { ResourceLocation } from '../../models';
+import { deserializerRegistry } from '../../service';
 
 export const SpawnPresetEntity = "SpawnPreset";
 
@@ -45,44 +43,6 @@ export class SpawnPresetNode extends DynamoNode {
             }
         }
     }
-}
-
-// Note: The edges between spawn presets and biomes/structures are stored in the opposite direction of the edges between spawn data and biomes/structures,
-// since it is more intuitive to traverse from biomes/structures to spawn presets than the other way around.
-export function createSpawnPresetNode(spawnPresetOptions: SpawnPresetOptions): SpawnPresetNode {
-    return new SpawnPresetNode(spawnPresetOptions);
-}
-
-export function createSpawnPresetDoesNotSpawnInBiomeEdge(spawnPresetName: ResourceLocation, biomeName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeEntity, biomeName.toString()), DoesNotSpawnInBiomeEdgeType, SpawnPresetEntity, spawnPresetName.toString());
-}
-
-export function createSpawnPresetDoesNotSpawnInBiomeTagEdge(spawnPresetName: ResourceLocation, biomeTagName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeTagEntity, biomeTagName.toString()), DoesNotSpawnInBiomeEdgeType, SpawnPresetEntity, spawnPresetName.toString());
-}
-
-export function createSpawnPresetSpawnsInBiomeEdge(spawnPresetName: ResourceLocation, biomeName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeEntity, biomeName.toString()), SpawnsInBiomeEdgeType, SpawnPresetEntity, spawnPresetName.toString());
-}
-
-export function createSpawnPresetSpawnsInBiomeTagEdge(spawnPresetName: ResourceLocation, biomeTagName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(BiomeTagEntity, biomeTagName.toString()), SpawnsInBiomeEdgeType, SpawnPresetEntity, spawnPresetName.toString());
-}
-
-export function createSpawnPresetSpawnsInStructureEdge(spawnPresetName: ResourceLocation, StructureName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(StructureEntity, StructureName.toString()), SpawnsInStructureEdgeType, SpawnPresetEntity, spawnPresetName.toString());
-}
-
-export function createSpawnPresetSpawnsInStructureTagEdge(spawnPresetName: ResourceLocation, StructureTagName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(StructureTagEntity, StructureTagName.toString()), SpawnsInStructureEdgeType, SpawnPresetEntity, spawnPresetName.toString());
-}
-
-export function createSpawnPresetDoesNotSpawnInStructureEdge(spawnPresetName: ResourceLocation, StructureName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(StructureEntity, StructureName.toString()), DoesNotSpawnInStructureEdgeType, SpawnPresetEntity, spawnPresetName.toString());
-}
-
-export function createSpawnPresetDoesNotSpawnInStructureTagEdge(spawnPresetName: ResourceLocation, StructureTagName: ResourceLocation): DynamoEdge {
-    return new DynamoEdge(getNodePK(StructureTagEntity, StructureTagName.toString()), DoesNotSpawnInStructureEdgeType, SpawnPresetEntity, spawnPresetName.toString());
 }
 
 deserializerRegistry.register(SpawnPresetEntity, SpawnPresetNode.deserialize);

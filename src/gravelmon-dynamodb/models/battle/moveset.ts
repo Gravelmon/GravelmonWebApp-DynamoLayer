@@ -1,31 +1,5 @@
-import { DynamoEdge, getNodePK } from '../../service/dynamoNodes';
-import { PokemonEntity, PokemonIdentifier } from '../../nodes/pokemon/pokemonNode';
-import { MoveEntity, MoveIdentifier, MoveCategory } from '../../nodes/battle/moveNode';
-import { deserializerRegistry } from '../../service/deserializerRegistry';
+import { MoveIdentifier, MoveCategory } from '../../nodes/battle/moveNode';
 
-const enum MoveSetLearnType {
-    LevelUp = "LevelUp",
-    Teach = "Teach",
-    Egg = "Egg",
-    Legacy = "Legacy"
-}
-
-//edges pointing towards pokemon from other nodes, used to easily query all related nodes of a moveset
-export function createMoveSetLevelUpMoveEdge(pokemonName: PokemonIdentifier, moveName: MoveIdentifier, level: number): DynamoEdge {
-    return new MoveSetLevelUpEdge(moveName, pokemonName, level);
-}
-
-export function createMoveSetTeachMoveEdge(pokemonName: PokemonIdentifier, moveName: MoveIdentifier): DynamoEdge {
-    return new MoveSetEdge(moveName, pokemonName, MoveSetLearnType.Teach);
-}
-
-export function createMoveSetEggMoveEdge(pokemonName: PokemonIdentifier, moveName: MoveIdentifier): DynamoEdge {
-    return new MoveSetEdge(moveName, pokemonName, MoveSetLearnType.Egg);
-}
-
-export function createMoveSetLegacyMoveEdge(pokemonName: PokemonIdentifier, moveName: MoveIdentifier): DynamoEdge {
-    return new MoveSetEdge(moveName, pokemonName, MoveSetLearnType.Legacy);
-}
 
 export interface MoveSetEntry {
     moveName: MoveIdentifier;
@@ -91,53 +65,3 @@ export function deserializeMoveSet(data: any): MoveSet {
         legacyMoves: data.legacyMoves.map(deserializeMoveSetEntry)
     }
 }
-
-export class MoveSetEdge extends DynamoEdge {
-
-    constructor(moveName: MoveIdentifier, pokemonName: PokemonIdentifier, relationship: MoveSetLearnType) {
-        super(getNodePK(MoveEntity, moveName.toString()), relationship, PokemonEntity, pokemonName.toString());
-    }
-
-    public serialize(): Record<string, any> {
-        return {
-            ...super.serialize(),
-        }
-    }
-
-    public static deserialize(data: Record<string, any>): MoveSetEdge {
-        return new MoveSetEdge(
-            MoveIdentifier.deserialize(data.PK.split("#").slice(1).join("#")),
-            PokemonIdentifier.deserialize(data.SK),
-            data.relationship as MoveSetLearnType,
-        );
-    }
-}
-
-export class MoveSetLevelUpEdge extends MoveSetEdge {
-    level: number;
-
-    constructor(moveName: MoveIdentifier, pokemonName: PokemonIdentifier, level: number) {
-        super(moveName, pokemonName, MoveSetLearnType.LevelUp);
-        this.level = level;
-    }
-
-    public serialize(): Record<string, any> {
-        return {
-            ...super.serialize(),
-            level: this.level
-        }
-    }
-
-    public static deserialize(data: Record<string, any>): MoveSetLevelUpEdge {
-        return new MoveSetLevelUpEdge(
-            MoveIdentifier.deserialize(data.PK.split("#").slice(1).join("#")),
-            PokemonIdentifier.deserialize(data.SK),
-            data.level
-        );
-    }
-}
-
-deserializerRegistry.register(MoveSetLearnType.LevelUp, MoveSetLevelUpEdge.deserialize);
-deserializerRegistry.register(MoveSetLearnType.Teach, MoveSetEdge.deserialize);
-deserializerRegistry.register(MoveSetLearnType.Egg, MoveSetEdge.deserialize);
-deserializerRegistry.register(MoveSetLearnType.Legacy, MoveSetEdge.deserialize);

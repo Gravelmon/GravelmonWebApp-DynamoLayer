@@ -2,18 +2,13 @@ import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/g
 import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../../testEnv";
 import {
-    createPokemonNode,
     PokemonData,
     PokemonEntity,
     PokemonIdentifier,
     PokemonNode,
     MoveCategory,
     MoveIdentifier,
-    AbilityIdentifier,
-    PokemonPrimaryTypeEdge,
-    PokemonTypeRelationship,
-    PokemonSecondaryTypeEdge,
-    PokemonHasAbilityEdge, HasAbilityEdgeType
+    AbilityIdentifier
 } from "../../../../gravelmon-dynamodb/nodes";
 import {BehaviourOptions, SleepDepth} from "../../../../gravelmon-dynamodb/models/behaviour/behaviour";
 import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
@@ -210,9 +205,9 @@ describe("PokemonNode Integration Tests", () => {
 
             abilities: [
                 {
-                    name: "static",
+                    identifier: new AbilityIdentifier("pokemon", "static"),
                     isHidden: false,
-                    isRebalance: false,
+                    isRebalanced: false,
                     isPlaceholder: false
                 }
             ],
@@ -224,7 +219,7 @@ describe("PokemonNode Integration Tests", () => {
             rebalancedMoveSet: undefined
         };
 
-        const pokemonNode = createPokemonNode(pokemonData, 123456);
+        const pokemonNode = new PokemonNode(pokemonData, 123456);
         const pk = getNodePK(PokemonEntity, identifier.toString());
 
         // Act
@@ -250,8 +245,6 @@ describe("PokemonNode Integration Tests", () => {
 
             expect(data.labels).toEqual(["starter"]);
             expect(data.speciesFeatures).toEqual(["shiny"]);
-
-            expect(data.abilities[0].name).toBe("static");
 
             expect(data.moveSet).toEqual(testMoveSet);
 
@@ -295,129 +288,5 @@ describe("PokemonNode Integration Tests", () => {
             // LEGACY MOVES
             expect(moveSet.legacyMoves).toHaveLength(0);
         }
-    });
-});
-
-describe("PokemonTypeEdge Integration Test", () => {
-    test("should serialize and deserialize a PrimaryTypeEdge correctly", async () => {
-        // Arrange
-        const pokemon = new PokemonIdentifier("pokemon", "pikachu");
-        const typeName = "electric";
-
-        const edge = new PokemonPrimaryTypeEdge(
-            pokemon,
-            typeName,
-            true,
-            123456
-        );
-
-        const pk = edge.PK;
-
-        // Act
-        await service.putItem(edge);
-        const read = await service.getEdges(pk);
-
-        // Assert
-        expect(read.length).toBe(1);
-
-        const readEdge = read[0] as PokemonPrimaryTypeEdge;
-
-        expect(readEdge).toBeInstanceOf(PokemonPrimaryTypeEdge);
-        expect(readEdge.entityType).toBe(PokemonTypeRelationship.PrimaryType);
-
-        expect(readEdge.isRebalanced).toBe(true);
-        expect(readEdge.lastEdited).toBe(123456);
-
-        // structural validation (important for your bug class)
-        expect(readEdge.sourceType).toBe("Type");
-        expect(readEdge.targetType).toBe(PokemonEntity);
-    });
-
-    test("should serialize and deserialize a PrimaryTypeEdge correctly", async () => {
-        // Arrange
-        const pokemon = new PokemonIdentifier("pokemon", "pikachu");
-        const typeName = "electric";
-
-        const edge = new PokemonSecondaryTypeEdge(
-            pokemon,
-            typeName,
-            true,
-            123456
-        );
-
-        const pk = edge.PK;
-
-        // Act
-        await service.putItem(edge);
-        const read = await service.getEdges(pk);
-
-        // Assert
-        expect(read.length).toBe(2);
-
-        const readEdge = read[0] as PokemonPrimaryTypeEdge;
-
-        expect(readEdge).toBeInstanceOf(PokemonPrimaryTypeEdge);
-        expect(readEdge.entityType).toBe(PokemonTypeRelationship.PrimaryType);
-
-        expect(readEdge.isRebalanced).toBe(true);
-        expect(readEdge.lastEdited).toBe(123456);
-
-        // structural validation (important for your bug class)
-        expect(readEdge.sourceType).toBe("Type");
-        expect(readEdge.targetType).toBe(PokemonEntity);
-    });
-})
-
-describe("PokemonHasAbilityEdge Integration Test", () => {
-    test("should serialize and deserialize a PokemonHasAbilityEdge correctly", async () => {
-        // Arrange
-        const pokemon = new PokemonIdentifier("pokemon", "pikachu");
-        const ability = new AbilityIdentifier("ability", "static");
-
-        const edge = new PokemonHasAbilityEdge(
-            pokemon,
-            ability,
-            true,   // isHidden
-            false,  // isPlaceholder
-            true,   // isRebalanced
-            123456
-        );
-
-        const pk = edge.PK;
-
-        // Act
-        await service.putItem(edge);
-        const read = await service.getEdges(pk);
-
-        // Assert
-        expect(read.length).toBe(1);
-
-        const readEdge = read[0] as PokemonHasAbilityEdge;
-
-        expect(readEdge).toBeInstanceOf(PokemonHasAbilityEdge);
-        expect(readEdge.entityType).toBe(HasAbilityEdgeType);
-
-        // flags
-        expect(readEdge.isHidden).toBe(true);
-        expect(readEdge.isPlaceholder).toBe(false);
-        expect(readEdge.isRebalanced).toBe(true);
-        expect(readEdge.lastEdited).toBe(123456);
-
-        // structural integrity (Dynamo layer)
-        expect(readEdge.PK).toBe(edge.PK);
-        expect(readEdge.SK).toBe(edge.SK);
-        expect(readEdge.sourceType).toBe("Ability");
-        expect(readEdge.targetType).toBe(PokemonEntity);
-
-        // new domain fields
-        expect(readEdge.recipient).toBeInstanceOf(PokemonIdentifier);
-        expect(readEdge.recipient.toString()).toBe(pokemon.toString());
-
-        expect(readEdge.abilityIdentifier).toBeInstanceOf(AbilityIdentifier);
-        expect(readEdge.abilityIdentifier.toString()).toBe(ability.toString());
-
-        // optional safety: ensure serialization round-trip consistency
-        expect(readEdge.serialize().recipient).toEqual(pokemon.serialize());
-        expect(readEdge.serialize().abilityIdentifier).toEqual(ability.serialize());
     });
 });

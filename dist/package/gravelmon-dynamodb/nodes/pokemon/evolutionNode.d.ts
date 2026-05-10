@@ -1,13 +1,9 @@
-import { DynamoEdge, DynamoNode } from '../../service/dynamoNodes';
 import { MoveIdentifier } from '../battle/moveNode';
 import { ResourceLocation } from '../../models/minecraft/resourceLocation';
 import { PokemonIdentifier } from './pokemonNode';
 import { EvolutionCondition } from '../../models/properties/evolutionCondition';
+import { DynamoNode } from "../../service";
 export declare const EvolutionEntity = "Evolution";
-export declare function createEvolutionNode(evolutionOptions: EvolutionOptions, lastEdited?: number): EvolutionNode;
-export declare function createEvolutionNeedsToHoldItemEdge(evolutionName: string, itemResourceLocation: ResourceLocation): DynamoEdge;
-export declare function createEvolutionUseItemOnEdge(evolutionName: string, itemResourceLocation: ResourceLocation): DynamoEdge;
-export declare function createEvolutionLearnsMoveUponEvolvingEdge(evolutionName: string, moveName: MoveIdentifier): DynamoEdge;
 export declare enum EvolutionType {
     LevelUp = "level_up",
     ItemInteract = "item_interact",

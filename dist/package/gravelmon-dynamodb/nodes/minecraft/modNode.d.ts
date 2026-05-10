@@ -1,10 +1,13 @@
-import { DynamoEdge, DynamoNode } from '../../service/dynamoNodes';
+import { DynamoNode } from '../../service/dynamoNodes';
 import { ResourceLocation } from "../../models/minecraft/resourceLocation";
 export declare const ModEntity = "Mod";
-export declare const AddedByModEdgeType = "AddedByMod";
-export declare function createModNode(name: string): DynamoNode;
-export declare function createModAddsBiomeEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge;
-export declare function createModAddsBiomeTagEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge;
-export declare function createModAddsStructureEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge;
-export declare function createModAddsStructureTagEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge;
-export declare function createModAddsItemEdge(modName: string, entityResourceLocation: ResourceLocation): DynamoEdge;
+export declare class ModNode extends DynamoNode {
+    displayName: string;
+    addsBiomes: ResourceLocation[];
+    addsStructures: ResourceLocation[];
+    addsItems: ResourceLocation[];
+    static version: number;
+    constructor(displayName: string, nameSpace: string, addsBiomes: ResourceLocation[], addsStructures: ResourceLocation[], addsItems: ResourceLocation[]);
+    serialize(): Record<string, any>;
+    static deserialize(data: Record<string, any>): ModNode;
+}

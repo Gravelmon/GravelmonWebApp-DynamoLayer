@@ -1,4 +1,3 @@
-
 import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
 import { createTestEnv } from "../../../testEnv";
 import { AbilityIdentifier, AbilityNode } from "../../../../gravelmon-dynamodb/nodes";
@@ -19,7 +18,7 @@ describe("AbilityNode", () => {
     test("AbilityNode should serialize and deserialize identifier and description", async () => {
         const identifier = new AbilityIdentifier("pokemon_sword", "pressure");
 
-        const node = new AbilityNode(identifier, "Reduces opponent PP usage");
+        const node = new AbilityNode(identifier, [], [], "Reduces opponent PP usage");
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as AbilityNode;
@@ -37,7 +36,7 @@ describe("AbilityNode", () => {
     test("AbilityNode should handle missing description", async () => {
         const identifier = new AbilityIdentifier("pokemon_scarlet", "overgrow");
 
-        const node = new AbilityNode(identifier);
+        const node = new AbilityNode(identifier, [], []);
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as AbilityNode;

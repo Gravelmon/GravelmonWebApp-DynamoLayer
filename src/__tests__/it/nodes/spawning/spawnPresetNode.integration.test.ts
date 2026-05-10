@@ -2,8 +2,7 @@ import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/g
 import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../../testEnv";
 import {
-    createSpawnPresetNode,
-    SpawnPresetEntity,
+    SpawnPresetEntity, SpawnPresetNode,
     SpawnPresetOptions
 } from "../../../../gravelmon-dynamodb/nodes/spawning/spawnPresetNode";
 import {ResourceLocation} from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
@@ -97,7 +96,7 @@ describe("SpawnPresetNode Integration Tests", () => {
             antiCondition: antiCondition
         };
 
-        const spawnPresetNode = createSpawnPresetNode(spawnPresetData);
+        const spawnPresetNode = new SpawnPresetNode(spawnPresetData);
         const pk = getNodePK(SpawnPresetEntity, spawnPresetData.name.toString());
 
         // Act: Write the node to DynamoDB

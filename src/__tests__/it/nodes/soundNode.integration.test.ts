@@ -2,7 +2,7 @@ import { GravelmonDynamoDBService } from "../../../gravelmon-dynamodb/service/gr
 import { getNodePK } from "../../../gravelmon-dynamodb/service/dynamoNodes";
 import {createTestEnv} from "../../testEnv";
 import {SoundData} from "../../../gravelmon-dynamodb/models/soundData";
-import {createSoundNode, SoundEntity} from "../../../gravelmon-dynamodb/nodes/soundNode";
+import {SoundEntity, SoundNode} from "../../../gravelmon-dynamodb/nodes/soundNode";
 let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
@@ -25,7 +25,7 @@ describe("SoundNode Integration Tests", () => {
             madeBy: "pokemon-logos/red.png",
         };
 
-        const soundNode = createSoundNode(soundData);
+        const soundNode = new SoundNode(soundData, []);
         const pk = getNodePK(SoundEntity, soundData.name);
 
         // Act: Write the node to DynamoDB

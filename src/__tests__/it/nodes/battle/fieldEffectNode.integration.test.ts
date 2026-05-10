@@ -26,12 +26,15 @@ describe("FieldEffectNode Integration Tests", () => {
     test("should serialize and deserialize FieldEffectNode correctly", async () => {
         const identifier = new FieldEffectIdentifier("pokemon", "trick_room");
 
-        const node = new FieldEffectNode("", identifier,
+        const node = new FieldEffectNode("",
+            identifier,
             {
                 durationInTurns: 5,
                 fieldEffectRange: MoveRange.AllPokemon,
                 description: "Reverses turn order"
             },
+            [],
+            [],
             undefined,
             ["speed", "priority"]
         );
@@ -71,7 +74,7 @@ describe("FieldEffectNode Integration Tests", () => {
             description: "Shortened duration"
         };
 
-        const node = new FieldEffectNode("", identifier, baseData, rebalancedData, ["field"]);
+        const node = new FieldEffectNode("", identifier, baseData, [], [], rebalancedData, ["field"]);
 
         const pk = node.PK;
 
@@ -91,7 +94,9 @@ describe("FieldEffectNode Integration Tests", () => {
             identifier,{
             durationInTurns: 5,
             fieldEffectRange: MoveRange.AllOpponents
-        });
+        },
+                [],
+            [],);
 
         const pk = node.PK;
 

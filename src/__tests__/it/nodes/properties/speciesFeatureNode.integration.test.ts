@@ -3,8 +3,6 @@ import {createTestEnv} from "../../../testEnv";
 import {
     SpeciesFeatureEntity,
     SpeciesFeatureType, ChoiceSpeciesFeatureNode,
-    createChoiceSpeciesFeatureNode,
-    createFlagSpeciesFeatureNode,
     FlagSpeciesFeatureNode
 } from "../../../../gravelmon-dynamodb/nodes/properties/speciesFeatureNode";
 
@@ -24,12 +22,13 @@ afterAll(async () => {
 describe("SpeciesFeatureNode - FlagSpeciesFeatureNode", () => {
     it("should serialize and deserialize a FlagSpeciesFeatureNode correctly", async () => {
         // Arrange
-        const flagSpeciesFeatureNode = createFlagSpeciesFeatureNode(
+        const flagSpeciesFeatureNode = new FlagSpeciesFeatureNode(
             "shiny",
             "shiny",
             true,
             true,
             "pokemon_red",
+            [],
             123456
         );
         const pk = flagSpeciesFeatureNode.PK;
@@ -54,13 +53,14 @@ describe("SpeciesFeatureNode - FlagSpeciesFeatureNode", () => {
 describe("SpeciesFeatureNode - ChoiceSpeciesFeatureNode", () => {
     it("should serialize and deserialize a ChoiceSpeciesFeatureNode correctly", async () => {
         // Arrange
-        const choiceSpeciesFeatureNode = createChoiceSpeciesFeatureNode(
+        const choiceSpeciesFeatureNode = new ChoiceSpeciesFeatureNode(
             "form",
             "form",
             ["kanto", "galar", "hisui"],
             "galar",
             true,
             "pokemon_sword",
+            [],
             999999
         );
         const pk = choiceSpeciesFeatureNode.PK;

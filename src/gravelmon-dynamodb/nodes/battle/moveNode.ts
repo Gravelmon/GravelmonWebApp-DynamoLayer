@@ -1,17 +1,12 @@
-import { DynamoEdge, DynamoNode, getNodePK } from '../../service';
-import { TypeEntity } from './typeNode';
+import { DynamoNode } from '../../service';
 import {MoveRange} from "../../models";
 import { deserializerRegistry } from '../../service';
-import {FieldEffectEntity, FieldEffectIdentifier} from "./fieldEffectNode";
+import { FieldEffectIdentifier } from "./fieldEffectNode";
+import {PokemonIdentifier} from "../pokemon/pokemonNode";
 
 export const MoveEntity = "Move";
 export const MoveFlagEntity = "MoveFlag";
 
-export const enum MoveEdgeType {
-    IsType = "IsType",
-    WithFlag = "WithFlag",
-    AssociatedWithFieldEffect = "AssociatedWithFieldEffect"
-}
 
 export enum MoveCategory {
     Physical = "Physical",
@@ -52,20 +47,32 @@ export class MoveIdentifier {
     }
 }
 
-export function createMoveFlagNode(name: string): DynamoNode {
-    return new DynamoNode(MoveFlagEntity, name);
+export class MoveFlagNode extends DynamoNode {
+    moves: MoveIdentifier[]
+
+    constructor(name: string, moves: MoveIdentifier[]) {
+        super(MoveFlagEntity, name);
+        this.moves = moves;
+    }
+
+    public serialize(): Record<string, any> {
+        return {
+            ...super.serialize(),
+            flags: this.moves.map(m => m.serialize())
+        }
+    }
+
+    public static deserialize(data: Record<string, any>): MoveFlagNode {
+        return new MoveFlagNode(data.name, data.flags.map((m : any) => MoveIdentifier.deserialize(m)));
+    }
 }
 
-export function createMoveIsTypeEdge(moveName: MoveIdentifier, typeName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(TypeEntity, typeName), MoveEdgeType.IsType, MoveEntity, moveName.toString());
-}
-
-export function createMoveWithFlagEdge(moveName: MoveIdentifier, flagName: string): DynamoEdge {
-    return new DynamoEdge(getNodePK(MoveFlagEntity, flagName), MoveEdgeType.WithFlag, MoveEntity, moveName.toString());
-}
-
-export function createMoveAssociatedWithFieldEffectEdge(moveName: MoveIdentifier, fieldEffect: FieldEffectIdentifier): DynamoEdge {
-    return new DynamoEdge(getNodePK(FieldEffectEntity, fieldEffect.toString()), MoveEdgeType.AssociatedWithFieldEffect, MoveEntity, moveName.toString());
+export interface LearnedByData {
+    levelUp: PokemonIdentifier[];
+    teach: PokemonIdentifier[];
+    egg: PokemonIdentifier[];
+    legacy: PokemonIdentifier[];
+    evolution: PokemonIdentifier[];
 }
 
 export interface MoveData {
@@ -84,6 +91,26 @@ export interface MoveData {
     associatedFieldEffects?: FieldEffectIdentifier[];
 }
 
+export function deserializeLearnedBy(data: any) {
+    return {
+        levelUp: data.levelUp.map(PokemonIdentifier.deserialize),
+        teach: data.teach.map(PokemonIdentifier.deserialize),
+        egg: data.egg.map(PokemonIdentifier.deserialize),
+        legacy: data.legacy.map(PokemonIdentifier.deserialize),
+        evolution: data.evolution.map(PokemonIdentifier.deserialize),
+    }
+}
+
+export function serializeLearnedBy(data: LearnedByData) {
+    return {
+        levelUp: data.levelUp.map(p => p.serialize()),
+        teach: data.teach.map(p => p.serialize()),
+        egg: data.egg.map(p => p.serialize()),
+        legacy: data.legacy.map(p => p.serialize()),
+        evolution: data.evolution.map(p => p.serialize()),
+    }
+}
+
 export class MoveNode extends DynamoNode {
     moveIdentifier: MoveIdentifier;
     displayName: string;
@@ -92,10 +119,14 @@ export class MoveNode extends DynamoNode {
     moveFlags: string[];
     implemented: boolean;
     itemRecipeCost: Record<string, number>
+    learnedBy: LearnedByData;
+    rebalancedLearnedBy: LearnedByData;
 
     constructor(displayName: string, name: MoveIdentifier,
                 moveData: MoveData,
+                learnedBy: LearnedByData,
                 rebalancedMoveData?: MoveData,
+                rebalancedLearnedBy?: LearnedByData,
                 moveFlags: string[] = [], implemented: boolean = false, itemRecipeCost?: Record<string, number>) {
         super(MoveEntity, name.toString());
         this.displayName = displayName;
@@ -105,6 +136,14 @@ export class MoveNode extends DynamoNode {
         this.moveFlags = moveFlags;
         this.implemented = implemented;
         this.itemRecipeCost = itemRecipeCost ?? {};
+        this.learnedBy = learnedBy;
+        this.rebalancedLearnedBy = rebalancedLearnedBy ?? {
+            levelUp: [],
+            teach: [],
+            egg: [],
+            legacy: [],
+            evolution: [],
+        };
     }
 
     static deserialize(data: Record<string, any>): MoveNode {
@@ -112,7 +151,9 @@ export class MoveNode extends DynamoNode {
             data.displayName,
             MoveIdentifier.deserialize(data.moveIdentifier),
             MoveNode.deserializeMoveData(data.moveData),
+            deserializeLearnedBy(data.learnedBy),
             data.rebalancedMoveData ? MoveNode.deserializeMoveData(data.rebalancedMoveData) : undefined,
+            data.rebalancedLearnedBy ? deserializeLearnedBy(data.rebalancedLearnedBy) : undefined,
             data.moveFlags || [],
             data.implemented,
             data.itemRecipeCost
@@ -159,7 +200,9 @@ export class MoveNode extends DynamoNode {
             displayName: this.displayName,
             moveIdentifier: this.moveIdentifier.serialize(),
             moveData: this.serializeMoveData(this.moveData),
+            learnedBy: serializeLearnedBy(this.learnedBy),
             rebalancedMoveData: this.rebalancedMoveData ? this.serializeMoveData(this.rebalancedMoveData) : undefined,
+            rebalancedLearnedBy: serializeLearnedBy(this.rebalancedLearnedBy),
             moveFlags: this.moveFlags,
             implemented: this.implemented,
             itemRecipeCost: this.itemRecipeCost,
@@ -168,3 +211,4 @@ export class MoveNode extends DynamoNode {
 }
 
 deserializerRegistry.register(MoveEntity, MoveNode.deserialize);
+deserializerRegistry.register(MoveFlagEntity, MoveFlagNode.deserialize);

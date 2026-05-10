@@ -1,42 +1,11 @@
-import { DynamoEdge, DynamoNode, getNodePK } from '../../service/dynamoNodes';
-import { MoveEntity, MoveIdentifier } from '../battle/moveNode';
-import { ItemEntity } from '../minecraft/itemNode';
+import { MoveIdentifier } from '../battle/moveNode';
 import { ResourceLocation } from '../../models/minecraft/resourceLocation';
 import { PokemonIdentifier } from './pokemonNode';
 import { EvolutionCondition } from '../../models/properties/evolutionCondition';
 import {deserializerRegistry} from "../../service/deserializerRegistry";
+import {DynamoNode} from "../../service";
 
 export const EvolutionEntity = "Evolution";
-
-const NeedsToHoldEdgeType = "NeedsToHold"
-const UseOnEdgeType = "UseOn"
-const LearnsUponEvolvingEdgeType = "LearnsUponEvolving"
-
-export function createEvolutionNode(evolutionOptions: EvolutionOptions, lastEdited: number = Date.now()) : EvolutionNode {
-    return new EvolutionNode(evolutionOptions, lastEdited)
-}
-
-//edges pointing towards evolution from other nodes, used to easily query all related nodes of an evolution
-export function createEvolutionNeedsToHoldItemEdge(evolutionName : string, itemResourceLocation : ResourceLocation) : DynamoEdge {
-    return new DynamoEdge(
-        getNodePK(ItemEntity, itemResourceLocation.toString()), 
-        NeedsToHoldEdgeType, evolutionName, EvolutionEntity
-    );
-}
-
-export function createEvolutionUseItemOnEdge(evolutionName : string, itemResourceLocation : ResourceLocation) : DynamoEdge {
-    return new DynamoEdge(
-        getNodePK(ItemEntity, itemResourceLocation.toString()), 
-        UseOnEdgeType, evolutionName, EvolutionEntity
-    );
-}
-
-export function createEvolutionLearnsMoveUponEvolvingEdge(evolutionName : string, moveName : MoveIdentifier) : DynamoEdge {
-    return new DynamoEdge(
-        getNodePK(MoveEntity, moveName.toString()), 
-        LearnsUponEvolvingEdgeType, evolutionName, EvolutionEntity
-    ); 
-}
 
 export enum EvolutionType {
     LevelUp = "level_up",

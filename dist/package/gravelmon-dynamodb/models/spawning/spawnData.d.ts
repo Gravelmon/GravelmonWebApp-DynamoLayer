@@ -1,4 +1,3 @@
-import { DynamoEdge } from '../../service/dynamoNodes';
 import { ResourceLocation } from '../minecraft/resourceLocation';
 import { PokemonIdentifier } from '../../nodes/pokemon/pokemonNode';
 import { NumberRange } from '../properties/numberRange';
@@ -40,15 +39,4 @@ export interface SpawnData {
 }
 export declare function serializeSpawnData(spawnDataNode: SpawnData): any;
 export declare function deserializeSpawnData(data: any): SpawnData;
-export declare function createSpawnDataUsesSpawnPresetEdge(spawnDataName: PokemonIdentifier, spawnPresetName: string): DynamoEdge;
-export declare function createSpawnDataPrefersBlockEdge(spawnDataName: PokemonIdentifier, blockName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataRequiresBlockEdge(spawnDataName: PokemonIdentifier, blockName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataDoesNotSpawnInBiomeEdge(spawnDataName: PokemonIdentifier, biomeName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataDoesNotSpawnInBiomeTagEdge(spawnDataName: PokemonIdentifier, biomeTagName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataSpawnsInBiomeEdge(spawnDataName: PokemonIdentifier, biomeName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataSpawnsInBiomeTagEdge(spawnDataName: PokemonIdentifier, biomeTagName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataSpawnsInStructureEdge(spawnDataName: PokemonIdentifier, StructureName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataSpawnsInStructureTagEdge(spawnDataName: PokemonIdentifier, StructureTagName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataDoesNotSpawnInStructureEdge(spawnDataName: PokemonIdentifier, StructureName: ResourceLocation): DynamoEdge;
-export declare function createSpawnDataDoesNotSpawnInStructureTagEdge(spawnDataName: PokemonIdentifier, StructureTagName: ResourceLocation): DynamoEdge;
 export {};

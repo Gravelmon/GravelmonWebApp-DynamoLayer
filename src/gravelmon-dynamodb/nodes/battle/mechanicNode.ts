@@ -1,18 +1,14 @@
-import {DynamoEdge, DynamoNode, getNodePK} from '../../service/dynamoNodes';
-import {ResourceLocation} from "../../models/minecraft/resourceLocation";
-import {ItemEntity} from "../minecraft/itemNode";
+import { DynamoNode } from '../../service';
+import {ResourceLocation} from "../../models";
 import {PokemonIdentifier} from "../pokemon/pokemonNode";
-import {FormEntity} from "../pokemon/formNode";
-import {deserializerRegistry} from "../../service/deserializerRegistry";
+import {deserializerRegistry} from "../../service";
 
 export const MechanicEntity = "Mechanic";
-
-export const UsesItemEdgeType = "UsesItem";
-export const AffectsFormEdgeType = "AffectsForm";
 
 export class MechanicNode extends DynamoNode {
     description?: string;
     usesItems?: ResourceLocation[];
+//This is not supposed to point towards the mega evolution in case of the mega evolution mechanic, but the base form
     affectsForms?: PokemonIdentifier[];
 
     constructor(name: string, description?: string, usesItems?: ResourceLocation[], affectsForms?: PokemonIdentifier[]) {
@@ -36,19 +32,6 @@ export class MechanicNode extends DynamoNode {
             affectsForms: this.affectsForms ? this.affectsForms.map((item)=> item.serialize()) : undefined
         }
     }
-}
-
-export function createMechanicNode(name: string, description?: string, usesItems?: ResourceLocation[], affectsForms?: PokemonIdentifier[]): MechanicNode {
-    return new MechanicNode(name, description, usesItems, affectsForms);
-}
-
-//This is not supposed to point towards the mega evolution in case of the mega evolution mechanic, but the base form
-export function createMechanicAffectsFormEdge(mechanicName: string, pokemonIdentifier: PokemonIdentifier) : DynamoEdge {
-    return new DynamoEdge(getNodePK(FormEntity, pokemonIdentifier.toString()), AffectsFormEdgeType, MechanicEntity, mechanicName);
-}
-
-export function createMechanicUsesItemEdge(mechanicName: string, item: ResourceLocation) : DynamoEdge {
-    return new DynamoEdge(getNodePK(ItemEntity, item.toString()), AffectsFormEdgeType, MechanicEntity, mechanicName);
 }
 
 deserializerRegistry.register(MechanicEntity, MechanicNode.deserialize);

@@ -1,10 +1,25 @@
 import { DynamoNode } from '../../service/dynamoNodes';
+import {PokemonIdentifier} from "../pokemon/pokemonNode";
 
 export const ExperienceGroupEntity = "ExperienceGroup";
-export const InExperienceGroupEdgeType = "InExperienceGroup";
 
-const version = 1;
+export class ExperienceGroupNode extends DynamoNode {
+    pokemonInExperienceGroup: PokemonIdentifier[]
+    static version = 1;
+    constructor(name: string, pokemonIdentifiers: PokemonIdentifier[]) {
+        super(ExperienceGroupEntity, name);
+        this.version = ExperienceGroupNode.version;
+        this.pokemonInExperienceGroup = pokemonIdentifiers;
+    }
 
-export function createExperienceGroupNode(name: string, lastEdited: number = Date.now()): DynamoNode {
-    return new DynamoNode(ExperienceGroupEntity, name, version, lastEdited);
+    public serialize(): Record<string, any> {
+        return {
+            ...super.serialize(),
+            pokemonInExperienceGroup: this.pokemonInExperienceGroup.map(m => m.serialize())
+        }
+    }
+
+    public static deserialize(data: Record<string, any>): ExperienceGroupNode {
+        return new ExperienceGroupNode(data.name, data.flags.map((m : any) => PokemonIdentifier.deserialize(m)));
+    }
 }

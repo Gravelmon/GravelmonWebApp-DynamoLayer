@@ -1,6 +1,7 @@
 import { DynamoNode } from '../../service/dynamoNodes';
 import { ResourceLocation } from '../../models/minecraft/resourceLocation';
 import { deserializerRegistry } from '../../service/deserializerRegistry';
+import {PokemonIdentifier} from "../pokemon/pokemonNode";
 
 export const ItemEntity = "Item";
 
@@ -10,20 +11,32 @@ export class ItemNode extends DynamoNode {
     isPlaceable: boolean = false;
     inBattleEffect?: string;
     rebalancedInBattleEffect?: string;
-    constructor(name: string, resourceLocation: ResourceLocation, isPlaceable: boolean, s3TextureLocation?: string, inBattleEffect?: string, rebalancedInBattleEffect?: string) {
+    droppedBy?: PokemonIdentifier[]
+    usedToEvolve?: PokemonIdentifier[];
+    usedWithMechanics?: string[];
+
+    static version = 1;
+    constructor(name: string, resourceLocation: ResourceLocation, isPlaceable: boolean, s3TextureLocation?: string, inBattleEffect?: string, rebalancedInBattleEffect?: string,
+                droppedBy?: PokemonIdentifier[], usedToEvolve?: PokemonIdentifier[], usedWithMechanics?: string[]) {
         super(ItemEntity, name);
         this.resourceLocation = resourceLocation;
         this.s3TextureLocation = s3TextureLocation;
         this.isPlaceable = isPlaceable;
         this.inBattleEffect = inBattleEffect;
         this.rebalancedInBattleEffect = rebalancedInBattleEffect;
+        this.droppedBy = droppedBy;
+        this.usedToEvolve = usedToEvolve;
+        this.usedWithMechanics = usedWithMechanics;
+        this.version = ItemNode.version;
     }
 
     static deserialize(data: Record<string, any>): ItemNode {
         if(!data.resourceLocation) {
             throw new Error("Invalid data for deserializing ItemNode: missing resourceLocation");
         }
-        return new ItemNode(data.name, ResourceLocation.deserialize(data.resourceLocation), data.isPlaceable, data.s3TextureLocation, data.inBattleEffect, data.rebalancedInBattleEffect);
+        return new ItemNode(data.name, ResourceLocation.deserialize(data.resourceLocation), data.isPlaceable, data.s3TextureLocation, data.inBattleEffect, data.rebalancedInBattleEffect,
+            data.droppedBy?.map((m: any) => PokemonIdentifier.deserialize(m)), data.usedToEvolve?.map((m: any) => PokemonIdentifier.deserialize(m)),
+            data.usedWithMechanics);
     }
 
     public serialize(): Record<string, any> {
@@ -33,14 +46,12 @@ export class ItemNode extends DynamoNode {
             isPlaceable: this.isPlaceable,
             s3TextureLocation: this.s3TextureLocation,
             inBattleEffect: this.inBattleEffect,
-            rebalancedInBattleEffect: this.rebalancedInBattleEffect
+            rebalancedInBattleEffect: this.rebalancedInBattleEffect,
+            droppedBy: this.droppedBy?.map(m => m.serialize()),
+            usedToEvolve: this.usedToEvolve?.map(m => m.serialize()),
+            usedWithMechanics: this.usedWithMechanics
         }   
     }
-}
-
-export function createItemNode(name: string, resourceLocation: ResourceLocation, isPlaceable: boolean = false,
-    s3TextureLocation: string = "", inBattleEffect: string = "", rebalancedInBattleEffect : string = ""): ItemNode {
-    return new ItemNode(name, resourceLocation, isPlaceable, s3TextureLocation, inBattleEffect, rebalancedInBattleEffect);
 }
 
 deserializerRegistry.register(ItemEntity, ItemNode.deserialize);

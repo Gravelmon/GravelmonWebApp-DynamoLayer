@@ -1,4 +1,10 @@
 import { DynamoNode } from '../../service/dynamoNodes';
+import { PokemonIdentifier } from "../pokemon/pokemonNode";
 export declare const ExperienceGroupEntity = "ExperienceGroup";
-export declare const InExperienceGroupEdgeType = "InExperienceGroup";
-export declare function createExperienceGroupNode(name: string, lastEdited?: number): DynamoNode;
+export declare class ExperienceGroupNode extends DynamoNode {
+    pokemonInExperienceGroup: PokemonIdentifier[];
+    static version: number;
+    constructor(name: string, pokemonIdentifiers: PokemonIdentifier[]);
+    serialize(): Record<string, any>;
+    static deserialize(data: Record<string, any>): ExperienceGroupNode;
+}

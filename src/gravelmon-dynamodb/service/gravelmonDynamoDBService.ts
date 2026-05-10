@@ -7,7 +7,7 @@ import {
     QueryCommand,
     QueryCommandInput, TransactWriteCommand
 } from "@aws-sdk/lib-dynamodb";
-import {DynamoEdge, DynamoItem, DynamoNode, ItemType, PK, SK} from "./dynamoNodes";
+import { DynamoItem, DynamoNode, PK, SK} from "./dynamoNodes";
 import {deserializerRegistry} from "./deserializerRegistry";
 
 export function getDynamoConfig() {
@@ -138,19 +138,6 @@ export class GravelmonDynamoDBService {
         return results;
     }
 
-    // ---------- Edges ----------
-
-    async getEdges<T extends DynamoEdge>(pk: PK): Promise<T[]> {
-        const items = await this.queryByPKAndSKPrefix(pk, "EDGE#");
-        return items.filter((i): i is T => i instanceof DynamoEdge);
-    }
-
-    async getEdgesByType(pk: PK, edgeType: string): Promise<DynamoEdge[]> {
-        const prefix = `EDGE#${edgeType}#`;
-        const items = await this.queryByPKAndSKPrefix(pk, prefix);
-        return items.filter((i): i is DynamoEdge => i instanceof DynamoEdge);
-    }
-
     // ---------- Writes ----------
 
     async putItem(item: DynamoItem): Promise<DynamoItem> {
@@ -207,12 +194,11 @@ export class GravelmonDynamoDBService {
 
     private deserializeItem(item: Record<string, any>): any {
         const type = item.entityType;
-        const itemType = item.TYPE;
 
         if (!type) {
             throw new Error("Missing entityType on item");
         }
 
-        return deserializerRegistry.deserialize(type, itemType as ItemType, item);
+        return deserializerRegistry.deserialize(type, item);
     }
 }
