@@ -20,6 +20,7 @@ interface HerdSpawnEntry {
     maxTimes?: number;
     isLeader?: boolean;
     levelRangeOffset: NumberRange;
+    heldItem?: ResourceLocation;
 }
 export interface SpawnData {
     levelRange: NumberRange;

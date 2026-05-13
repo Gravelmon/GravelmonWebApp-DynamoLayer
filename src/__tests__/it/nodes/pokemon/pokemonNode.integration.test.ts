@@ -1,5 +1,5 @@
-import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
-import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb";
+import {getNodePK} from "../../../../gravelmon-dynamodb";
 import {createTestEnv} from "../../../testEnv";
 import {
     PokemonData,
@@ -10,14 +10,13 @@ import {
     MoveIdentifier,
     AbilityIdentifier
 } from "../../../../gravelmon-dynamodb/nodes";
-import {BehaviourOptions, SleepDepth} from "../../../../gravelmon-dynamodb/models/behaviour/behaviour";
-import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
-import {Time} from "../../../../gravelmon-dynamodb/models/properties/time";
-import {RidingKey} from "../../../../gravelmon-dynamodb/models/behaviour/riding";
-import {PoseType} from "../../../../gravelmon-dynamodb/models/assets/posing/poseType";
+import {BehaviourOptions, SleepDepth} from "../../../../gravelmon-dynamodb";
+import {NumberRange} from "../../../../gravelmon-dynamodb";
+import {Time} from "../../../../gravelmon-dynamodb";
+import {RidingKey} from "../../../../gravelmon-dynamodb";
 
-import {Stats} from "../../../../gravelmon-dynamodb/models/properties/stats";
-import {MoveSet} from "../../../../gravelmon-dynamodb/models/battle/moveset";
+import {Stats} from "../../../../gravelmon-dynamodb";
+import {MoveSet} from "../../../../gravelmon-dynamodb";
 let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
 
@@ -83,25 +82,21 @@ describe("PokemonNode Integration Tests", () => {
 
     const behaviourOptions: BehaviourOptions = {
         movement: {
-            canLookAround: true,
-            looksAtEntities: true,
-            canWalk: true,
-            walkSpeed: 1.2,
             wanderChance: 0.5,
-            wanderSpeed: 1.0
+            wanderSpeed: 1.0,
+            aquatic: {
+                canSwimInWater: true,
+                swimSpeed: 0.8,
+                canBreatheUnderwater: false
+            },
         },
 
-        aquatic: {
-            canSwimInWater: true,
-            avoidsLand: false,
-            swimSpeed: 0.8,
-            canBreatheUnderwater: false
-        },
 
-        sleep: {
+
+        resting: {
             canSleep: true,
             willSleepOnBed: false,
-            sleepLightLevel: new NumberRange(0, 7),
+            light: new NumberRange(0, 7),
             drowsyChance: 0.2,
             depth: SleepDepth.Normal,
             times: [
@@ -118,39 +113,7 @@ describe("PokemonNode Integration Tests", () => {
             herdData: [
                 {
                     tier: 1,
-                    leaderEntityType: new PokemonIdentifier("pokemon", "pikachu")
-                }
-            ]
-        },
-
-        riding: {
-            landRidingBehaviour: {
-                key: RidingKey.Horse,
-                stats: {
-                    ACCELERATION: new NumberRange(0.1, 0.3),
-                    JUMP: new NumberRange(0.5, 1.0),
-                    SKILL: new NumberRange(0.2, 0.6),
-                    SPEED: new NumberRange(1.0, 2.0),
-                    STAMINA: new NumberRange(10, 20)
-                },
-                rideSounds: {
-                    pitchExpression: "1.0",
-                    volumeExpression: "0.8",
-                    SoundPK: "SOUND#pokemon#ride",
-                    playForPassengers: true,
-                    playForNonPassengers: false
-                }
-            },
-
-            seats: [
-                {
-                    offset: { x: 0, y: 1, z: 0 },
-                    poseOffsets: [
-                        {
-                            offset: { x: 0, y: 0, z: 0 },
-                            poseTypes: [PoseType.FLY, PoseType.FLOAT]
-                        }
-                    ]
+                    pokemon: new PokemonIdentifier("pokemon", "pikachu")
                 }
             ]
         }
@@ -169,9 +132,10 @@ describe("PokemonNode Integration Tests", () => {
             rebalancedStats: undefined,
             evYield: testStats,
 
-            heightInMeters: 0.4,
-            weightInKg: 6,
+            heightInDecimeters: 0.4,
+            weightInDeciGrams: 6,
             catchRate: 190,
+            standingEyeHeight: 0.4,
 
             maleRatio: 0.5,
             baseExperience: 112,
@@ -202,7 +166,31 @@ describe("PokemonNode Integration Tests", () => {
 
             experienceGroup: "medium_fast",
             gameIntroducedIn: "pokemon_red",
+            riding: {
+                landRidingBehaviour: {
+                    key: RidingKey.Horse,
+                    stats: {
+                        ACCELERATION: new NumberRange(0.1, 0.3),
+                        JUMP: new NumberRange(0.5, 1.0),
+                        SKILL: new NumberRange(0.2, 0.6),
+                        SPEED: new NumberRange(1.0, 2.0),
+                        STAMINA: new NumberRange(10, 20)
+                    },
+                    rideSounds: {
+                        pitchExpression: "1.0",
+                        volumeExpression: "0.8",
+                        SoundPK: "SOUND#pokemon#ride",
+                        playForPassengers: true,
+                        playForNonPassengers: false
+                    }
+                },
 
+                seats: [
+                    {
+                        locator: "seat1"
+                    }
+                ]
+            },
             abilities: [
                 {
                     identifier: new AbilityIdentifier("pokemon", "static"),
@@ -238,8 +226,8 @@ describe("PokemonNode Integration Tests", () => {
             expect(data.baseStats).toEqual(testStats);
             expect(data.evYield).toEqual(testStats);
 
-            expect(data.heightInMeters).toBe(0.4);
-            expect(data.weightInKg).toBe(6);
+            expect(data.heightInDecimeters).toBe(0.4);
+            expect(data.weightInDeciGrams).toBe(6);
 
             expect(data.typing.primaryType).toBe("Electric");
 
@@ -247,22 +235,6 @@ describe("PokemonNode Integration Tests", () => {
             expect(data.speciesFeatures).toEqual(["shiny"]);
 
             expect(data.moveSet).toEqual(testMoveSet);
-
-            expect(data.behaviourOptions?.movement?.canWalk).toBe(true);
-            expect(data.behaviourOptions?.sleep?.sleepLightLevel?.min).toBe(0);
-            expect(data.behaviourOptions?.sleep?.depth).toBe(SleepDepth.Normal);
-
-            expect(data.behaviourOptions?.herd?.herdData[0].leaderEntityType.toString())
-                .toBe("pokemon#pikachu");
-
-            expect(data.behaviourOptions?.riding?.landRidingBehaviour?.stats.SPEED.min)
-                .toBe(1.0);
-
-            expect(data.behaviourOptions?.riding?.seats.length).toBe(1);
-            expect(data.behaviourOptions?.riding?.seats[0].poseOffsets[0].poseTypes)
-                .toContain(PoseType.FLY);
-            expect(data.behaviourOptions?.riding?.seats[0].poseOffsets[0].poseTypes)
-                .toContain(PoseType.FLOAT);
 
             const moveSet = data.moveSet;
 

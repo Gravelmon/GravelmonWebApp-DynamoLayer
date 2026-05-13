@@ -42,5 +42,5 @@ export interface RidingBehaviourOptions {
     liquidRidingBehaviour?: RidingBehaviour;
     seats: Seat[];
 }
-export declare function serializeRidingBehaviourOptions(options: RidingBehaviourOptions): any;
-export declare function deserializeRidingBehaviourOptions(data: any): RidingBehaviourOptions;
+export declare function serializeRidingOptions(options: RidingBehaviourOptions): any;
+export declare function deserializeRidingOptions(data: any): RidingBehaviourOptions;

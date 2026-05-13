@@ -1,62 +1,102 @@
 import { PokemonIdentifier } from '../../nodes/pokemon/pokemonNode';
 import { NumberRange } from '../properties/numberRange';
-import { RidingBehaviourOptions as BehaviourRidingOptions } from './riding';
 import { TimeRange } from "../properties";
 export declare enum SleepDepth {
     Normal = "normal",
     Comatose = "comatose"
 }
 export interface BehaviourMovementOptions {
-    canLookAround?: boolean;
-    looksAtEntities?: boolean;
-    canWalk?: boolean;
+    walk?: WalkMovementOptions;
+    aquatic?: AquaticMovementOptions;
+    fly?: FlyMovementOptions;
     stepHeight?: number;
-    canFly?: boolean;
-    canWalkOnWater?: boolean;
-    canWalkOnLava?: boolean;
-    walkSpeed?: number;
-    flySpeedHorizontal?: number;
     wanderChance?: number;
     wanderSpeed?: number;
+    canLook?: boolean;
 }
-export interface BehaviourAquaticOptions {
+export interface WalkMovementOptions {
+    canWalk?: boolean;
     avoidsLand?: boolean;
+    walkSpeed?: number;
+}
+export interface FlyMovementOptions {
+    canFly?: boolean;
+    flySpeedHorizontal?: number;
+}
+export interface AquaticMovementOptions {
+    avoidsWater?: boolean;
     canSwimInWater?: boolean;
-    canSwimInLava?: boolean;
-    canBreatheUnderwater?: boolean;
-    canBreatheUnderlava?: boolean;
-    hurtByLava?: boolean;
     swimSpeed?: number;
+    canBreatheUnderwater?: boolean;
+    canWalkOnWater?: boolean;
+    canSwimInLava?: boolean;
+    canBreatheUnderlava?: boolean;
+    canWalkOnLava?: boolean;
 }
 export interface BehaviourSleepOptions {
     canSleep?: boolean;
-    willSleepOnBed?: boolean;
-    sleepLightLevel?: NumberRange;
-    drowsyChance?: number;
-    depth?: SleepDepth;
     times?: TimeRange[];
     biomes?: string[];
+    blocks?: string[];
+    fluids?: string[];
+    light?: NumberRange;
+    depth?: SleepDepth;
+    canSeeSky?: boolean;
+    skyLight?: NumberRange;
+    drowsyChance?: number;
+    rouseChance?: number;
+    willSleepOnBed?: boolean;
 }
 export interface HerdData {
     tier: number;
-    leaderEntityType: PokemonIdentifier;
+    pokemon: PokemonIdentifier;
+    ignoresLevel?: boolean;
+    followDistance?: NumberRange;
 }
 export interface BehaviorHerdingOptions {
     maxHerdSize: number;
     herdData: HerdData[];
+    followDistance?: NumberRange;
 }
 export interface CombatBehaviourOptions {
     willDefendOwner?: boolean;
     willDefendSelf?: boolean;
     willFlee?: boolean;
+    fightsMelee?: boolean;
+}
+export interface EntityBehaviourOptions {
+    avoidedByCreeper?: boolean;
+    avoidedByPhantom?: boolean;
+    avoidedByFox?: boolean;
+    avoidedBySkeleton?: boolean;
+}
+export interface ItemBehaviourOptions {
+    desiredItems: ObtainableItemDTO[];
+}
+export interface ObtainableItemDTO {
+    item: string;
+    pickupPriority?: number;
+    fullnessValue?: number;
+    returnItem?: string;
+    expressionLike?: string;
+}
+export interface BlockBehaviourOptions {
+    immuneToSweetBerryBushBlock?: boolean;
+    canStandOnPowderSnow?: boolean;
+    canPathThroughSaccLeaves?: boolean;
+    immuneToCobwebBlock?: boolean;
 }
 export interface BehaviourOptions {
+    resting?: BehaviourSleepOptions;
     movement?: BehaviourMovementOptions;
-    aquatic?: BehaviourAquaticOptions;
-    sleep?: BehaviourSleepOptions;
-    herd?: BehaviorHerdingOptions;
-    riding?: BehaviourRidingOptions;
+    fireImmune?: boolean;
+    dampensVibrations?: boolean;
+    entityInteract?: EntityBehaviourOptions;
+    blockInteract?: BlockBehaviourOptions;
     combat?: CombatBehaviourOptions;
+    herd?: BehaviorHerdingOptions;
+    characteristicRainbow?: boolean;
+    item?: ItemBehaviourOptions;
 }
 export declare function serializeBehaviourOptions(options: BehaviourOptions): any;
 export declare function deserializeBehaviourOptions(data: any): BehaviourOptions;

@@ -24,6 +24,7 @@ interface HerdSpawnEntry {
     maxTimes?: number;
     isLeader?: boolean;
     levelRangeOffset: NumberRange;
+    heldItem?: ResourceLocation;
 }
 
 function serializeHerdSpawnEntry(herdSpawnEntry: HerdSpawnEntry): any {
@@ -33,7 +34,8 @@ function serializeHerdSpawnEntry(herdSpawnEntry: HerdSpawnEntry): any {
         weight: herdSpawnEntry.weight,
         maxTimes: herdSpawnEntry.maxTimes,
         isLeader: herdSpawnEntry.isLeader,
-        levelRangeOffset: herdSpawnEntry.levelRangeOffset.serialize()
+        levelRangeOffset: herdSpawnEntry.levelRangeOffset.serialize(),
+        heldItem: herdSpawnEntry.heldItem?.serialize()
     }
 }
 
@@ -44,7 +46,8 @@ function deserializeHerdSpawnEntry(data: any): HerdSpawnEntry {
         weight: data.weight,
         maxTimes: data.maxTimes,
         isLeader: data.isLeader,
-        levelRangeOffset: NumberRange.deserialize(data.levelRangeOffset)
+        levelRangeOffset: NumberRange.deserialize(data.levelRangeOffset),
+        heldItem: data.heldItem ? ResourceLocation.deserialize(data.heldItem) : undefined
     }
 }
 

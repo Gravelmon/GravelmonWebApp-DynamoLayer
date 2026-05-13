@@ -1,28 +1,40 @@
-import { ResourceLocation } from "../minecraft/resourceLocation";
-import { PokemonIdentifier } from "../../nodes/pokemon/pokemonNode";
-import { MoveIdentifier } from "../../nodes";
+import {ResourceLocation} from "../minecraft/resourceLocation";
+import {PokemonIdentifier} from "../../nodes/pokemon/pokemonNode";
+import {MoveIdentifier} from "../../nodes";
 import {Time} from "./time";
+import {NumberRange} from "./numberRange";
 
 export enum EvolutionConditionType {
     LEVEL,
-    TIME,
-    RATIO,
+    TIME_RANGE,
+    STAT_COMPARE,
+    STAT_EQUAL,
     HAS_MOVE,
     HELD_ITEM,
-    PROPERTY,
-    GENDER,
+    PROPERTIES,
     FRIENDSHIP,
+    FRIENDSHIP_BELOW,
     PARTY_MEMBER,
-    PARTY_MEMBER_OF_TYPE,
     BIOME,
     WEATHER,
     BLOCKS_TRAVELED,
+    HAS_MOVE_TYPE,
+    BATTLE_CRITICAL_HITS,
+    CHANCE,
+    RECOIL,
+    USE_MOVE,
+    PROPERTY_RANGE,
+    DEFEAT,
+    DAMAGE_TAKEN,
 }
 
-export enum StatRatio {
-    DEFENCE_HIGHER,
-    ATTACK_HIGHER,
-    EQUAL
+export enum Stat {
+    attack,
+    defence,
+    special_attack,
+    special_defence,
+    hp,
+    speed
 }
 
 export enum Gender {
@@ -30,39 +42,24 @@ export enum Gender {
     FEMALE = "female"
 }
 
-export abstract class EvolutionCondition {
-    name: string;
-    condition: string;
-    value: string | number | boolean | ResourceLocation | Time | StatRatio | Gender | PokemonIdentifier | MoveIdentifier;
+export abstract class EvolutionCondition<T> {
+    conditions: Record<string, T>;
     type: EvolutionConditionType;
 
-    constructor(name: string, type: EvolutionConditionType, condition: string, value: any) {
-        this.name = name;
+    protected constructor(type: EvolutionConditionType, condition: Record<string, T>) {
         this.type = type;
-        this.condition = condition;
-        this.value = value;
+        this.conditions = condition;
     }
 
     serialize(): Record<string, any> {
         return {
-            name: this.name,
             type: this.type,
-            condition: this.condition,
-            value: this.serializeValue()
+            values: Object.entries(this.conditions).map(([, value]) => this.serializeValue(value))
         }
     }
 
-    private serializeValue(): any {
-        if (this.value instanceof ResourceLocation) {
-            return this.value.serialize();
-        }
-        if (this.value instanceof PokemonIdentifier) {
-            return this.value.serialize();
-        }
-        if (this.value instanceof MoveIdentifier) {
-            return this.value.serialize();
-        }
-        return this.value;
+    serializeValue(value: T): any {
+        return value;
     }
 
     private static deserializeValue(type: EvolutionConditionType, value: any): any {
@@ -74,155 +71,221 @@ export abstract class EvolutionCondition {
         return value;
     }
 
-    static deserialize(data: any): EvolutionCondition {
-        const evolutionConditionData = { 
-            name: data.name,
+    static deserialize(data: any): EvolutionCondition<any> {
+        const evolutionConditionData = {
             type: data.type,
-            condition: data.condition,
-            value: this.deserializeValue(data.type, data.value) 
+            values: data.values.map((value: any) => EvolutionCondition.deserializeValue(data.type, value)) as any[]
         };
 
         switch (evolutionConditionData.type) {
             case EvolutionConditionType.LEVEL:
-                return new LevelCondition(evolutionConditionData.value as number);
-            case EvolutionConditionType.TIME:
-                return new TimeCondition(evolutionConditionData.value as Time);
-            case EvolutionConditionType.RATIO:
-                return new RatioCondition(evolutionConditionData.value as StatRatio);
+                return new LevelCondition(evolutionConditionData.values[0]);
+            case EvolutionConditionType.TIME_RANGE:
+                return new TimeCondition(evolutionConditionData.values[0]);
+            case EvolutionConditionType.STAT_COMPARE:
+                return new StatCompareCondition(evolutionConditionData.values[0], evolutionConditionData.values[1]);
+            case EvolutionConditionType.STAT_EQUAL:
+                return new StatEqualCondition(evolutionConditionData.values[0], evolutionConditionData.values[1]);
             case EvolutionConditionType.HAS_MOVE:
-                return new HasMoveCondition(MoveIdentifier.deserialize(evolutionConditionData.value));
+                return new HasMoveCondition(MoveIdentifier.deserialize(evolutionConditionData.values[0]));
+            case EvolutionConditionType.HAS_MOVE_TYPE:
+                return new HasMoveTypeCondition(evolutionConditionData.values[0]);
             case EvolutionConditionType.HELD_ITEM:
-                return new HeldItemCondition(ResourceLocation.deserialize(evolutionConditionData.value));
+                return new HeldItemCondition(ResourceLocation.deserialize(evolutionConditionData.values[0]));
             case EvolutionConditionType.FRIENDSHIP:
-                return new FriendshipCondition(evolutionConditionData.value as number);
-            case EvolutionConditionType.GENDER:
-                return new GenderCondition(evolutionConditionData.value as Gender);
+                return new FriendshipCondition(evolutionConditionData.values[0] as number);
+            case EvolutionConditionType.FRIENDSHIP_BELOW:
+                return new FriendshipBelowCondition(evolutionConditionData.values[0] as number);
+            case EvolutionConditionType.PROPERTIES:
+                return new PropertyCondition(evolutionConditionData.values[0]);
             case EvolutionConditionType.PARTY_MEMBER:
-                return new PartyMemberPokemonCondition(PokemonIdentifier.deserialize(evolutionConditionData.value));  
-            case EvolutionConditionType.PARTY_MEMBER_OF_TYPE:
-                return new PartyMemberTypeCondition(evolutionConditionData.value as string);
+                return new PartyMemberCondition(evolutionConditionData.values[0] as string, evolutionConditionData.values[1] as boolean);
             case EvolutionConditionType.BIOME:
-                return new BiomeCondition(evolutionConditionData.value as ResourceLocation);
+                return new BiomeCondition(evolutionConditionData.values[0] as ResourceLocation);
             case EvolutionConditionType.WEATHER:
-                const { isRaining, isThundering } = evolutionConditionData.value as { isRaining: boolean, isThundering: boolean };
+                const {isRaining, isThundering} = evolutionConditionData.values[0] as {
+                    isRaining: boolean,
+                    isThundering: boolean
+                };
                 return isRaining ? new RainingCondition(true) : new ThunderCondition(isThundering);
             case EvolutionConditionType.BLOCKS_TRAVELED:
-                return new BlocksTraveledCondition(evolutionConditionData.value as number);
+                return new BlocksTraveledCondition(evolutionConditionData.values[0] as number);
+            case EvolutionConditionType.BATTLE_CRITICAL_HITS:
+                return new BattleCriticalHitsCondition(evolutionConditionData.values[0] as number);
+            case EvolutionConditionType.CHANCE:
+                return new ChanceCondition(evolutionConditionData.values[0] as number);
+            case EvolutionConditionType.RECOIL:
+                return new RecoilCondition(evolutionConditionData.values[0] as number);
+            case EvolutionConditionType.USE_MOVE:
+                return new UseMoveCondition(evolutionConditionData.values[0] as string, evolutionConditionData.values[1] as number);
+            case EvolutionConditionType.PROPERTY_RANGE:
+                return new PropertyRangeCondition(evolutionConditionData.values[0], NumberRange.deserialize(evolutionConditionData.values[1]));
+            case EvolutionConditionType.DEFEAT:
+                return new DefeatCondition(evolutionConditionData.values[0] as string, evolutionConditionData.values[1] as number);
+            case EvolutionConditionType.DAMAGE_TAKEN:
+                return new DamageTakenCondition(evolutionConditionData.values[0] as number);
             default:
                 throw new Error(`Unsupported EvolutionConditionType: ${evolutionConditionData.type}`);
         }
     }
 }
 
-export class LevelCondition extends EvolutionCondition {
+export class LevelCondition extends EvolutionCondition<number> {
     constructor(value: number) {
-        super("level", EvolutionConditionType.LEVEL, "minLevel", value);
+        super(EvolutionConditionType.LEVEL, {minLevel: value});
     }
 }
 
-export class TimeCondition extends EvolutionCondition {
+export class TimeCondition extends EvolutionCondition<Time> {
     constructor(value: Time) {
-        super("time_range", EvolutionConditionType.TIME, "range", value);
+        super(EvolutionConditionType.TIME_RANGE, {range: value});
     }
 }
 
-export class RatioCondition extends EvolutionCondition {
-    constructor(value: StatRatio) {
-        super("attack_defence_ratio", EvolutionConditionType.RATIO, "ratio", value);
+export class StatCompareCondition extends EvolutionCondition<Stat> {
+    constructor(highStat: Stat, lowStat: Stat) {
+        super(EvolutionConditionType.STAT_COMPARE, {
+            highStat: highStat,
+            lowStat: lowStat,
+        });
     }
 }
 
-export class HasMoveCondition extends EvolutionCondition {
+export class StatEqualCondition extends EvolutionCondition<Stat> {
+    constructor(statOne: Stat, statTwo: Stat) {
+        super(EvolutionConditionType.STAT_EQUAL, {
+            statOne: statOne,
+            statTwo: statTwo,
+        });
+    }
+}
+
+export class HasMoveCondition extends EvolutionCondition<MoveIdentifier> {
     constructor(value: MoveIdentifier) {
-        super("has_move", EvolutionConditionType.HAS_MOVE, "move", value);
+        super(EvolutionConditionType.HAS_MOVE, {move: value});
+    }
+
+    serializeValue(value: MoveIdentifier): any {
+        return value.serialize();
     }
 }
 
-export class HeldItemCondition extends EvolutionCondition {
+export class HasMoveTypeCondition extends EvolutionCondition<string> {
+    constructor(type: string) {
+        super(EvolutionConditionType.HAS_MOVE_TYPE, {type: type});
+    }
+}
+
+export class HeldItemCondition extends EvolutionCondition<ResourceLocation> {
     constructor(value: ResourceLocation) {
-        super("held_item", EvolutionConditionType.HELD_ITEM, "itemCondition", value);
+        super(EvolutionConditionType.HELD_ITEM, {itemCondition: value});
     }
 
-    serialize(): Record<string, any> {
-        return {
-            name: this.name,
-            type: this.type,
-            condition: this.condition,
-            value: this.value instanceof ResourceLocation ? this.value.serialize() : this.value
-        }
+    serializeValue(value: ResourceLocation): any {
+        return value.serialize();
     }
 }
 
-export abstract class PropertyCondition extends EvolutionCondition {
-    property: string;
-    constructor(evolutionConditionType: EvolutionConditionType, property: string, value: any) {
-        super("properties", evolutionConditionType, "target", value);
-        this.property = property;
-    }
-
-    serialize(): Record<string, any> {
-        return {
-            name: this.name,
-            type: this.type,
-            property: this.property,
-            condition: this.condition,
-            value: this.value instanceof ResourceLocation ? this.value.serialize() : this.value
-        }
-    }
-}
-
-export class GenderCondition extends PropertyCondition {
-    constructor(value: Gender) {
-        super(EvolutionConditionType.GENDER, "gender=", value);
-    }
-}
-
-export class FriendshipCondition extends EvolutionCondition {
-    constructor(value: number) {
-        super("friendship", EvolutionConditionType.FRIENDSHIP, "amount", value);
-    }
-}
-
-export abstract class PartyMemberCondition extends EvolutionCondition {
-    property: string;
-    constructor(evolutionConditionType: EvolutionConditionType,property: string, value: any) {
-        super("party_member", evolutionConditionType, "target", value);
-        this.property = property;
-    }
-}
-
-export class PartyMemberPokemonCondition extends PartyMemberCondition {
-    constructor(value: PokemonIdentifier) {
-        super(EvolutionConditionType.PARTY_MEMBER, "", value);
-    }
-}
-
-export class PartyMemberTypeCondition extends PartyMemberCondition {
+export class PropertyCondition extends EvolutionCondition<string> {
     constructor(value: string) {
-        super(EvolutionConditionType.PARTY_MEMBER_OF_TYPE, "type=", value);
+        super(EvolutionConditionType.PROPERTIES, {target: value});
     }
 }
 
-export class BiomeCondition extends EvolutionCondition {
-    constructor(value: ResourceLocation) {
-        super("biome", EvolutionConditionType.BIOME, "biomeCondition", value);
-    }
-}
-
-export class RainingCondition extends EvolutionCondition {
-    constructor(value: boolean) {
-        super("weather", EvolutionConditionType.WEATHER, "isRaining", value);
-    }
-}
-
-export class ThunderCondition extends EvolutionCondition {
-    constructor(value: boolean) {
-        super("weather", EvolutionConditionType.WEATHER, "isThundering", value);
-    }
-}
-
-export class BlocksTraveledCondition extends EvolutionCondition {
+export class FriendshipCondition extends EvolutionCondition<number> {
     constructor(value: number) {
-        super("blocks_traveled", EvolutionConditionType.BLOCKS_TRAVELED, "amount", value);
+        super(EvolutionConditionType.FRIENDSHIP, {amount: value});
     }
 }
+
+export class FriendshipBelowCondition extends EvolutionCondition<number> {
+    constructor(value: number) {
+        super(EvolutionConditionType.FRIENDSHIP_BELOW, {amount: value});
+    }
+}
+
+export class PartyMemberCondition extends EvolutionCondition<any> {
+    constructor(condition: string, contains: boolean = true) {
+        super(EvolutionConditionType.PARTY_MEMBER, {
+            target: condition,
+            contains: contains
+        });
+    }
+}
+
+export class BiomeCondition extends EvolutionCondition<ResourceLocation> {
+    constructor(value: ResourceLocation) {
+        super(EvolutionConditionType.BIOME, {biomeCondition: value});
+    }
+
+    public serializeValue(value: ResourceLocation): any {
+        return value.serialize();
+    }
+}
+
+export class RainingCondition extends EvolutionCondition<boolean> {
+    constructor(value: boolean) {
+        super(EvolutionConditionType.WEATHER, {isRaining: value});
+    }
+}
+
+export class ThunderCondition extends EvolutionCondition<boolean> {
+    constructor(value: boolean) {
+        super(EvolutionConditionType.WEATHER, {isThundering: value});
+    }
+}
+
+export class BlocksTraveledCondition extends EvolutionCondition<number> {
+    constructor(value: number) {
+        super(EvolutionConditionType.BLOCKS_TRAVELED, {amount: value});
+    }
+}
+
+export class BattleCriticalHitsCondition extends EvolutionCondition<number> {
+    constructor(value: number) {
+        super(EvolutionConditionType.BATTLE_CRITICAL_HITS, {amount: value});
+    }
+}
+
+export class ChanceCondition extends EvolutionCondition<number> {
+    constructor(value: number) {
+        super(EvolutionConditionType.CHANCE, {chance: value});
+    }
+}
+
+export class DefeatCondition extends EvolutionCondition<any> {
+    constructor(target: string, value: number) {
+        super(EvolutionConditionType.DEFEAT, {target: target, amount: value});
+    }
+}
+
+export class PropertyRangeCondition extends EvolutionCondition<any> {
+    constructor(feature: string, value: NumberRange) {
+        super(EvolutionConditionType.PROPERTY_RANGE, {feature: feature, amount: value});
+    }
+
+    public serializeValue(value: any): any {
+        if(value instanceof NumberRange) return value.serialize();
+        return value;
+    }
+}
+
+export class RecoilCondition extends EvolutionCondition<number> {
+    constructor(value: number) {
+        super(EvolutionConditionType.RECOIL, {amount: value});
+    }
+}
+
+export class DamageTakenCondition extends EvolutionCondition<number> {
+    constructor(value: number) {
+        super(EvolutionConditionType.DAMAGE_TAKEN, {amount: value});
+    }
+}
+
+export class UseMoveCondition extends EvolutionCondition<any> {
+    constructor(move: string, value: number) {
+        super(EvolutionConditionType.USE_MOVE, {move: move, amount: value});
+    }
+}
+
+

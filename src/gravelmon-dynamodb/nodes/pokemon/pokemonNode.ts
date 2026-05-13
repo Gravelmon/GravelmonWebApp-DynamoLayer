@@ -8,6 +8,11 @@ import {
 import {Stats} from '../../models/properties/stats';
 import {deserializeMoveSet, MoveSet, serializeMoveSet} from '../../models/battle/moveset';
 import {deserializerRegistry} from '../../service/deserializerRegistry';
+import {
+    deserializeRidingOptions,
+    RidingBehaviourOptions as RidingOptions,
+    serializeRidingOptions
+} from "../../models";
 
 export const PokemonEntity = "Pokemon";
 
@@ -73,8 +78,8 @@ export interface PokemonData {
     baseStats: Stats;
     rebalancedStats?: Stats;
     evYield: Stats;
-    heightInMeters: number;
-    weightInKg: number;
+    heightInDecimeters: number;
+    weightInDeciGrams: number;
     catchRate: number;
     maleRatio: number;
     baseExperience: number;
@@ -85,7 +90,9 @@ export interface PokemonData {
     baseScale: number;
     cannotDynamax: boolean;
     dropAmount: number;
+    standingEyeHeight?: number;
     behaviourOptions?: BehaviourOptions;
+    riding?: RidingOptions;
 
     //references to related nodes
     typing: {
@@ -120,8 +127,8 @@ export function deserializePokemonData(rawData: any): PokemonData {
         baseStats: Stats.deserialize(rawData.baseStats),
         rebalancedStats: rawData.rebalancedStats ? Stats.deserialize(rawData.rebalancedStats) : undefined,
         evYield: Stats.deserialize(rawData.evYield),
-        heightInMeters: rawData.heightInMeters,
-        weightInKg: rawData.weightInKg,
+        heightInDecimeters: rawData.heightInDecimeters,
+        weightInDeciGrams: rawData.weightInDeciGrams,
         catchRate: rawData.catchRate,
 
         maleRatio: rawData.maleRatio,
@@ -133,7 +140,9 @@ export function deserializePokemonData(rawData: any): PokemonData {
         baseScale: rawData.baseScale,
         cannotDynamax: rawData.cannotDynamax,
         dropAmount: rawData.dropAmount,
+        standingEyeHeight: rawData.standingEyeHeight,
         behaviourOptions: rawData.behaviourOptions ? deserializeBehaviourOptions(rawData.behaviourOptions) : undefined,
+        riding: rawData.riding ? deserializeRidingOptions(rawData.riding) : undefined,
         typing: {
             primaryType: rawData.typing.primaryType,
             secondaryType: rawData.typing.secondaryType
@@ -170,8 +179,8 @@ export class PokemonNode extends DynamoNode {
             baseStats: this.pokemonData.baseStats.serialize(),
             rebalancedStats: this.pokemonData.rebalancedStats?.serialize(),
             evYield: this.pokemonData.evYield.serialize(),
-            heightInMeters: this.pokemonData.heightInMeters,
-            weightInKg: this.pokemonData.weightInKg,
+            heightInDecimeters: this.pokemonData.heightInDecimeters,
+            weightInDeciGrams: this.pokemonData.weightInDeciGrams,
             catchRate: this.pokemonData.catchRate,
             maleRatio: this.pokemonData.maleRatio,
             baseExperience: this.pokemonData.baseExperience,
@@ -186,7 +195,9 @@ export class PokemonNode extends DynamoNode {
             baseScale: this.pokemonData.baseScale,
             cannotDynamax: this.pokemonData.cannotDynamax,
             dropAmount: this.pokemonData.dropAmount,
+            standingEyeHeight: this.pokemonData.standingEyeHeight,
             behaviourOptions: this.pokemonData.behaviourOptions ? serializeBehaviourOptions(this.pokemonData.behaviourOptions) : undefined,
+            riding: this.pokemonData.riding ? serializeRidingOptions(this.pokemonData.riding) : undefined,
             typing: {...this.pokemonData.typing},
             rebalancedTyping: {...this.pokemonData.rebalancedTyping},
             speciesFeatures: this.pokemonData.speciesFeatures,

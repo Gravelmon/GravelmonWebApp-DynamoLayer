@@ -3,6 +3,7 @@ import { AbilityIdentifier } from '../battle/abilityNode';
 import { BehaviourOptions } from '../../models/behaviour/behaviour';
 import { Stats } from '../../models/properties/stats';
 import { MoveSet } from '../../models/battle/moveset';
+import { RidingBehaviourOptions as RidingOptions } from "../../models";
 export declare const PokemonEntity = "Pokemon";
 export declare const HasAbilityEdgeType = "HasAbility";
 export declare class PokemonIdentifier {
@@ -27,8 +28,8 @@ export interface PokemonData {
     baseStats: Stats;
     rebalancedStats?: Stats;
     evYield: Stats;
-    heightInMeters: number;
-    weightInKg: number;
+    heightInDecimeters: number;
+    weightInDeciGrams: number;
     catchRate: number;
     maleRatio: number;
     baseExperience: number;
@@ -39,7 +40,9 @@ export interface PokemonData {
     baseScale: number;
     cannotDynamax: boolean;
     dropAmount: number;
+    standingEyeHeight?: number;
     behaviourOptions?: BehaviourOptions;
+    riding?: RidingOptions;
     typing: {
         primaryType: string;
         secondaryType?: string;

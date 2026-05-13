@@ -9,32 +9,23 @@ export declare enum EvolutionType {
     ItemInteract = "item_interact",
     Trade = "trade"
 }
-export declare class EvolutionIdentifier {
-    source: PokemonIdentifier;
-    result: PokemonIdentifier;
-    constructor(source: PokemonIdentifier, result: PokemonIdentifier);
-    toString(): string;
-    static fromString(identifier: string): EvolutionIdentifier;
-    serialize(): any;
-    static deserialize(data: any): EvolutionIdentifier;
-}
 export interface EvolutionOptions {
-    identifier: EvolutionIdentifier;
     evolutionType: EvolutionType;
     consumesHeldItem?: boolean;
     isOptional?: boolean;
-    evolutionConditions: EvolutionCondition[];
+    evolutionConditions: EvolutionCondition<any>[];
     needsToHoldItem?: ResourceLocation;
     requiresItemUsedOn?: ResourceLocation;
-    evolvesFromForm: PokemonIdentifier;
-    evolvesIntoForm: PokemonIdentifier;
     shedsIntoForm?: PokemonIdentifier;
     learnsMovesUponEvolving?: MoveIdentifier[];
 }
 export declare class EvolutionNode extends DynamoNode {
+    currentPokemon: PokemonIdentifier;
+    evolutions: PokemonIdentifier[];
+    preEvolutions: PokemonIdentifier[];
     evolutionOptions: EvolutionOptions;
     static version: number;
-    constructor(evolutionOptions: EvolutionOptions, lastEdited?: number);
+    constructor(currentPokemon: PokemonIdentifier, evolutionOptions: EvolutionOptions, evolutions: PokemonIdentifier[], preEvolutions: PokemonIdentifier[], lastEdited?: number);
     serialize(): any;
     static deserialize(data: any): EvolutionNode;
 }

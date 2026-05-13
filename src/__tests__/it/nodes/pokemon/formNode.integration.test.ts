@@ -1,24 +1,16 @@
-import { GravelmonDynamoDBService } from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
-import { createTestEnv } from "../../../testEnv";
-import { getNodePK } from "../../../../gravelmon-dynamodb/service/dynamoNodes";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
+import {createTestEnv} from "../../../testEnv";
+import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
 
-import {
-    FormNode,
-    FormData
-} from "../../../../gravelmon-dynamodb/nodes";
-
-import {
-    PokemonIdentifier,
-    PokemonData
-} from "../../../../gravelmon-dynamodb/nodes";
-import { Stats } from "../../../../gravelmon-dynamodb/models/properties/stats";
-import { PoseType } from "../../../../gravelmon-dynamodb/models/assets/posing/poseType";
+import {FormData, FormNode, LiquidGlowMode, PokemonData, PokemonIdentifier} from "../../../../gravelmon-dynamodb/nodes";
+import {Stats} from "../../../../gravelmon-dynamodb/models/properties/stats";
+import {PoseType} from "../../../../gravelmon-dynamodb/models/assets/posing/poseType";
 import {CommonLayerNames} from "../../../../gravelmon-dynamodb/models/assets/resolverData";
-import { SpawnType, SpawnData } from "../../../../gravelmon-dynamodb/models/spawning/spawnData";
-import { SpawnablePositionType, SpawnBucket } from "../../../../gravelmon-dynamodb/models/spawning/spawning";
-import { SpawnCondition } from "../../../../gravelmon-dynamodb/models/spawning/spawnCondition";
-import { ResourceLocation } from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
-import { NumberRange } from "../../../../gravelmon-dynamodb/models/properties/numberRange";
+import {SpawnData, SpawnType} from "../../../../gravelmon-dynamodb/models/spawning/spawnData";
+import {SpawnablePositionType, SpawnBucket} from "../../../../gravelmon-dynamodb/models/spawning/spawning";
+import {SpawnCondition} from "../../../../gravelmon-dynamodb/models/spawning/spawnCondition";
+import {ResourceLocation} from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
+import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
 
 let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
@@ -108,9 +100,10 @@ describe("FormNode Integration Tests", () => {
             pokemonIdentifier: identifier,
             baseStats: new Stats(35, 55, 40, 50, 50, 90),
             evYield: new Stats(0, 0, 0, 0, 0, 2),
-            heightInMeters: 0.4,
-            weightInKg: 6,
+            heightInDecimeters: 0.4,
+            weightInDeciGrams: 6,
             catchRate: 190,
+            standingEyeHeight: 0.4,
             maleRatio: 0.5,
             baseExperience: 112,
             baseFriendship: 70,
@@ -150,7 +143,7 @@ describe("FormNode Integration Tests", () => {
 
             lightingData: {
                 lightLevel: 10,
-                liquidGlowMode: "LAND"
+                liquidGlowMode: LiquidGlowMode.LAND
             },
 
             affectedByMechanics: ["weather"],
@@ -217,8 +210,6 @@ describe("FormNode Integration Tests", () => {
         expect(readNode.pokemonData.baseStats.speed).toBe(90);
 
         expect(readNode.pokemonData.evYield.speed).toBe(2);
-        expect(readNode.pokemonData.heightInMeters).toBe(0.4);
-        expect(readNode.pokemonData.weightInKg).toBe(6);
         expect(readNode.pokemonData.catchRate).toBe(190);
         expect(readNode.pokemonData.maleRatio).toBe(0.5);
         expect(readNode.pokemonData.baseExperience).toBe(112);

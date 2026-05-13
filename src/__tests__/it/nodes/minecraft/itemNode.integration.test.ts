@@ -24,6 +24,7 @@ describe("ItemNode", () => {
             item,
             true,
             "s3://textures/diamond.png",
+            undefined,
             "sharpness_boost"
         );
 

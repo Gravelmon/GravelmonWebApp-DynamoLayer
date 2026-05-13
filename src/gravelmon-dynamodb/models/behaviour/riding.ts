@@ -80,7 +80,7 @@ function deserializeRidingBehaviour(data: any): RidingBehaviour {
     };
 }
 
-export function serializeRidingBehaviourOptions(options: RidingBehaviourOptions): any {
+export function serializeRidingOptions(options: RidingBehaviourOptions): any {
     return {
         airRidingBehaviour: options.airRidingBehaviour ? serializeRidingBehaviour(options.airRidingBehaviour) : undefined,
         landRidingBehaviour: options.landRidingBehaviour ? serializeRidingBehaviour(options.landRidingBehaviour) : undefined,
@@ -109,7 +109,7 @@ function deserializeRidingStats(data: any): RidingStats {
     }
 }
 
-export function deserializeRidingBehaviourOptions(data: any): RidingBehaviourOptions {
+export function deserializeRidingOptions(data: any): RidingBehaviourOptions {
     return {
         airRidingBehaviour: data.airRidingBehaviour ? deserializeRidingBehaviour(data.airRidingBehaviour) : undefined,
         landRidingBehaviour: data.landRidingBehaviour ? deserializeRidingBehaviour(data.landRidingBehaviour) : undefined,
