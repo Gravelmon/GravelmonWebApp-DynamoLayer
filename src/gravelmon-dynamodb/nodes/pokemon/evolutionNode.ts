@@ -28,6 +28,36 @@ export interface EvolutionOptions {
     learnsMovesUponEvolving?: MoveIdentifier[];
 }
 
+function deserializeEvolutionOptions(options : any) {
+     return {
+        evolutionType: options.evolutionType,
+        consumesHeldItem: options.consumesHeldItem,
+        isOptional: options.isOptional,
+        evolutionConditions: Array.isArray(options.evolutionConditions) ?
+            options.evolutionConditions.map((condition: any) => EvolutionCondition.deserialize(condition))
+            : [],
+        needsToHoldItem: options.needsToHoldItem ? ResourceLocation.deserialize(options.needsToHoldItem) : undefined,
+        requiresItemUsedOn: options.useItemOn ? ResourceLocation.deserialize(options.useItemOn) : undefined,
+        shedsIntoForm: options.shedsIntoForm ? PokemonIdentifier.deserialize(options.shedsIntoForm) : undefined,
+        learnsMovesUponEvolving: options.learnsMoveUponEvolving ? options.learnsMoveUponEvolving.map((move:any)  => MoveIdentifier.deserialize(move)) : undefined
+    }
+}
+
+function serializeEvolutionOptions(evolutionOptions: EvolutionOptions) {
+    return {
+        evolutionType: evolutionOptions.evolutionType,
+        consumesHeldItem: evolutionOptions.consumesHeldItem,
+        isOptional: evolutionOptions.isOptional,
+        evolutionConditions: evolutionOptions.evolutionConditions.map(condition => condition.serialize()),
+        needsToHoldItem: evolutionOptions.needsToHoldItem?.serialize(),
+        useItemOn: evolutionOptions.requiresItemUsedOn?.serialize(),
+        shedsIntoForm: evolutionOptions.shedsIntoForm?.serialize(),
+        learnsMoveUponEvolving: evolutionOptions.learnsMovesUponEvolving ?
+            evolutionOptions.learnsMovesUponEvolving?.map(move => move.serialize())
+            : undefined
+    }
+}
+
 export class EvolutionNode extends DynamoNode {
     currentPokemon: PokemonIdentifier;
 
@@ -59,24 +89,11 @@ export class EvolutionNode extends DynamoNode {
             currentPokemon: this.currentPokemon.serialize(),
             evolutions: this.evolutions.map(p => p.serialize()),
             preEvolutions: this.preEvolutions.map(p => p.serialize()),
-            evolutionOptions: {
-                evolutionType: this.evolutionOptions.evolutionType,
-                consumesHeldItem: this.evolutionOptions.consumesHeldItem,
-                isOptional: this.evolutionOptions.isOptional,
-                evolutionConditions: this.evolutionOptions.evolutionConditions.map(condition => condition.serialize()),
-                needsToHoldItem: this.evolutionOptions.needsToHoldItem?.serialize(),
-                useItemOn: this.evolutionOptions.requiresItemUsedOn?.serialize(),
-                shedsIntoForm: this.evolutionOptions.shedsIntoForm?.serialize(),
-                learnsMoveUponEvolving: this.evolutionOptions.learnsMovesUponEvolving ? 
-                    this.evolutionOptions.learnsMovesUponEvolving?.map(move => move.serialize()) 
-                    : undefined
-            }
+            evolutionOptions: serializeEvolutionOptions(this.evolutionOptions)
         }
     }
 
     static deserialize(data: any): EvolutionNode {
-        const options = data.evolutionOptions;
-
         const currentPokemon = PokemonIdentifier.deserialize(data.currentPokemon);
         const evolutions: PokemonIdentifier[] = [];
         const preEvolutions: PokemonIdentifier[] = [];
@@ -91,19 +108,8 @@ export class EvolutionNode extends DynamoNode {
             });
         }
 
-        const evolutionOptions: EvolutionOptions = {
-            evolutionType: options.evolutionType,
-            consumesHeldItem: options.consumesHeldItem,
-            isOptional: options.isOptional,
-            evolutionConditions: Array.isArray(options.evolutionConditions) ?
-                options.evolutionConditions.map((condition: any) => EvolutionCondition.deserialize(condition))
-                : [],
-            needsToHoldItem: options.needsToHoldItem ? ResourceLocation.deserialize(options.needsToHoldItem) : undefined,
-            requiresItemUsedOn: options.useItemOn ? ResourceLocation.deserialize(options.useItemOn) : undefined,
-            shedsIntoForm: options.shedsIntoForm ? PokemonIdentifier.deserialize(options.shedsIntoForm) : undefined,
-            learnsMovesUponEvolving: options.learnsMoveUponEvolving ? options.learnsMoveUponEvolving.map((move:any)  => MoveIdentifier.deserialize(move)) : undefined
-        }
-        return new EvolutionNode(currentPokemon, evolutionOptions, evolutions, preEvolutions, data.lastEdited);
+
+        return new EvolutionNode(currentPokemon, deserializeEvolutionOptions(data.evolutionOptions), evolutions, preEvolutions, data.lastEdited);
     }
 }
 
