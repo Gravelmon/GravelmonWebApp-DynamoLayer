@@ -39,7 +39,7 @@ export interface DropData {
 export interface FormData {
     genderDifference?: GenderDifference;
     lightingData?: LightingData;
-    isFormOf: PokemonIdentifier;
+    isFormOf?: PokemonIdentifier;
     affectedByMechanics?: string[];
     resolverData?: ResolverData;
     posingData?: PosingData;
@@ -48,7 +48,7 @@ export interface FormData {
     revivesFromFossils?: string[];
     dropData?: DropData;
     mechanicInteractions?: MechanicInteraction[];
-    addedByGame?: string;
+    addedByGame: string;
 }
 export declare class FormNode extends PokemonNode {
     formData: FormData;

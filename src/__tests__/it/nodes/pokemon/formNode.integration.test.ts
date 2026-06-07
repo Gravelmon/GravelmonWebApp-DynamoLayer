@@ -138,7 +138,7 @@ describe("FormNode Integration Tests", () => {
         // -------------------------
         const formData: FormData = {
             isFormOf: new PokemonIdentifier("pokemon", "pikachu"),
-
+            addedByGame: "pokemon",
             speciesFeatures: ["galarian"],
 
             lightingData: {
@@ -229,7 +229,7 @@ describe("FormNode Integration Tests", () => {
 // --- FormData checks
         const data = readNode.formData;
 
-        expect(data.isFormOf.toString())
+        expect(data.isFormOf?.toString())
             .toBe("pokemon#pikachu");
 
         expect(data.speciesFeatures).toEqual(["galarian"]);

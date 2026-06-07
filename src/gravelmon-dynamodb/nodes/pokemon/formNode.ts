@@ -54,7 +54,7 @@ export interface FormData {
     genderDifference?: GenderDifference;
     lightingData?: LightingData;
     // evolutions?: PokemonIdentifier[];
-    isFormOf: PokemonIdentifier;
+    isFormOf?: PokemonIdentifier; //undefined if it is the base form
     affectedByMechanics?: string[];
     resolverData?: ResolverData;
     posingData?: PosingData;
@@ -63,7 +63,7 @@ export interface FormData {
     revivesFromFossils?: string[];
     dropData?: DropData;
     mechanicInteractions?: MechanicInteraction[];
-    addedByGame?: string;
+    addedByGame: string;
 }
 
 export class FormNode extends PokemonNode {
@@ -109,7 +109,7 @@ export function serializeFormData(formData: FormData): any {
             liquidGlowMode: formData.lightingData.liquidGlowMode
         } : undefined,
         // evolutions: formData.evolutions?.map(evolution => evolution.serialize()),
-        isFormOf: formData.isFormOf.serialize(),
+        isFormOf: formData.isFormOf ? formData.isFormOf.serialize() : undefined,
         affectedByMechanics: formData.affectedByMechanics,
         resolverData: formData.resolverData ? serializeResolverData(formData.resolverData) : undefined,
         posingData: formData.posingData ? serializePosingData(formData.posingData) : undefined,
@@ -149,13 +149,13 @@ export function deserializeFormData(data: any): FormData {
             liquidGlowMode: data.lightingData.liquidGlowMode
         } : undefined,
         // evolutions: data.evolutions?.map((evolution: any) => PokemonIdentifier.deserialize(evolution)),
-        isFormOf: PokemonIdentifier.deserialize(data.isFormOf ),
-        affectedByMechanics: data.affectedByMechanics,
-        resolverData: deserializeResolverData(data.resolverData),
-        posingData: deserializePosingData(data.posingData),
+        isFormOf: data.isFormOf ? PokemonIdentifier.deserialize(data.isFormOf ) : undefined,
+        affectedByMechanics: data.affectedByMechanics ? data.affectedByMechanics : undefined,
+        resolverData: data.resolverData ? deserializeResolverData(data.resolverData) : undefined,
+        posingData: data.posingData ? deserializePosingData(data.posingData) : undefined,
         speciesFeatures: data.speciesFeatures,
         spawnData: data.spawnData ? data.spawnData.map(deserializeSpawnData) : undefined,
-        revivesFromFossils: data.revivesFromFossils,
+        revivesFromFossils: data.revivesFromFossils ?? [],
         dropData: data.dropData ? {
             dropAmount: data.dropData.dropAmount,
             drops: data.dropData.drops.map((drop: any) => {
@@ -167,12 +167,12 @@ export function deserializeFormData(data: any): FormData {
                 item: ResourceLocation.deserialize(drop.item);
             })
         } : undefined,
-        mechanicInteractions: data.mechanicInteractions?.map((mechanicInteraction: any) => {
+        mechanicInteractions: data.mechanicInteractions ? data.mechanicInteractions.map((mechanicInteraction: any) => {
             return {
                 mechanic: mechanicInteraction.mechanic,
                 resultingForm: mechanicInteraction.resultingForms.map((form:any)=> PokemonIdentifier.deserialize(form))
             }
-        }),
+        }) : undefined,
         addedByGame: data.addedByGame
     };
 }
