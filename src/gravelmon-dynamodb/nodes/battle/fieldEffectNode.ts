@@ -114,10 +114,10 @@ export class FieldEffectNode extends DynamoNode {
 
     static deserializeFieldEffectData(data: any): FieldEffectData {
         return {
-            associatedTypes: data.associatedTypes,
+            associatedTypes: data.associatedTypes ? data.associatedTypes : [],
             durationInTurns: data.durationInTurns,
             fieldEffectRange: data.fieldEffectRange,
-            description: data.description,
+            description: data.description ? data.description : undefined,
         }
     }
 

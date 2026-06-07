@@ -1,4 +1,4 @@
-import { MoveIdentifier, MoveCategory } from '../../nodes/battle/moveNode';
+import { MoveIdentifier, MoveCategory } from '../../nodes';
 export interface MoveSetEntry {
     moveName: MoveIdentifier;
     category: MoveCategory;

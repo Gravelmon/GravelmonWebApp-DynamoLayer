@@ -1,4 +1,4 @@
-import { MoveIdentifier, MoveCategory } from '../../nodes/battle/moveNode';
+import { MoveIdentifier, MoveCategory } from '../../nodes';
 
 
 export interface MoveSetEntry {
@@ -19,22 +19,22 @@ function serializeMoveSetEntry(entry: MoveSetEntry): any {
         basePower: entry.basePower,
         accuracy: entry.accuracy,
         type: entry.type,
-        rebalancedBasePower: entry.rebalancedBasePower,
-        rebalancedAccuracy: entry.rebalancedAccuracy,
-        rebalancedType: entry.rebalancedType
+        rebalancedBasePower: entry.rebalancedBasePower ?? undefined,
+        rebalancedAccuracy: entry.rebalancedAccuracy ?? undefined,
+        rebalancedType: entry.rebalancedType ?? undefined
     }
 }
 
 function deserializeMoveSetEntry(data: any): MoveSetEntry {
     return {
         moveName: MoveIdentifier.deserialize(data.moveName),
-        category: data.category,
-        basePower: data.basePower,
-        accuracy: data.accuracy,
+        category: data.category ?? MoveCategory.UNKNOWN,
+        basePower: data.basePower ?? 0,
+        accuracy: data.accuracy ?? 100,
         type: data.type,
-        rebalancedBasePower: data.rebalancedBasePower,
-        rebalancedAccuracy: data.rebalancedAccuracy,
-        rebalancedType: data.rebalancedType
+        rebalancedBasePower: data.rebalancedBasePower ?? undefined,
+        rebalancedAccuracy: data.rebalancedAccuracy ?? undefined,
+        rebalancedType: data.rebalancedType ?? undefined
     }
 }
 
@@ -59,9 +59,9 @@ export function serializeMoveSet(moveSet: MoveSet): any {
 
 export function deserializeMoveSet(data: any): MoveSet {
     return {
-        levelUpMoves: data.levelUpMoves.map((m: any) => ({ moveName: deserializeMoveSetEntry(m.moveName), level: m.level })),
-        teachMoves: data.teachMoves.map(deserializeMoveSetEntry),
-        eggMoves: data.eggMoves.map(deserializeMoveSetEntry),
-        legacyMoves: data.legacyMoves.map(deserializeMoveSetEntry)
+        levelUpMoves: data.levelUpMoves ? data.levelUpMoves.map((m: any) => ({ moveName: deserializeMoveSetEntry(m.moveName), level: m.level })) : [],
+        teachMoves: data.teachMoves ? data.teachMoves.map(deserializeMoveSetEntry) : [],
+        eggMoves: data.eggMoves ? data.eggMoves.map(deserializeMoveSetEntry) : [],
+        legacyMoves: data.legacyMoves ? data.legacyMoves.map(deserializeMoveSetEntry) : []
     }
 }
