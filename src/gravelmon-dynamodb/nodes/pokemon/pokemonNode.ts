@@ -69,27 +69,27 @@ export class Hitbox {
 
 export interface PokemonData {
     pokemonIdentifier: PokemonIdentifier;
-    baseStats: Stats;
+    baseStats?: Stats;
     rebalancedStats?: Stats;
-    evYield: Stats;
-    heightInDecimeters: number;
-    weightInDeciGrams: number;
-    catchRate: number;
-    maleRatio: number;
-    baseExperience: number;
-    baseFriendship: number;
-    eggCycles: number;
-    pokedexEntry: string;
-    hitbox: Hitbox;
-    baseScale: number;
-    cannotDynamax: boolean;
-    dropAmount: number;
+    evYield?: Stats;
+    heightInDecimeters?: number;
+    weightInDeciGrams?: number;
+    catchRate?: number;
+    maleRatio?: number;
+    baseExperience?: number;
+    baseFriendship?: number;
+    eggCycles?: number;
+    pokedexEntry?: string;
+    hitbox?: Hitbox;
+    baseScale?: number;
+    cannotDynamax?: boolean;
+    dropAmount?: number;
     standingEyeHeight?: number;
     behaviourOptions?: BehaviourOptions;
     riding?: RidingOptions;
 
     //references to related nodes
-    typing: {
+    typing?: {
         primaryType: string;
         secondaryType?: string;
     }
@@ -97,20 +97,20 @@ export interface PokemonData {
         primaryType: string;
         secondaryType?: string;
     }
-    speciesFeatures: string[];
-    labels: string[];
-    eggGroups: string[];
-    experienceGroup: string;
-    gameIntroducedIn: string;
-    abilities: {
+    speciesFeatures?: string[];
+    labels?: string[];
+    eggGroups?: string[];
+    experienceGroup?: string;
+    gameIntroducedIn?: string;
+    abilities?: {
         identifier: AbilityIdentifier;
         isHidden: boolean;
         isRebalanced: boolean;
         isPlaceholder: boolean;
     }[]
-    forms: PokemonIdentifier[];
+    forms?: PokemonIdentifier[];
 
-    moveSet: MoveSet;
+    moveSet?: MoveSet;
     placeholderMoveSet?: MoveSet;
     rebalancedMoveSet?: MoveSet;
 }
@@ -118,41 +118,41 @@ export interface PokemonData {
 export function deserializePokemonData(rawData: any): PokemonData {
     return {
         pokemonIdentifier: PokemonIdentifier.deserialize(rawData.pokemonIdentifier),
-        baseStats: Stats.deserialize(rawData.baseStats),
+        baseStats: rawData.baseStats ? Stats.deserialize(rawData.baseStats) : undefined,
         rebalancedStats: rawData.rebalancedStats ? Stats.deserialize(rawData.rebalancedStats) : undefined,
-        evYield: Stats.deserialize(rawData.evYield),
-        heightInDecimeters: rawData.heightInDecimeters,
-        weightInDeciGrams: rawData.weightInDeciGrams,
-        catchRate: rawData.catchRate,
+        evYield: rawData.evYield ? Stats.deserialize(rawData.evYield) : undefined,
+        heightInDecimeters: rawData.heightInDecimeters !== undefined ? rawData.heightInDecimeters : undefined,
+        weightInDeciGrams: rawData.weightInDeciGrams !== undefined ? rawData.weightInDeciGrams : undefined,
+        catchRate: rawData.catchRate !== undefined ? rawData.catchRate : undefined,
 
-        maleRatio: rawData.maleRatio,
-        baseExperience: rawData.baseExperience,
-        baseFriendship: rawData.baseFriendship,
-        eggCycles: rawData.eggCycles,
-        pokedexEntry: rawData.pokedexEntry,
-        hitbox: new Hitbox(rawData.hitbox.width, rawData.hitbox.height, rawData.hitbox.fixed),
-        baseScale: rawData.baseScale,
-        cannotDynamax: rawData.cannotDynamax,
-        dropAmount: rawData.dropAmount,
-        standingEyeHeight: rawData.standingEyeHeight,
+        maleRatio: rawData.maleRatio !== undefined ? rawData.maleRatio : undefined,
+        baseExperience: rawData.baseExperience !== undefined ? rawData.baseExperience : undefined,
+        baseFriendship: rawData.baseFriendship !== undefined ? rawData.baseFriendship : undefined,
+        eggCycles: rawData.eggCycles !== undefined ? rawData.eggCycles : undefined,
+        pokedexEntry: rawData.pokedexEntry !== undefined ? rawData.pokedexEntry : undefined,
+        hitbox: rawData.hitbox ? new Hitbox(rawData.hitbox.width, rawData.hitbox.height, rawData.hitbox.fixed) : undefined,
+        baseScale: rawData.baseScale !== undefined ? rawData.baseScale : undefined,
+        cannotDynamax: rawData.cannotDynamax !== undefined ? rawData.cannotDynamax : undefined,
+        dropAmount: rawData.dropAmount !== undefined ? rawData.dropAmount : undefined,
+        standingEyeHeight: rawData.standingEyeHeight !== undefined ? rawData.standingEyeHeight : undefined,
         behaviourOptions: rawData.behaviourOptions ? deserializeBehaviourOptions(rawData.behaviourOptions) : undefined,
         riding: rawData.riding ? deserializeRidingOptions(rawData.riding) : undefined,
-        typing: {
+        typing: rawData.typing ? {
             primaryType: rawData.typing.primaryType,
             secondaryType: rawData.typing.secondaryType
-        },
-        rebalancedTyping: {
+        } : undefined,
+        rebalancedTyping: rawData.rebalancedTyping ? {
             primaryType: rawData.rebalancedTyping.primaryType,
             secondaryType: rawData.rebalancedTyping.secondaryType
-        },
-        speciesFeatures: rawData.speciesFeatures,
-        labels: rawData.labels,
-        eggGroups: rawData.eggGroups,
-        experienceGroup: rawData.experienceGroup,
-        gameIntroducedIn: rawData.gameIntroducedIn,
-        abilities: rawData.abilities,
-        forms: rawData.forms.map((f: any) => PokemonIdentifier.deserialize(f)),
-        moveSet: deserializeMoveSet(rawData.moveSet),
+        } : undefined,
+        speciesFeatures: rawData.speciesFeatures !== undefined ? rawData.speciesFeatures : undefined,
+        labels: rawData.labels !== undefined ? rawData.labels : undefined,
+        eggGroups: rawData.eggGroups !== undefined ? rawData.eggGroups : undefined,
+        experienceGroup: rawData.experienceGroup !== undefined ? rawData.experienceGroup : undefined,
+        gameIntroducedIn: rawData.gameIntroducedIn !== undefined ? rawData.gameIntroducedIn : undefined,
+        abilities: rawData.abilities !== undefined ? rawData.abilities : undefined,
+        forms: rawData.forms ? rawData.forms.map((f: any) => PokemonIdentifier.deserialize(f)) : undefined,
+        moveSet: rawData.moveSet ? deserializeMoveSet(rawData.moveSet) : undefined,
         placeholderMoveSet: rawData.placeholderMoveSet ? deserializeMoveSet(rawData.placeholderMoveSet) : undefined,
         rebalancedMoveSet: rawData.rebalancedMoveSet ? deserializeMoveSet(rawData.rebalancedMoveSet) : undefined
     };
@@ -170,9 +170,9 @@ export class PokemonNode extends DynamoNode {
     public serializePokemonData(): Record<string, any> {
         return {
             pokemonIdentifier: this.pokemonData.pokemonIdentifier.serialize(),
-            baseStats: this.pokemonData.baseStats.serialize(),
+            baseStats: this.pokemonData.baseStats ? this.pokemonData.baseStats.serialize() : undefined,
             rebalancedStats: this.pokemonData.rebalancedStats?.serialize(),
-            evYield: this.pokemonData.evYield.serialize(),
+            evYield: this.pokemonData.evYield ? this.pokemonData.evYield.serialize() : undefined,
             heightInDecimeters: this.pokemonData.heightInDecimeters,
             weightInDeciGrams: this.pokemonData.weightInDeciGrams,
             catchRate: this.pokemonData.catchRate,
@@ -181,11 +181,11 @@ export class PokemonNode extends DynamoNode {
             baseFriendship: this.pokemonData.baseFriendship,
             eggCycles: this.pokemonData.eggCycles,
             pokedexEntry: this.pokemonData.pokedexEntry,
-            hitbox: {
+            hitbox: this.pokemonData.hitbox ? {
                 width: this.pokemonData.hitbox.width,
                 height: this.pokemonData.hitbox.height,
                 fixed: this.pokemonData.hitbox.fixed
-            },
+            } : undefined,
             baseScale: this.pokemonData.baseScale,
             cannotDynamax: this.pokemonData.cannotDynamax,
             dropAmount: this.pokemonData.dropAmount,
@@ -200,8 +200,8 @@ export class PokemonNode extends DynamoNode {
             experienceGroup: this.pokemonData.experienceGroup,
             gameIntroducedIn: this.pokemonData.gameIntroducedIn,
             abilities: this.pokemonData.abilities,
-            forms: this.pokemonData.forms.map(f => f.serialize()),
-            moveSet: serializeMoveSet(this.pokemonData.moveSet),
+            forms: this.pokemonData.forms ? this.pokemonData.forms.map(f => f.serialize()) : undefined,
+            moveSet: this.pokemonData.moveSet ? serializeMoveSet(this.pokemonData.moveSet) : undefined,
             placeholderMoveSet: this.pokemonData.placeholderMoveSet ? serializeMoveSet(this.pokemonData.placeholderMoveSet) : undefined,
             rebalancedMoveSet: this.pokemonData.rebalancedMoveSet ? serializeMoveSet(this.pokemonData.rebalancedMoveSet) : undefined
         };

@@ -229,7 +229,7 @@ describe("PokemonNode Integration Tests", () => {
             expect(data.heightInDecimeters).toBe(0.4);
             expect(data.weightInDeciGrams).toBe(6);
 
-            expect(data.typing.primaryType).toBe("Electric");
+            expect(data.typing?.primaryType).toBe("Electric");
 
             expect(data.labels).toEqual(["starter"]);
             expect(data.speciesFeatures).toEqual(["shiny"]);
@@ -239,26 +239,26 @@ describe("PokemonNode Integration Tests", () => {
             const moveSet = data.moveSet;
 
             // LEVEL UP MOVES
-            expect(moveSet.levelUpMoves).toHaveLength(2);
+            expect(moveSet?.levelUpMoves).toHaveLength(2);
 
-            expect(moveSet.levelUpMoves[0].level).toBe(5);
-            expect(moveSet.levelUpMoves[0].moveName.moveName.toString()).toBe("pokemon#thundershock");
-            expect(moveSet.levelUpMoves[0].moveName.type).toBe("Electric");
+            expect(moveSet?.levelUpMoves[0].level).toBe(5);
+            expect(moveSet?.levelUpMoves[0].moveName.moveName.toString()).toBe("pokemon#thundershock");
+            expect(moveSet?.levelUpMoves[0].moveName.type).toBe("Electric");
 
-            expect(moveSet.levelUpMoves[1].level).toBe(10);
-            expect(moveSet.levelUpMoves[1].moveName.moveName.toString()).toBe("pokemon#quick_attack");
+            expect(moveSet?.levelUpMoves[1].level).toBe(10);
+            expect(moveSet?.levelUpMoves[1].moveName.moveName.toString()).toBe("pokemon#quick_attack");
 
             // TEACH MOVES
-            expect(moveSet.teachMoves).toHaveLength(1);
-            expect(moveSet.teachMoves[0].moveName.toString()).toBe("pokemon#iron_tail");
-            expect(moveSet.teachMoves[0].type).toBe("Steel");
+            expect(moveSet?.teachMoves).toHaveLength(1);
+            expect(moveSet?.teachMoves[0].moveName.toString()).toBe("pokemon#iron_tail");
+            expect(moveSet?.teachMoves[0].type).toBe("Steel");
 
             // EGG MOVES
-            expect(moveSet.eggMoves).toHaveLength(1);
-            expect(moveSet.eggMoves[0].moveName.toString()).toBe("pokemon#volt_tackle");
+            expect(moveSet?.eggMoves).toHaveLength(1);
+            expect(moveSet?.eggMoves[0].moveName.toString()).toBe("pokemon#volt_tackle");
 
             // LEGACY MOVES
-            expect(moveSet.legacyMoves).toHaveLength(0);
+            expect(moveSet?.legacyMoves).toHaveLength(0);
         }
     });
 });
