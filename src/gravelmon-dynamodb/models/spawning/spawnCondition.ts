@@ -6,7 +6,7 @@ export enum LabelMode {
     ANY, ALL
 }
 
-export interface SpawnConditionOptions {
+export interface SpawnCondition {
     dimensions?: string[];
     moonPhase?: NumberRange;
     canSeeSky?: boolean;
@@ -51,99 +51,89 @@ export interface SpawnConditionOptions {
     bait?: ResourceLocation;
 }
 
-export class SpawnCondition {
-    spawnConditionOptions: SpawnConditionOptions;
+export function serializeSpawnCondition(spawnCondition: SpawnCondition): any {
+    return {
+        spawnConditionOptions: {
+            dimension: spawnCondition.dimensions,
+            moonPhase: spawnCondition.moonPhase ? spawnCondition.moonPhase.serialize() : undefined,
+            canSeeSky: spawnCondition.canSeeSky,
+            minY: spawnCondition.minY,
+            minX: spawnCondition.minX,
+            minZ: spawnCondition.minZ,
+            maxY: spawnCondition.maxY,
+            maxX: spawnCondition.maxX,
+            maxZ: spawnCondition.maxZ,
+            minLight: spawnCondition.minLight,
+            maxLight: spawnCondition.maxLight,
+            minSkyLight: spawnCondition.minSkyLight,
+            maxSkyLight: spawnCondition.maxSkyLight,
+            timeRange: spawnCondition.timeRange,
+            isRaining: spawnCondition.isRaining,
+            isThundering: spawnCondition.isThundering,
+            isSlimeChunk: spawnCondition.isSlimeChunk,
+            labels: spawnCondition.labels,
+            labelMode: spawnCondition.labelMode,
 
-    constructor(options: SpawnConditionOptions) {
-        this.spawnConditionOptions = options;
-    }
+            minWidth: spawnCondition.minWidth,
+            maxWidth: spawnCondition.maxWidth,
+            minLength: spawnCondition.minLength,
+            maxLength: spawnCondition.maxLength,
 
-    serialize(): any {
-        return {
-            spawnConditionOptions: {
-                dimension: this.spawnConditionOptions.dimensions,
-                moonPhase: this.spawnConditionOptions.moonPhase ? this.spawnConditionOptions.moonPhase.serialize() : undefined,
-                canSeeSky: this.spawnConditionOptions.canSeeSky,
-                minY: this.spawnConditionOptions.minY,
-                minX: this.spawnConditionOptions.minX,
-                minZ: this.spawnConditionOptions.minZ,
-                maxY: this.spawnConditionOptions.maxY,
-                maxX: this.spawnConditionOptions.maxX,
-                maxZ: this.spawnConditionOptions.maxZ,
-                minLight: this.spawnConditionOptions.minLight,
-                maxLight: this.spawnConditionOptions.maxLight,
-                minSkyLight: this.spawnConditionOptions.minSkyLight,
-                maxSkyLight: this.spawnConditionOptions.maxSkyLight,
-                timeRange: this.spawnConditionOptions.timeRange,
-                isRaining: this.spawnConditionOptions.isRaining,
-                isThundering: this.spawnConditionOptions.isThundering,
-                isSlimeChunk: this.spawnConditionOptions.isSlimeChunk,
-                labels: this.spawnConditionOptions.labels,
-                labelMode: this.spawnConditionOptions.labelMode,
-
-                minWidth: this.spawnConditionOptions.minWidth,
-                maxWidth: this.spawnConditionOptions.maxWidth,
-                minLength: this.spawnConditionOptions.minLength,
-                maxLength: this.spawnConditionOptions.maxLength,
-
-                neededNearbyBlocks: this.spawnConditionOptions.neededNearbyBlocks ? this.spawnConditionOptions.neededNearbyBlocks.map(item => item.serialize()) : undefined,
-                neededBaseBlocks: this.spawnConditionOptions.neededBaseBlocks ? this.spawnConditionOptions.neededBaseBlocks.map(item => item.serialize()) : undefined,
-                spawnsInBiomes: this.spawnConditionOptions.spawnsInBiomes ? this.spawnConditionOptions.spawnsInBiomes.map(item => item.serialize()) : undefined,
-                spawnsInStructures: this.spawnConditionOptions.spawnsInStructures ? this.spawnConditionOptions.spawnsInStructures.map(item => item.serialize()) : undefined,
-                minDepth: this.spawnConditionOptions.minDepth,
-                maxDepth: this.spawnConditionOptions.maxDepth,
-                fluidIsSource: this.spawnConditionOptions.fluidIsSource,
-                fluid: this.spawnConditionOptions.fluid ? this.spawnConditionOptions.fluid.serialize() : undefined,
-                minLureLevel: this.spawnConditionOptions.minLureLevel,
-                maxLureLevel: this.spawnConditionOptions.maxLureLevel,
-                bobber: this.spawnConditionOptions.bobber ? this.spawnConditionOptions.bobber.serialize() : undefined,
-                bait: this.spawnConditionOptions.bait ? this.spawnConditionOptions.bait.serialize() : undefined
-            }
+            neededNearbyBlocks: spawnCondition.neededNearbyBlocks ? spawnCondition.neededNearbyBlocks.map(item => item.serialize()) : undefined,
+            neededBaseBlocks: spawnCondition.neededBaseBlocks ? spawnCondition.neededBaseBlocks.map(item => item.serialize()) : undefined,
+            spawnsInBiomes: spawnCondition.spawnsInBiomes ? spawnCondition.spawnsInBiomes.map(item => item.serialize()) : undefined,
+            spawnsInStructures: spawnCondition.spawnsInStructures ? spawnCondition.spawnsInStructures.map(item => item.serialize()) : undefined,
+            minDepth: spawnCondition.minDepth,
+            maxDepth: spawnCondition.maxDepth,
+            fluidIsSource: spawnCondition.fluidIsSource,
+            fluid: spawnCondition.fluid ? spawnCondition.fluid.serialize() : undefined,
+            minLureLevel: spawnCondition.minLureLevel,
+            maxLureLevel: spawnCondition.maxLureLevel,
+            bobber: spawnCondition.bobber ? spawnCondition.bobber.serialize() : undefined,
+            bait: spawnCondition.bait ? spawnCondition.bait.serialize() : undefined
         }
     }
+}
 
-    static deserialize(data: any): SpawnCondition {
-        if(!data.spawnConditionOptions) throw new Error("SpawnConditionOptions not found: " + data);
-        const options: SpawnConditionOptions = {
-            dimensions: data.spawnConditionOptions.dimension ?? undefined,
-            moonPhase: data.spawnConditionOptions.moonPhase ? NumberRange.deserialize(data.spawnConditionOptions.moonPhase) : undefined,
-            canSeeSky: data.spawnConditionOptions.canSeeSky ?? undefined,
-            minY: data.spawnConditionOptions.minY ?? undefined,
-            minX: data.spawnConditionOptions.minX ?? undefined,
-            minZ: data.spawnConditionOptions.minZ ?? undefined,
-            maxY: data.spawnConditionOptions.maxY ?? undefined,
-            maxX: data.spawnConditionOptions.maxX ?? undefined,
-            maxZ: data.spawnConditionOptions.maxZ ?? undefined,
-            minLight: data.spawnConditionOptions.minLight ?? undefined,
-            maxLight: data.spawnConditionOptions.maxLight ?? undefined,
-            minSkyLight: data.spawnConditionOptions.minSkyLight ?? undefined,
-            maxSkyLight: data.spawnConditionOptions.maxSkyLight ?? undefined,
-            timeRange: data.spawnConditionOptions.timeRange ?? undefined,
-            isRaining: data.spawnConditionOptions.isRaining ?? undefined,
-            isThundering: data.spawnConditionOptions.isThundering ?? undefined,
-            isSlimeChunk: data.spawnConditionOptions.isSlimeChunk ?? undefined,
-            labels: data.spawnConditionOptions.labels ?? undefined,
-            labelMode: data.spawnConditionOptions.labelMode ?? undefined,
+export function deserializeSpawnCondition(data: any): SpawnCondition {
+    if(!data) throw new Error("SpawnConditionOptions not found: " + JSON.stringify(data));
+    return {
+        dimensions: data.dimension ?? undefined,
+        moonPhase: data.moonPhase ? NumberRange.deserialize(data.moonPhase) : undefined,
+        canSeeSky: data.canSeeSky ?? undefined,
+        minY: data.minY ?? undefined,
+        minX: data.minX ?? undefined,
+        minZ: data.minZ ?? undefined,
+        maxY: data.maxY ?? undefined,
+        maxX: data.maxX ?? undefined,
+        maxZ: data.maxZ ?? undefined,
+        minLight: data.minLight ?? undefined,
+        maxLight: data.maxLight ?? undefined,
+        minSkyLight: data.minSkyLight ?? undefined,
+        maxSkyLight: data.maxSkyLight ?? undefined,
+        timeRange: data.timeRange ?? undefined,
+        isRaining: data.isRaining ?? undefined,
+        isThundering: data.isThundering ?? undefined,
+        isSlimeChunk: data.isSlimeChunk ?? undefined,
+        labels: data.labels ?? undefined,
+        labelMode: data.labelMode ?? undefined,
 
-            minWidth: data.spawnConditionOptions.minWidth ?? undefined,
-            maxWidth: data.spawnConditionOptions.maxWidth ?? undefined,
-            minLength: data.spawnConditionOptions.minLength ?? undefined,
-            maxLength: data.spawnConditionOptions.maxLength ?? undefined,
+        minWidth: data.minWidth ?? undefined,
+        maxWidth: data.maxWidth ?? undefined,
+        minLength: data.minLength ?? undefined,
+        maxLength: data.maxLength ?? undefined,
 
-            neededNearbyBlocks: data.spawnConditionOptions.neededNearbyBlocks ? data.spawnConditionOptions.neededNearbyBlocks.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
-            neededBaseBlocks: data.spawnConditionOptions.neededBaseBlocks ? data.spawnConditionOptions.neededBaseBlocks.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
-            spawnsInBiomes: data.spawnConditionOptions.spawnsInBiomes ? data.spawnConditionOptions.spawnsInBiomes.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
-            spawnsInStructures: data.spawnConditionOptions.spawnsInStructures ? data.spawnConditionOptions.spawnsInStructures.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
-            minDepth: data.spawnConditionOptions.minDepth ?? undefined,
-            maxDepth: data.spawnConditionOptions.maxDepth ?? undefined,
-            fluidIsSource: data.spawnConditionOptions.fluidIsSource ?? undefined,
-            fluid: data.spawnConditionOptions.fluid ? ResourceLocation.deserialize(data.spawnConditionOptions.fluid) : undefined,
-            minLureLevel: data.spawnConditionOptions.minLureLevel ?? undefined,
-            maxLureLevel: data.spawnConditionOptions.maxLureLevel ?? undefined,
-            bobber: data.spawnConditionOptions.bobber ? ResourceLocation.deserialize(data.spawnConditionOptions.bobber) : undefined,
-            bait: data.spawnConditionOptions.bait ? ResourceLocation.deserialize(data.spawnConditionOptions.bait) : undefined
-        };
-
-        return new SpawnCondition(options);
-    }
+        neededNearbyBlocks: data.neededNearbyBlocks ? data.neededNearbyBlocks.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
+        neededBaseBlocks: data.neededBaseBlocks ? data.neededBaseBlocks.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
+        spawnsInBiomes: data.spawnsInBiomes ? data.spawnsInBiomes.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
+        spawnsInStructures: data.spawnsInStructures ? data.spawnsInStructures.map((item: any) => ResourceLocation.deserialize(item)) : undefined,
+        minDepth: data.minDepth ?? undefined,
+        maxDepth: data.maxDepth ?? undefined,
+        fluidIsSource: data.fluidIsSource ?? undefined,
+        fluid: data.fluid ? ResourceLocation.deserialize(data.fluid) : undefined,
+        minLureLevel: data.minLureLevel ?? undefined,
+        maxLureLevel: data.maxLureLevel ?? undefined,
+        bobber: data.bobber ? ResourceLocation.deserialize(data.bobber) : undefined,
+        bait: data.bait ? ResourceLocation.deserialize(data.bait) : undefined
+    };
 }

@@ -23,7 +23,7 @@ afterAll(async () => {
 });
 
 describe("SpawnPresetNode Integration Tests", () => {
-    const testSpawnCondition = new SpawnCondition({
+    const testSpawnCondition = {
         dimensions: ["minecraft:overworld", "minecraft:nether"],
 
         moonPhase: new NumberRange(0, 4),
@@ -83,7 +83,7 @@ describe("SpawnPresetNode Integration Tests", () => {
         maxLureLevel: 3,
         bobber: new ResourceLocation("minecraft", "fishing_bobber"),
         bait: new ResourceLocation("minecraft", "worm")
-    });
+    };
 
     test("should write and read a SpawnPresetNode from DynamoDB", async () => {
         // Arrange: Create sample game data

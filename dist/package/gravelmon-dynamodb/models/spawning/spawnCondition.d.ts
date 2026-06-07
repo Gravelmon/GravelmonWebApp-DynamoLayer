@@ -5,7 +5,7 @@ export declare enum LabelMode {
     ANY = 0,
     ALL = 1
 }
-export interface SpawnConditionOptions {
+export interface SpawnCondition {
     dimensions?: string[];
     moonPhase?: NumberRange;
     canSeeSky?: boolean;
@@ -42,9 +42,5 @@ export interface SpawnConditionOptions {
     bobber?: ResourceLocation;
     bait?: ResourceLocation;
 }
-export declare class SpawnCondition {
-    spawnConditionOptions: SpawnConditionOptions;
-    constructor(options: SpawnConditionOptions);
-    serialize(): any;
-    static deserialize(data: any): SpawnCondition;
-}
+export declare function serializeSpawnCondition(spawnCondition: SpawnCondition): any;
+export declare function deserializeSpawnCondition(data: any): SpawnCondition;

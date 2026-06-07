@@ -1,16 +1,15 @@
-import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb";
 import {createTestEnv} from "../../../testEnv";
-import {getNodePK} from "../../../../gravelmon-dynamodb/service/dynamoNodes";
+import {getNodePK} from "../../../../gravelmon-dynamodb";
 
-import {FormData, FormNode, LiquidGlowMode, PokemonData, PokemonIdentifier} from "../../../../gravelmon-dynamodb/nodes";
-import {Stats} from "../../../../gravelmon-dynamodb/models/properties/stats";
-import {PoseType} from "../../../../gravelmon-dynamodb/models/assets/posing/poseType";
-import {CommonLayerNames} from "../../../../gravelmon-dynamodb/models/assets/resolverData";
-import {SpawnData, SpawnType} from "../../../../gravelmon-dynamodb/models/spawning/spawnData";
-import {SpawnablePositionType, SpawnBucket} from "../../../../gravelmon-dynamodb/models/spawning/spawning";
-import {SpawnCondition} from "../../../../gravelmon-dynamodb/models/spawning/spawnCondition";
-import {ResourceLocation} from "../../../../gravelmon-dynamodb/models/minecraft/resourceLocation";
-import {NumberRange} from "../../../../gravelmon-dynamodb/models/properties/numberRange";
+import {FormData, FormNode, LiquidGlowMode, PokemonData, PokemonIdentifier} from "../../../../gravelmon-dynamodb";
+import {Stats} from "../../../../gravelmon-dynamodb";
+import {PoseType} from "../../../../gravelmon-dynamodb";
+import {CommonLayerNames} from "../../../../gravelmon-dynamodb";
+import {SpawnData, SpawnType} from "../../../../gravelmon-dynamodb";
+import {SpawnablePositionType, SpawnBucket} from "../../../../gravelmon-dynamodb";
+import {ResourceLocation} from "../../../../gravelmon-dynamodb";
+import {NumberRange} from "../../../../gravelmon-dynamodb";
 
 let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;
@@ -57,16 +56,16 @@ describe("FormNode Integration Tests", () => {
 
             minDistanceBetweenSpawns: 16,
 
-            condition: new SpawnCondition({
+            condition: {
                 dimensions: ["minecraft:overworld"],
                 canSeeSky: true,
                 minY: 60,
                 maxY: 120
-            } as any),
+            } as any,
 
-            antiCondition: new SpawnCondition({
+            antiCondition: {
                 isRaining: true
-            } as any),
+            } as any,
 
             herdSpawnEntries: [
                 {
@@ -284,11 +283,11 @@ describe("FormNode Integration Tests", () => {
         expect(spawn.levelRange.max).toBe(20);
 
 // condition
-        expect(spawn.condition?.spawnConditionOptions.dimensions).toContain("minecraft:overworld");
-        expect(spawn.condition?.spawnConditionOptions.canSeeSky).toBe(true);
+        expect(spawn.condition?.dimensions).toContain("minecraft:overworld");
+        expect(spawn.condition?.canSeeSky).toBe(true);
 
 // anti-condition
-        expect(spawn.antiCondition?.spawnConditionOptions.isRaining).toBe(true);
+        expect(spawn.antiCondition?.isRaining).toBe(true);
 
 // herd entries
         expect(spawn.herdSpawnEntries?.length).toBe(2);

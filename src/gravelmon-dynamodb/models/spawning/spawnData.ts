@@ -2,7 +2,7 @@ import { ResourceLocation } from '../minecraft/resourceLocation';
 import { PokemonIdentifier } from '../../nodes/pokemon/pokemonNode';
 import { NumberRange } from '../properties/numberRange';
 import { SpawnablePositionType, SpawnBucket } from './spawning';
-import {SpawnCondition} from "./spawnCondition";
+import {deserializeSpawnCondition, serializeSpawnCondition, SpawnCondition} from "./spawnCondition";
 
 export const SpawnDataEntity = "SpawnData";
 
@@ -84,8 +84,8 @@ export function serializeSpawnData(spawnDataNode: SpawnData): any {
         evolutionStage: spawnDataNode.evolutionStage,
         maxHerdSize: spawnDataNode.maxHerdSize,
         minDistanceBetweenSpawns: spawnDataNode.minDistanceBetweenSpawns,
-        condition: spawnDataNode.condition?.serialize(),
-        antiCondition: spawnDataNode.antiCondition?.serialize(),
+        condition: spawnDataNode.condition ?  serializeSpawnCondition(spawnDataNode.condition) : undefined,
+        antiCondition: spawnDataNode.antiCondition ?  serializeSpawnCondition(spawnDataNode.antiCondition) : undefined,
         herdSpawnEntries: spawnDataNode.herdSpawnEntries?.map(serializeHerdSpawnEntry),
         preferredBlocks: spawnDataNode.preferredBlocks?.map(block => block.serialize()),
         requiredBlocks: spawnDataNode.requiredBlocks?.map(block => block.serialize())
@@ -104,8 +104,8 @@ export function deserializeSpawnData(data: any): SpawnData {
         evolutionStage: data.evolutionStage,
         maxHerdSize: data.maxHerdSize,
         minDistanceBetweenSpawns: data.minDistanceBetweenSpawns,
-        condition: data.condition ? SpawnCondition.deserialize(data.condition) : undefined,
-        antiCondition: data.antiCondition ? SpawnCondition.deserialize(data.antiCondition) : undefined,
+        condition: data.condition ? deserializeSpawnCondition(data.condition) : undefined,
+        antiCondition: data.antiCondition ? deserializeSpawnCondition(data.antiCondition) : undefined,
         herdSpawnEntries: data.herdSpawnEntries?.map(deserializeHerdSpawnEntry),
         preferredBlocks: data.preferredBlocks?.map((block: any) => ResourceLocation.deserialize(block)),
         requiredBlocks: data.requiredBlocks?.map((block: any) => ResourceLocation.deserialize(block))

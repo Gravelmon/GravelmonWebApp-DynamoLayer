@@ -1,5 +1,5 @@
 import { DynamoNode } from '../../service';
-import { SpawnCondition } from '../../models';
+import {deserializeSpawnCondition, serializeSpawnCondition, SpawnCondition} from '../../models';
 import { ResourceLocation } from '../../models';
 import { deserializerRegistry } from '../../service';
 
@@ -14,8 +14,8 @@ export interface SpawnPresetOptions {
 export function deserializeSpawnPresetOptions(spawnPresetOptions: any) {
     return {
         name: ResourceLocation.deserialize(spawnPresetOptions.name),
-        condition: spawnPresetOptions.condition ? SpawnCondition.deserialize(spawnPresetOptions.condition) : undefined,
-        antiCondition: spawnPresetOptions.antiCondition ? SpawnCondition.deserialize(spawnPresetOptions.antiCondition) : undefined
+        condition: spawnPresetOptions.condition ? deserializeSpawnCondition(spawnPresetOptions.condition) : undefined,
+        antiCondition: spawnPresetOptions.antiCondition ? deserializeSpawnCondition(spawnPresetOptions.antiCondition) : undefined
     };
 }
 
@@ -42,8 +42,8 @@ export class SpawnPresetNode extends DynamoNode {
             ...super.serialize(),
             spawnPresetOptions: {
                 name: this.spawnPresetOptions.name.serialize(),
-                condition: this.spawnPresetOptions.condition ? this.spawnPresetOptions.condition.serialize() : undefined,
-                antiCondition: this.spawnPresetOptions.antiCondition ? this.spawnPresetOptions.antiCondition.serialize() : undefined
+                condition: this.spawnPresetOptions.condition ?  serializeSpawnCondition(this.spawnPresetOptions.condition) : undefined,
+                antiCondition: this.spawnPresetOptions.antiCondition ? serializeSpawnCondition(this.spawnPresetOptions.antiCondition) : undefined
             }
         }
     }
