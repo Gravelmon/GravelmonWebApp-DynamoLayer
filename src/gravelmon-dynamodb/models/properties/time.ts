@@ -33,6 +33,7 @@ export function isTimeRange(value: any): value is TimeRange {
 }
 
 export function deserializeTimeRange(value: any): TimeRange {
+    console.log("deserializing time range from object: " + value);
     if (!value) {
         throw new Error("Invalid TimeRange: value is null/undefined");
     }
