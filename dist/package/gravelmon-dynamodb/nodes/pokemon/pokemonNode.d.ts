@@ -23,25 +23,25 @@ export declare class Hitbox {
 }
 export interface PokemonData {
     pokemonIdentifier: PokemonIdentifier;
-    baseStats: Stats;
+    baseStats?: Stats;
     rebalancedStats?: Stats;
-    evYield: Stats;
-    heightInDecimeters: number;
-    weightInDeciGrams: number;
-    catchRate: number;
-    maleRatio: number;
-    baseExperience: number;
-    baseFriendship: number;
-    eggCycles: number;
-    pokedexEntry: string;
-    hitbox: Hitbox;
-    baseScale: number;
-    cannotDynamax: boolean;
-    dropAmount: number;
+    evYield?: Stats;
+    heightInDecimeters?: number;
+    weightInDeciGrams?: number;
+    catchRate?: number;
+    maleRatio?: number;
+    baseExperience?: number;
+    baseFriendship?: number;
+    eggCycles?: number;
+    pokedexEntry?: string;
+    hitbox?: Hitbox;
+    baseScale?: number;
+    cannotDynamax?: boolean;
+    dropAmount?: number;
     standingEyeHeight?: number;
     behaviourOptions?: BehaviourOptions;
     riding?: RidingOptions;
-    typing: {
+    typing?: {
         primaryType: string;
         secondaryType?: string;
     };
@@ -49,19 +49,19 @@ export interface PokemonData {
         primaryType: string;
         secondaryType?: string;
     };
-    speciesFeatures: string[];
-    labels: string[];
-    eggGroups: string[];
-    experienceGroup: string;
-    gameIntroducedIn: string;
-    abilities: {
+    speciesFeatures?: string[];
+    labels?: string[];
+    eggGroups?: string[];
+    experienceGroup?: string;
+    gameIntroducedIn?: string;
+    abilities?: {
         identifier: AbilityIdentifier;
         isHidden: boolean;
         isRebalanced: boolean;
         isPlaceholder: boolean;
     }[];
-    forms: PokemonIdentifier[];
-    moveSet: MoveSet;
+    forms?: PokemonIdentifier[];
+    moveSet?: MoveSet;
     placeholderMoveSet?: MoveSet;
     rebalancedMoveSet?: MoveSet;
 }

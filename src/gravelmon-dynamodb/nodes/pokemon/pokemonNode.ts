@@ -51,6 +51,18 @@ export class PokemonIdentifier {
     }
 
     static deserialize(data: any): PokemonIdentifier {
+        if(!data) {
+            throw new Error("data was undefined for PokemonIdentifier.deserialize");
+        }
+        if(!data.game) {
+            throw new Error("game was undefined for PokemonIdentifier.deserialize: " + JSON.stringify(data));
+        }
+        if(!data.pokemon) {
+            throw new Error("pokemon was undefined for PokemonIdentifier.deserialize: " + JSON.stringify(data));
+        }
+        if(data.formAspects && !Array.isArray(data.formAspects)) {
+            throw new Error("formAspects was not an array for PokemonIdentifier.deserialize: " + JSON.stringify(data));
+        }
         return new PokemonIdentifier(data.game, data.pokemon, data.formAspects);
     }
 }
@@ -116,8 +128,11 @@ export interface PokemonData {
 }
 
 export function deserializePokemonData(rawData: any): PokemonData {
+    if (rawData.pokemonIdentifier === undefined) throw new Error("pokemonIdentifier was undefined")
+    if (rawData.pokemonIdentifier.game === undefined) throw new Error("game was undefined")
+    let pokemonIdentifier: PokemonIdentifier = PokemonIdentifier.deserialize(rawData.pokemonIdentifier);
     return {
-        pokemonIdentifier: PokemonIdentifier.deserialize(rawData.pokemonIdentifier),
+        pokemonIdentifier: pokemonIdentifier,
         baseStats: rawData.baseStats ? Stats.deserialize(rawData.baseStats) : undefined,
         rebalancedStats: rawData.rebalancedStats ? Stats.deserialize(rawData.rebalancedStats) : undefined,
         evYield: rawData.evYield ? Stats.deserialize(rawData.evYield) : undefined,
