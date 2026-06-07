@@ -50,7 +50,8 @@ describe("GameNode Integration Tests", () => {
             introducesAbilities: ["Overgrow", "Blaze"],
             introducesSpeciesFeatures: ["Pokemon"],
             introducesMechanics: ["Experience", "Leveling"],
-            introducesTypes: ["Normal", "Fire", "Water", "Grass"]
+            introducesTypes: ["Normal", "Fire", "Water", "Grass"],
+            isEngineCollection: false,
         };
 
         const gameNode = new GameNode(gameData);

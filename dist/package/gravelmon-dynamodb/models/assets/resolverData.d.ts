@@ -1,3 +1,4 @@
+import { ResourceLocation } from "../minecraft";
 export declare enum CommonLayerNames {
     Emissive = "emissive",
     TransparentEmissive = "transparentEmissive",
@@ -7,14 +8,17 @@ export declare enum CommonLayerNames {
     Flame = "flame",
     Glow = "glow"
 }
-export interface ResolverLayer {
-    name: string | CommonLayerNames;
-    textureName: string;
-    isEmissive?: boolean;
-    isTranslucent?: boolean;
+export interface AnimatedTexture {
+    texture: ResourceLocation;
     framerate?: number;
     loops: boolean;
     numberOfFrames?: number;
+}
+export interface ResolverLayer {
+    name: string | CommonLayerNames;
+    texture: ResourceLocation | AnimatedTexture;
+    isEmissive?: boolean;
+    isTranslucent?: boolean;
 }
 export interface ResolverData {
     layers: ResolverLayer[];
@@ -26,12 +30,9 @@ export interface ResolverData {
 export declare function serializeResolverData(resolverData: ResolverData): {
     layers: {
         name: string;
-        textureName: string;
+        texture: any;
         isEmissive: boolean | undefined;
         isTranslucent: boolean | undefined;
-        framerate: number | undefined;
-        loops: boolean;
-        numberOfFrames: number | undefined;
     }[];
     variationForSpeciesFeatureChoice: {
         speciesFeature: string;

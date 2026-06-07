@@ -30,7 +30,8 @@ test("should query nodes by entityType using GSI", async () => {
         introducesAbilities: [],
         introducesSpeciesFeatures: [],
         introducesMechanics: [],
-        introducesTypes: []
+        introducesTypes: [],
+        isEngineCollection: false,
     };
     const blueGameData: GameData = {
         name: "Pokemon Blue",
@@ -45,7 +46,8 @@ test("should query nodes by entityType using GSI", async () => {
         introducesAbilities: [],
         introducesSpeciesFeatures: [],
         introducesMechanics: [],
-        introducesTypes: []
+        introducesTypes: [],
+        isEngineCollection: false,
     };
 
     const redGameNode = new GameNode(redGameData);

@@ -1,4 +1,4 @@
-import { getNodePK} from '../../service/dynamoNodes';
+import { getNodePK} from '../../service';
 import { GenderDifferenceNode as GenderDifference } from '../../models/assets/genderDifference';
 import {
     deserializePokemonData,
@@ -6,12 +6,12 @@ import {
     PokemonIdentifier,
     PokemonNode
 } from './pokemonNode';
-import {NumberRange} from "../../models/properties/numberRange";
-import {ResourceLocation} from "../../models/minecraft/resourceLocation";
-import {deserializeResolverData, ResolverData, serializeResolverData} from '../../models/assets/resolverData';
-import {deserializePosingData, PosingData, serializePosingData} from '../../models/assets/posing/posingFileData';
+import {NumberRange} from "../../models";
+import {ResourceLocation} from "../../models";
+import {deserializeResolverData, ResolverData, serializeResolverData} from '../../models';
+import {deserializePosingData, PosingData, serializePosingData} from '../../models';
 import {deserializeSpawnData, serializeSpawnData, SpawnData as SpawnData} from '../../models/spawning/spawnData';
-import { deserializerRegistry } from '../../service/deserializerRegistry';
+import { deserializerRegistry } from '../../service';
 
 export const FormEntity = "Form";
 
@@ -45,10 +45,15 @@ export interface MechanicInteraction {
     resultingForms: PokemonIdentifier[];
 }
 
+export interface DropData {
+    dropAmount?: number;
+    drops?: ItemDrop[]
+}
+
 export interface FormData {
     genderDifference?: GenderDifference;
     lightingData?: LightingData;
-    evolutions?: PokemonIdentifier[];
+    // evolutions?: PokemonIdentifier[];
     isFormOf: PokemonIdentifier;
     affectedByMechanics?: string[];
     resolverData?: ResolverData;
@@ -56,8 +61,9 @@ export interface FormData {
     speciesFeatures: string[];
     spawnData?: SpawnData[];
     revivesFromFossils?: string[];
-    drops?: ItemDrop[];
+    dropData?: DropData;
     mechanicInteractions?: MechanicInteraction[];
+    addedByGame?: string;
 }
 
 export class FormNode extends PokemonNode {
@@ -102,7 +108,7 @@ export function serializeFormData(formData: FormData): any {
             lightLevel: formData.lightingData.lightLevel,
             liquidGlowMode: formData.lightingData.liquidGlowMode
         } : undefined,
-        evolutions: formData.evolutions?.map(evolution => evolution.serialize()),
+        // evolutions: formData.evolutions?.map(evolution => evolution.serialize()),
         isFormOf: formData.isFormOf.serialize(),
         affectedByMechanics: formData.affectedByMechanics,
         resolverData: formData.resolverData ? serializeResolverData(formData.resolverData) : undefined,
@@ -110,20 +116,24 @@ export function serializeFormData(formData: FormData): any {
         speciesFeatures: formData.speciesFeatures,
         spawnData: formData.spawnData ? formData.spawnData.map(serializeSpawnData) : undefined,
         revivesFromFossils: formData.revivesFromFossils,
-        drops: formData.drops?.map(drop => {
-            percentage: drop.percentage;
-            quantity: drop.quantity;
-            quantityRange: drop.quantityRange ? drop.quantityRange.serialize() : undefined;
-            maxSelectableItems: drop.maxSelectableItems;
-            dropMethod: drop.dropMethod
-            item: drop.item.serialize();
-        }),
+        dropData: formData.dropData ? {
+            dropAmount: formData.dropData.dropAmount,
+            drops: formData.dropData.drops?.map(drop => {
+                percentage: drop.percentage;
+                quantity: drop.quantity;
+                quantityRange: drop.quantityRange ? drop.quantityRange.serialize() : undefined;
+                maxSelectableItems: drop.maxSelectableItems;
+                dropMethod: drop.dropMethod
+                item: drop.item.serialize();
+            })
+        } : undefined,
         mechanicInteractions: formData.mechanicInteractions?.map(mechanicInteraction => {
             return {
                 mechanic: mechanicInteraction.mechanic,
                 resultingForm: mechanicInteraction.resultingForms.map(form=>form.serialize())
             }
-        })
+        }),
+        addedByGame: formData.addedByGame
     };
 }
 
@@ -138,7 +148,7 @@ export function deserializeFormData(data: any): FormData {
             lightLevel: data.lightingData.lightLevel,
             liquidGlowMode: data.lightingData.liquidGlowMode
         } : undefined,
-        evolutions: data.evolutions?.map((evolution: any) => PokemonIdentifier.deserialize(evolution)),
+        // evolutions: data.evolutions?.map((evolution: any) => PokemonIdentifier.deserialize(evolution)),
         isFormOf: PokemonIdentifier.deserialize(data.isFormOf ),
         affectedByMechanics: data.affectedByMechanics,
         resolverData: deserializeResolverData(data.resolverData),
@@ -146,20 +156,24 @@ export function deserializeFormData(data: any): FormData {
         speciesFeatures: data.speciesFeatures,
         spawnData: data.spawnData ? data.spawnData.map(deserializeSpawnData) : undefined,
         revivesFromFossils: data.revivesFromFossils,
-        drops: data.drops?.map((drop: any) => {
-            percentage: drop.percentage;
-            quantity: drop.quantity;
-            quantityRange: drop.quantityRange ? NumberRange.deserialize(drop.quantityRange) : undefined;
-            maxSelectableItems: drop.maxSelectableItems;
-            dropMethod: drop.dropMethod
-            item: ResourceLocation.deserialize(drop.item);
-        }),
+        dropData: data.dropData ? {
+            dropAmount: data.dropData.dropAmount,
+            drops: data.dropData.drops.map((drop: any) => {
+                percentage: drop.percentage;
+                quantity: drop.quantity;
+                quantityRange: drop.quantityRange ? NumberRange.deserialize(drop.quantityRange) : undefined;
+                maxSelectableItems: drop.maxSelectableItems;
+                dropMethod: drop.dropMethod
+                item: ResourceLocation.deserialize(drop.item);
+            })
+        } : undefined,
         mechanicInteractions: data.mechanicInteractions?.map((mechanicInteraction: any) => {
             return {
                 mechanic: mechanicInteraction.mechanic,
                 resultingForm: mechanicInteraction.resultingForms.map((form:any)=> PokemonIdentifier.deserialize(form))
             }
-        })
+        }),
+        addedByGame: data.addedByGame
     };
 }
 

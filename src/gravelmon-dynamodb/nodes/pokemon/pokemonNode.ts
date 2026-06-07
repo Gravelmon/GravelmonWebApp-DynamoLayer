@@ -16,48 +16,42 @@ import {
 
 export const PokemonEntity = "Pokemon";
 
-export const HasAbilityEdgeType = "HasAbility";
-
 export class PokemonIdentifier {
     game: string;
     pokemon: string;
-    formName?: string;
+    formAspects?: string[];
 
-    constructor(game: string, pokemon: string, formName?: string | string[]) {
+    constructor(game: string, pokemon: string, formAspects?: string | string[]) {
         this.game = game;
         this.pokemon = pokemon;
-        if (Array.isArray(formName)) {
-            this.formName = formName.join("-");
+        if (Array.isArray(formAspects)) {
+            this.formAspects = formAspects;
+        } else if (formAspects !== undefined) {
+            this.formAspects = [formAspects];
         } else {
-            this.formName = formName;
+            this.formAspects = [];
         }
     }
 
     toString(): string {
-        const formSuffix = this.formName ? `#${this.formName}` : "";
+        const formSuffix = this.formAspects && this.formAspects.length > 0 ? `#${this.formAspects.join(",")}` : "";
         return `${this.game}#${this.pokemon}${formSuffix}`;
     }
 
-    static fromString(identifier: string): PokemonIdentifier {
-        const [game, pokemonWithForm] = identifier.split("#");
-        const [pokemon, formName] = pokemonWithForm.split("#");
-        return new PokemonIdentifier(game, pokemon, formName);
-    }
-
     isForm(): boolean {
-        return !!this.formName;
+        return this.formAspects !== undefined && this.formAspects.length > 0 && !(this.formAspects.length === 1 && ["normal", "Normal"].includes(this.formAspects[0]));
     }
 
     serialize(): any {
         return {
             game: this.game,
             pokemon: this.pokemon,
-            ...(this.formName && {formName: this.formName})
+            ...(this.formAspects && this.formAspects.length > 0 && {formAspects: this.formAspects})
         }
     }
 
     static deserialize(data: any): PokemonIdentifier {
-        return new PokemonIdentifier(data.game, data.pokemon, data.formName);
+        return new PokemonIdentifier(data.game, data.pokemon, data.formAspects);
     }
 }
 

@@ -4,6 +4,7 @@ import { Vector } from "../../properties/vector";
 import { PoseType } from "./poseType";
 import { NumberRange } from "../../properties/numberRange";
 import { Animation } from '../../../nodes/assets/animationNode';
+import { MoveIdentifier } from "../../../nodes";
 export declare const PosingDataEntity = "PosingData";
 export declare const PosingForSpeciesFeatureEdgeType = "PosingForSpeciesFeature";
 export declare const PosingForFormEdgeType = "PosingForForm";
@@ -21,7 +22,7 @@ export declare enum NamedAnimationTypes {
 }
 export interface NamedAnimation {
     animationExpression: string;
-    name: NamedAnimationTypes;
+    name: NamedAnimationTypes | MoveIdentifier;
     animation: SK;
 }
 export interface ConditionalAnimation {

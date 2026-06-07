@@ -1,5 +1,5 @@
-import { DynamoNode } from '../service/dynamoNodes';
-import { GameData } from '../models/gameData';
+import { DynamoNode } from '../service';
+import { GameData } from '../models';
 export declare const GameEntity = "Game";
 export declare class GameNode extends DynamoNode {
     gameData: GameData;

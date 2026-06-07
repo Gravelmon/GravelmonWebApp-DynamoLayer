@@ -14,16 +14,29 @@ export declare enum EvolutionConditionType {
     FRIENDSHIP_BELOW = 8,
     PARTY_MEMBER = 9,
     BIOME = 10,
-    WEATHER = 11,
-    BLOCKS_TRAVELED = 12,
-    HAS_MOVE_TYPE = 13,
-    BATTLE_CRITICAL_HITS = 14,
-    CHANCE = 15,
-    RECOIL = 16,
-    USE_MOVE = 17,
-    PROPERTY_RANGE = 18,
-    DEFEAT = 19,
-    DAMAGE_TAKEN = 20
+    STRUCTURE = 11,
+    ADVANCEMENT = 12,
+    WEATHER = 13,
+    BLOCKS_TRAVELED = 14,
+    HAS_MOVE_TYPE = 15,
+    BATTLE_CRITICAL_HITS = 16,
+    CHANCE = 17,
+    RECOIL = 18,
+    USE_MOVE = 19,
+    PROPERTY_RANGE = 20,
+    DEFEAT = 21,
+    DAMAGE_TAKEN = 22,
+    MOON_PHASE = 23
+}
+declare enum MoonPhase {
+    FULL_MOON = 0,
+    WANING_GIBBOUS = 1,
+    THIRD_QUARTER = 2,
+    WANING_CRESCENT = 3,
+    NEW_MOON = 4,
+    WAXING_CRESCENT = 5,
+    FIRST_QUARTER = 6,
+    WAXING_GIBBOUS = 7
 }
 export declare enum Stat {
     attack = 0,
@@ -51,6 +64,9 @@ export declare class LevelCondition extends EvolutionCondition<number> {
 }
 export declare class TimeCondition extends EvolutionCondition<Time> {
     constructor(value: Time);
+}
+export declare class MoonPhaseCondition extends EvolutionCondition<MoonPhase> {
+    constructor(value: MoonPhase);
 }
 export declare class StatCompareCondition extends EvolutionCondition<Stat> {
     constructor(highStat: Stat, lowStat: Stat);
@@ -81,8 +97,16 @@ export declare class FriendshipBelowCondition extends EvolutionCondition<number>
 export declare class PartyMemberCondition extends EvolutionCondition<any> {
     constructor(condition: string, contains?: boolean);
 }
-export declare class BiomeCondition extends EvolutionCondition<ResourceLocation> {
-    constructor(value: ResourceLocation);
+export declare class BiomeCondition extends EvolutionCondition<ResourceLocation | undefined> {
+    constructor(biomeCondition?: ResourceLocation, biomeAnticondition?: ResourceLocation);
+    serializeValue(value: ResourceLocation): any;
+}
+export declare class StructureCondition extends EvolutionCondition<ResourceLocation | undefined> {
+    constructor(structureCondition?: ResourceLocation, structureAnticondition?: ResourceLocation);
+    serializeValue(value: ResourceLocation): any;
+}
+export declare class AdvancementCondition extends EvolutionCondition<ResourceLocation | undefined> {
+    constructor(requiredAdvancement: ResourceLocation);
     serializeValue(value: ResourceLocation): any;
 }
 export declare class RainingCondition extends EvolutionCondition<boolean> {
@@ -116,3 +140,4 @@ export declare class DamageTakenCondition extends EvolutionCondition<number> {
 export declare class UseMoveCondition extends EvolutionCondition<any> {
     constructor(move: string, value: number);
 }
+export {};

@@ -1,9 +1,9 @@
-import {DynamoNode} from '../service/dynamoNodes';
+import {DynamoNode} from '../service';
 import {MoveIdentifier} from "./battle/moveNode";
 import {PokemonIdentifier} from "./pokemon/pokemonNode";
-import {ResourceLocation} from "../models/minecraft/resourceLocation";
-import { deserializerRegistry } from '../service/deserializerRegistry';
-import { GameData } from '../models/gameData';
+import {ResourceLocation} from "../models";
+import {deserializerRegistry} from '../service';
+import {GameData} from '../models';
 
 export const GameEntity = "Game";
 
@@ -24,21 +24,25 @@ export class GameNode extends DynamoNode {
             developer: rawGameData.developer,
             websiteURL: rawGameData.websiteURL,
             isPermitted: rawGameData.isPermitted,
+            isEngineCollection: rawGameData.isEngineCollection,
             s3LogoLocation: rawGameData.s3LogoLocation,
-                introducesPokemon: Object.fromEntries(
-                    Object.entries(rawGameData.introducesPokemon).map(
-                        ([key, pokemon]) => [
-                            key,
-                            PokemonIdentifier.deserialize(pokemon)
-                        ]
-                    )
-                ),
+
+            introducesPokemon: Object.fromEntries(
+                Object.entries(rawGameData.introducesPokemon).map(
+                    ([key, pokemon]) => [
+                        key,
+                        PokemonIdentifier.deserialize(pokemon)
+                    ]
+                )
+            ),
             introducesItem: rawGameData.introducesItem.map((item: any) => new ResourceLocation(item.namespace, item.path)),
             introducesMoves: rawGameData.introducesMoves.map((move: any) => new MoveIdentifier(move.game, move.move)),
             introducesAbilities: rawGameData.introducesAbilities,
             introducesSpeciesFeatures: rawGameData.introducesSpeciesFeatures,
             introducesMechanics: rawGameData.introducesMechanics,
-            introducesTypes: rawGameData.introducesTypes
+            introducesTypes: rawGameData.introducesTypes,
+            starterPokemon: rawGameData.starterPokemon,
+
         };
         return new GameNode(gameData, data.lastEdited);
     }
@@ -52,6 +56,7 @@ export class GameNode extends DynamoNode {
                 developer: this.gameData.developer,
                 websiteURL: this.gameData.websiteURL,
                 isPermitted: this.gameData.isPermitted,
+                isEngineCollection: this.gameData.isEngineCollection,
                 s3LogoLocation: this.gameData.s3LogoLocation,
                 introducesPokemon: Object.fromEntries(
                     Object.entries(this.gameData.introducesPokemon).map(([key, value]) => [
@@ -64,7 +69,8 @@ export class GameNode extends DynamoNode {
                 introducesAbilities: this.gameData.introducesAbilities,
                 introducesSpeciesFeatures: this.gameData.introducesSpeciesFeatures,
                 introducesMechanics: this.gameData.introducesMechanics,
-                introducesTypes: this.gameData.introducesTypes
+                introducesTypes: this.gameData.introducesTypes,
+                starterPokemon: this.gameData.starterPokemon,
             }
         }
     }

@@ -1,3 +1,5 @@
+import {ResourceLocation} from "../minecraft";
+
 export enum CommonLayerNames {
     Emissive = "emissive",
     TransparentEmissive = "transparentEmissive",
@@ -8,15 +10,19 @@ export enum CommonLayerNames {
     Glow = "glow",
 }
 
-//texturename, model name and poser name will all be solved programmatically
-export interface ResolverLayer {
-    name: string | CommonLayerNames;
-    textureName: string;
-    isEmissive?: boolean;
-    isTranslucent?: boolean;
+export interface AnimatedTexture {
+    texture: ResourceLocation;
     framerate?: number;
     loops: boolean;
     numberOfFrames?: number;
+}
+
+//texturename, model name and poser name will all be solved programmatically
+export interface ResolverLayer {
+    name: string | CommonLayerNames;
+    texture: ResourceLocation | AnimatedTexture;
+    isEmissive?: boolean;
+    isTranslucent?: boolean;
 }
 
 export interface ResolverData {
@@ -30,24 +36,32 @@ export interface ResolverData {
 function serializeResolverLayer(layer: ResolverLayer) {
     return {
         name: layer.name,
-        textureName: layer.textureName,
+        texture: layer.texture instanceof ResourceLocation
+            ? layer.texture.serialize()
+            : {
+                texture: layer.texture.texture.serialize(),
+                framerate: layer.texture.framerate,
+                loops: layer.texture.loops,
+                numberOfFrames: layer.texture.numberOfFrames
+            },
         isEmissive: layer.isEmissive,
-        isTranslucent: layer.isTranslucent,
-        framerate: layer.framerate,
-        loops: layer.loops,
-        numberOfFrames: layer.numberOfFrames
-    }
+        isTranslucent: layer.isTranslucent
+    };
 }
 
-function deserializeResolverLayer(data: any) : ResolverLayer {
+function deserializeResolverLayer(data: any): ResolverLayer {
     return {
         name: data.name,
-        textureName: data.textureName,
+        texture: data.texture.texture
+            ? {
+                texture: ResourceLocation.deserialize(data.texture.texture),
+                framerate: data.texture.framerate,
+                loops: data.texture.loops,
+                numberOfFrames: data.texture.numberOfFrames
+            }
+            : ResourceLocation.deserialize(data.texture),
         isEmissive: data.isEmissive,
-        isTranslucent: data.isTranslucent,
-        framerate: data.framerate,
-        loops: data.loops,
-        numberOfFrames: data.numberOfFrames
+        isTranslucent: data.isTranslucent
     }
 }
 

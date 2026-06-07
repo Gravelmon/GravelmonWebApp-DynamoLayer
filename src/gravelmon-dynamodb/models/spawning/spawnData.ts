@@ -63,7 +63,8 @@ export interface SpawnData {
 
     maxHerdSize?: number;
     minDistanceBetweenSpawns?: number;
-    
+    evolutionStage?: number;
+
     condition?: SpawnCondition;
     antiCondition?: SpawnCondition;
     herdSpawnEntries?: HerdSpawnEntry[];
@@ -80,6 +81,7 @@ export function serializeSpawnData(spawnDataNode: SpawnData): any {
         spawnBucket: spawnDataNode.spawnBucket,
         moonPhaseMultiplier: spawnDataNode.moonPhaseMultiplier,
         weightMultiplier: spawnDataNode.weightMultiplier,
+        evolutionStage: spawnDataNode.evolutionStage,
         maxHerdSize: spawnDataNode.maxHerdSize,
         minDistanceBetweenSpawns: spawnDataNode.minDistanceBetweenSpawns,
         condition: spawnDataNode.condition?.serialize(),
@@ -99,6 +101,7 @@ export function deserializeSpawnData(data: any): SpawnData {
         spawnBucket: data.spawnBucket,
         moonPhaseMultiplier: data.moonPhaseMultiplier,
         weightMultiplier: data.weightMultiplier,
+        evolutionStage: data.evolutionStage,
         maxHerdSize: data.maxHerdSize,
         minDistanceBetweenSpawns: data.minDistanceBetweenSpawns,
         condition: data.condition ? SpawnCondition.deserialize(data.condition) : undefined,

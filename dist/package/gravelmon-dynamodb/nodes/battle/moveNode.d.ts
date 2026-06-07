@@ -7,7 +7,8 @@ export declare const MoveFlagEntity = "MoveFlag";
 export declare enum MoveCategory {
     Physical = "Physical",
     Special = "Special",
-    Status = "Status"
+    Status = "Status",
+    UNKNOWN = "UNKNOWN"
 }
 export declare class MoveIdentifier {
     game: string;
@@ -38,8 +39,8 @@ export interface MoveData {
     basePower: number;
     priority: number;
     accuracy: number;
-    moveRange: MoveRange;
-    moveCategory: MoveCategory;
+    moveRange?: MoveRange;
+    moveCategory?: MoveCategory;
     description?: string;
     zMoveEffect?: string;
     associatedWeathers?: FieldEffectIdentifier[];
@@ -63,14 +64,15 @@ export declare function serializeLearnedBy(data: LearnedByData): {
 export declare class MoveNode extends DynamoNode {
     moveIdentifier: MoveIdentifier;
     displayName: string;
-    moveData: MoveData;
+    moveData?: MoveData;
     rebalancedMoveData?: MoveData;
-    moveFlags: string[];
+    moveFlags?: string[];
     implemented: boolean;
-    itemRecipeCost: Record<string, number>;
+    itemRecipeCost?: Record<string, number>;
     learnedBy: LearnedByData;
     rebalancedLearnedBy: LearnedByData;
-    constructor(displayName: string, name: MoveIdentifier, moveData: MoveData, learnedBy: LearnedByData, rebalancedMoveData?: MoveData, rebalancedLearnedBy?: LearnedByData, moveFlags?: string[], implemented?: boolean, itemRecipeCost?: Record<string, number>);
+    incomplete: boolean;
+    constructor(displayName: string, name: MoveIdentifier, learnedBy: LearnedByData, moveData?: MoveData, rebalancedMoveData?: MoveData, rebalancedLearnedBy?: LearnedByData, moveFlags?: string[], implemented?: boolean, itemRecipeCost?: Record<string, number>, incomplete?: boolean);
     static deserialize(data: Record<string, any>): MoveNode;
     static deserializeMoveData(data: any): MoveData;
     private serializeMoveData;

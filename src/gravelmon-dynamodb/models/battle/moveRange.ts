@@ -9,5 +9,6 @@ export enum MoveRange {
     EntireField,
     OpponentSide,
     UserSide,
-    Varies
+    Varies,
+    UNKNOWN = "UNKNOWN",
 }

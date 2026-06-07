@@ -33,7 +33,7 @@ describe("MechanicNode Integration Tests", () => {
 
     test("should persist usesItems correctly", async () => {
 
-        const node = new MechanicNode("mega_evolution", "description", [item1, item2]);
+        const node = new MechanicNode("mega_evolution", "description", undefined, [item1, item2]);
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MechanicNode;
@@ -45,7 +45,7 @@ describe("MechanicNode Integration Tests", () => {
 
     test("should persist affectsForms correctly", async () => {
 
-        const node = new MechanicNode("mega_evolution", "description", [item1, item2], [form1, form2]);
+        const node = new MechanicNode("mega_evolution", "description", undefined, [item1, item2], [form1, form2]);
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MechanicNode;

@@ -16,9 +16,10 @@ export declare class AbilityNode extends DynamoNode {
     rebalancedDescription?: string;
     identifier: AbilityIdentifier;
     implemented: boolean;
+    incomplete: boolean;
     abilityHolders: PokemonIdentifier[];
     rebalancedAbilityHolders: PokemonIdentifier[];
-    constructor(name: AbilityIdentifier, abilityHolder: PokemonIdentifier[], rebalancedAbilityHolders: PokemonIdentifier[], description?: string, rebalancedDescription?: string, implemented?: boolean);
+    constructor(name: AbilityIdentifier, abilityHolder: PokemonIdentifier[], rebalancedAbilityHolders: PokemonIdentifier[], description?: string, rebalancedDescription?: string, implemented?: boolean, incomplete?: boolean);
     serialize(): Record<string, any>;
     static deserialize(data: Record<string, any>): DynamoNode;
 }

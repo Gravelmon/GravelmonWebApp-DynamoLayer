@@ -152,9 +152,8 @@ describe("FormNode Integration Tests", () => {
                 layers: [
                     {
                         name: CommonLayerNames.Emissive,
-                        textureName: "pikachu_glow",
-                        isEmissive: true,
-                        loops: true
+                        texture: new ResourceLocation("test", "path"),
+                        isEmissive: true
                     }
                 ],
                 variationForSpeciesFeatureChoice: {
@@ -248,9 +247,7 @@ describe("FormNode Integration Tests", () => {
 
         const layer = data.resolverData!.layers[0];
         expect(layer.name).toBe(CommonLayerNames.Emissive);
-        expect(layer.textureName).toBe("pikachu_glow");
         expect(layer.isEmissive).toBe(true);
-        expect(layer.loops).toBe(true);
 
 // variation
         expect(data.resolverData?.variationForSpeciesFeatureChoice).toEqual({

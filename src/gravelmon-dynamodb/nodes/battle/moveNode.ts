@@ -11,7 +11,8 @@ export const MoveFlagEntity = "MoveFlag";
 export enum MoveCategory {
     Physical = "Physical",
     Special = "Special",
-    Status = "Status"
+    Status = "Status",
+    UNKNOWN = "UNKNOWN",
 }
 
 export class MoveIdentifier {
@@ -81,8 +82,8 @@ export interface MoveData {
     basePower: number;
     priority: number;
     accuracy: number;
-    moveRange: MoveRange;
-    moveCategory: MoveCategory;
+    moveRange?: MoveRange;
+    moveCategory?: MoveCategory;
     description?: string;
     zMoveEffect?: string;
     //string used here must be a resource location
@@ -114,20 +115,21 @@ export function serializeLearnedBy(data: LearnedByData) {
 export class MoveNode extends DynamoNode {
     moveIdentifier: MoveIdentifier;
     displayName: string;
-    moveData: MoveData;
+    moveData?: MoveData;
     rebalancedMoveData?: MoveData;
-    moveFlags: string[];
+    moveFlags?: string[];
     implemented: boolean;
-    itemRecipeCost: Record<string, number>
+    itemRecipeCost?: Record<string, number>
     learnedBy: LearnedByData;
     rebalancedLearnedBy: LearnedByData;
+    incomplete: boolean;
 
     constructor(displayName: string, name: MoveIdentifier,
-                moveData: MoveData,
                 learnedBy: LearnedByData,
+                moveData?: MoveData,
                 rebalancedMoveData?: MoveData,
                 rebalancedLearnedBy?: LearnedByData,
-                moveFlags: string[] = [], implemented: boolean = false, itemRecipeCost?: Record<string, number>) {
+                moveFlags: string[] = [], implemented: boolean = false, itemRecipeCost?: Record<string, number>, incomplete: boolean = false) {
         super(MoveEntity, name.toString());
         this.displayName = displayName;
         this.moveIdentifier = name;
@@ -144,19 +146,21 @@ export class MoveNode extends DynamoNode {
             legacy: [],
             evolution: [],
         };
+        this.incomplete = incomplete;
     }
 
     static deserialize(data: Record<string, any>): MoveNode {
         return new MoveNode(
             data.displayName,
             MoveIdentifier.deserialize(data.moveIdentifier),
-            MoveNode.deserializeMoveData(data.moveData),
             deserializeLearnedBy(data.learnedBy),
+            data.moveData ? MoveNode.deserializeMoveData(data.moveData) : undefined,
             data.rebalancedMoveData ? MoveNode.deserializeMoveData(data.rebalancedMoveData) : undefined,
             data.rebalancedLearnedBy ? deserializeLearnedBy(data.rebalancedLearnedBy) : undefined,
             data.moveFlags || [],
             data.implemented,
-            data.itemRecipeCost
+            data.itemRecipeCost || {},
+            data.incomplete
         );
     }
 
@@ -173,7 +177,7 @@ export class MoveNode extends DynamoNode {
             zMoveEffect: data.zMoveEffect,
             associatedWeathers: data.associatedWeathers,
             associatedTerrain: data.associatedTerrain,
-            associatedFieldEffects: data.associatedFieldEffects
+            associatedFieldEffects: data.associatedFieldEffects,
         }
     }
 
@@ -199,13 +203,14 @@ export class MoveNode extends DynamoNode {
             ...super.serialize(),
             displayName: this.displayName,
             moveIdentifier: this.moveIdentifier.serialize(),
-            moveData: this.serializeMoveData(this.moveData),
+            moveData: this.moveData ? this.serializeMoveData(this.moveData) : undefined,
             learnedBy: serializeLearnedBy(this.learnedBy),
             rebalancedMoveData: this.rebalancedMoveData ? this.serializeMoveData(this.rebalancedMoveData) : undefined,
             rebalancedLearnedBy: serializeLearnedBy(this.rebalancedLearnedBy),
-            moveFlags: this.moveFlags,
+            moveFlags: this.moveFlags ? this.moveFlags : undefined,
             implemented: this.implemented,
-            itemRecipeCost: this.itemRecipeCost,
+            itemRecipeCost: this.itemRecipeCost ? this.itemRecipeCost : undefined,
+            incomplete: this.incomplete
         }
     }
 }

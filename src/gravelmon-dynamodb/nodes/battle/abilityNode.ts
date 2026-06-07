@@ -43,6 +43,7 @@ export class AbilityNode extends DynamoNode {
     rebalancedDescription?: string;
     identifier: AbilityIdentifier;
     implemented: boolean = false;
+    incomplete: boolean = false;
     abilityHolders: PokemonIdentifier[];
     rebalancedAbilityHolders: PokemonIdentifier[];
 
@@ -51,7 +52,8 @@ export class AbilityNode extends DynamoNode {
                 rebalancedAbilityHolders: PokemonIdentifier[],
                 description?: string,
                 rebalancedDescription?: string,
-                implemented: boolean = false) {
+                implemented: boolean = false,
+                incomplete: boolean = false) {
         super(AbilityEntity, name.toString());
         this.description = description;
         this.identifier = name;
@@ -59,6 +61,7 @@ export class AbilityNode extends DynamoNode {
         this.implemented = implemented;
         this.abilityHolders = abilityHolder;
         this.rebalancedAbilityHolders = rebalancedAbilityHolders;
+        this.incomplete = incomplete;
     }
 
     public serialize(): Record<string, any> {
@@ -69,14 +72,15 @@ export class AbilityNode extends DynamoNode {
             identifier: this.identifier.serialize(),
             implemented: this.implemented,
             abilityHolders: this.abilityHolders.map((pokemon)=>pokemon.serialize()),
-            rebalancedAbilityHolders: this.rebalancedAbilityHolders.map((pokemon)=>pokemon.serialize())
+            rebalancedAbilityHolders: this.rebalancedAbilityHolders.map((pokemon)=>pokemon.serialize()),
+            incomplete: this.incomplete
         }
     }
 
     static deserialize(data: Record<string, any>): DynamoNode {
         const abilityHolders = data.abilityHolders ? data.abilityHolders.map((pokemon: any)=>PokemonIdentifier.deserialize(pokemon)) : [];
         const rebalancedAbilityHolders = data.rebalancedAbilityHolders ? data.rebalancedAbilityHolders.map((pokemon: any)=>PokemonIdentifier.deserialize(pokemon)) : [];
-        return new AbilityNode(AbilityIdentifier.deserialize(data.identifier), abilityHolders, rebalancedAbilityHolders, data.description, data.rebalancedDescription, data.implemented);
+        return new AbilityNode(AbilityIdentifier.deserialize(data.identifier), abilityHolders, rebalancedAbilityHolders, data.description, data.rebalancedDescription, data.implemented, data.incomplete);
     }
 }
 

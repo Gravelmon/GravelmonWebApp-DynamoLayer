@@ -32,6 +32,7 @@ export interface SpawnData {
     weightMultiplier?: number;
     maxHerdSize?: number;
     minDistanceBetweenSpawns?: number;
+    evolutionStage?: number;
     condition?: SpawnCondition;
     antiCondition?: SpawnCondition;
     herdSpawnEntries?: HerdSpawnEntry[];

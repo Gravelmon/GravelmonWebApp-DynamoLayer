@@ -16,6 +16,8 @@ export enum EvolutionConditionType {
     FRIENDSHIP_BELOW,
     PARTY_MEMBER,
     BIOME,
+    STRUCTURE,
+    ADVANCEMENT,
     WEATHER,
     BLOCKS_TRAVELED,
     HAS_MOVE_TYPE,
@@ -26,6 +28,18 @@ export enum EvolutionConditionType {
     PROPERTY_RANGE,
     DEFEAT,
     DAMAGE_TAKEN,
+    MOON_PHASE,
+}
+
+enum MoonPhase {
+    FULL_MOON,
+    WANING_GIBBOUS,
+    THIRD_QUARTER,
+    WANING_CRESCENT,
+    NEW_MOON,
+    WAXING_CRESCENT,
+    FIRST_QUARTER,
+    WAXING_GIBBOUS
 }
 
 export enum Stat {
@@ -82,6 +96,8 @@ export abstract class EvolutionCondition<T> {
                 return new LevelCondition(evolutionConditionData.values[0]);
             case EvolutionConditionType.TIME_RANGE:
                 return new TimeCondition(evolutionConditionData.values[0]);
+            case EvolutionConditionType.MOON_PHASE:
+                return new MoonPhaseCondition(evolutionConditionData.values[0]);
             case EvolutionConditionType.STAT_COMPARE:
                 return new StatCompareCondition(evolutionConditionData.values[0], evolutionConditionData.values[1]);
             case EvolutionConditionType.STAT_EQUAL:
@@ -101,7 +117,13 @@ export abstract class EvolutionCondition<T> {
             case EvolutionConditionType.PARTY_MEMBER:
                 return new PartyMemberCondition(evolutionConditionData.values[0] as string, evolutionConditionData.values[1] as boolean);
             case EvolutionConditionType.BIOME:
-                return new BiomeCondition(evolutionConditionData.values[0] as ResourceLocation);
+                return new BiomeCondition(evolutionConditionData.values[0] ? evolutionConditionData.values[0] as ResourceLocation : undefined,
+                    evolutionConditionData.values[1] ? evolutionConditionData.values[1] as ResourceLocation: undefined);
+            case EvolutionConditionType.STRUCTURE:
+                return new StructureCondition(evolutionConditionData.values[0] ? evolutionConditionData.values[0] as ResourceLocation : undefined,
+                    evolutionConditionData.values[1] ? evolutionConditionData.values[1] as ResourceLocation: undefined);
+            case EvolutionConditionType.ADVANCEMENT:
+                return new AdvancementCondition(evolutionConditionData.values[0] as ResourceLocation);
             case EvolutionConditionType.WEATHER:
                 const {isRaining, isThundering} = evolutionConditionData.values[0] as {
                     isRaining: boolean,
@@ -139,6 +161,12 @@ export class LevelCondition extends EvolutionCondition<number> {
 export class TimeCondition extends EvolutionCondition<Time> {
     constructor(value: Time) {
         super(EvolutionConditionType.TIME_RANGE, {range: value});
+    }
+}
+
+export class MoonPhaseCondition extends EvolutionCondition<MoonPhase> {
+    constructor(value: MoonPhase) {
+        super(EvolutionConditionType.MOON_PHASE, {moonPhase: value});
     }
 }
 
@@ -213,9 +241,29 @@ export class PartyMemberCondition extends EvolutionCondition<any> {
     }
 }
 
-export class BiomeCondition extends EvolutionCondition<ResourceLocation> {
-    constructor(value: ResourceLocation) {
-        super(EvolutionConditionType.BIOME, {biomeCondition: value});
+export class BiomeCondition extends EvolutionCondition<ResourceLocation | undefined> {
+    constructor(biomeCondition?: ResourceLocation, biomeAnticondition?: ResourceLocation) {
+        super(EvolutionConditionType.BIOME, {biomeCondition: biomeCondition, biomeAnticondition: biomeAnticondition});
+    }
+
+    public serializeValue(value: ResourceLocation): any {
+        return value.serialize();
+    }
+}
+
+export class StructureCondition extends EvolutionCondition<ResourceLocation | undefined> {
+    constructor(structureCondition?: ResourceLocation, structureAnticondition?: ResourceLocation) {
+        super(EvolutionConditionType.STRUCTURE, {structureCondition: structureCondition, structureAnticondition: structureAnticondition});
+    }
+
+    public serializeValue(value: ResourceLocation): any {
+        return value.serialize();
+    }
+}
+
+export class AdvancementCondition extends EvolutionCondition<ResourceLocation | undefined> {
+    constructor(requiredAdvancement: ResourceLocation) {
+        super(EvolutionConditionType.ADVANCEMENT, {requiredAdvancement: requiredAdvancement});
     }
 
     public serializeValue(value: ResourceLocation): any {

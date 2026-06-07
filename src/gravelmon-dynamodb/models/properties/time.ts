@@ -2,6 +2,7 @@ import { NumberRange } from "./numberRange";
 
 export enum Time {
     Day = "day",
+    Any = "any",
     Night = "night",
     Twilight = "twilight"
 }

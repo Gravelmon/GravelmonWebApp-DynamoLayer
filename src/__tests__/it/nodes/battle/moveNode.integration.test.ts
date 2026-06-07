@@ -1,6 +1,6 @@
 import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
-import { createTestEnv } from "../../../testEnv";
-import { MoveCategory, MoveIdentifier, MoveNode} from "../../../../gravelmon-dynamodb/nodes";
+import {createTestEnv} from "../../../testEnv";
+import {MoveCategory, MoveIdentifier, MoveNode} from "../../../../gravelmon-dynamodb/nodes";
 import {MoveRange} from "../../../../gravelmon-dynamodb/models/battle/moveRange";
 
 let service: GravelmonDynamoDBService;
@@ -21,7 +21,7 @@ describe("MoveNode", () => {
         const moveId = new MoveIdentifier("pokemon_scarlet", "flamethrower");
 
         const moveData = {
-            moveTypes: [ "fire" ],
+            moveTypes: ["fire"],
             powerPoints: 15,
             basePower: 90,
             priority: 0,
@@ -29,7 +29,7 @@ describe("MoveNode", () => {
             moveRange: MoveRange.AllAllies,
             moveCategory: MoveCategory.Special,
             description: "Burns the target",
-            itemRecipeCost: { fire: 1 }
+            itemRecipeCost: {fire: 1}
         };
 
         const rebalanced = {
@@ -39,7 +39,6 @@ describe("MoveNode", () => {
 
         const node = new MoveNode("",
             moveId,
-            moveData,
             {
                 levelUp: [],
                 teach: [],
@@ -47,6 +46,7 @@ describe("MoveNode", () => {
                 legacy: [],
                 evolution: []
             },
+            moveData,
             rebalanced,
             undefined,
             ["tm", "special"]
@@ -73,7 +73,7 @@ describe("MoveNode", () => {
         const moveId = new MoveIdentifier("test_game", "ice_beam");
 
         const moveData = {
-            moveTypes: [ "ice" ],
+            moveTypes: ["ice"],
             powerPoints: 10,
             basePower: 90,
             priority: 0,
@@ -83,45 +83,46 @@ describe("MoveNode", () => {
             description: "Freezes target"
         };
 
-        const node = new MoveNode("", moveId,  moveData,
+        const node = new MoveNode("", moveId,
             {
                 levelUp: [],
                 teach: [],
                 egg: [],
                 legacy: [],
                 evolution: []
-            }, undefined, undefined, ["hm"]);
+            }, moveData, undefined, undefined, ["hm"]);
 
         await service.putItem(node);
         const read = await service.getNode(node.PK) as MoveNode;
 
-        expect(read.moveData.moveTypes).toHaveLength(2);
-        expect(read.moveData.moveTypes[0]).toEqual("ice");
+        expect(read.moveData?.moveTypes).toHaveLength(2);
+        expect(read.moveData?.moveTypes[0]).toEqual("ice");
 
-        expect(read.moveData.powerPoints).toBe(10);
-        expect(read.itemRecipeCost).toEqual({ ice: 2 });
+        expect(read.moveData?.powerPoints).toBe(10);
+        expect(read.itemRecipeCost).toEqual({ice: 2});
     });
 
     test("MoveNode should default moveFlags to empty array", () => {
         const moveId = new MoveIdentifier("game", "tackle");
 
         const node = new MoveNode("", moveId, {
-            moveTypes: [],
-            powerPoints: 35,
-            basePower: 40,
-            priority: 0,
-            accuracy: 100,
-            moveRange: MoveRange.AllAllies,
-            moveCategory: MoveCategory.Physical,
-            description: ""
-        },
-            {
                 levelUp: [],
                 teach: [],
                 egg: [],
                 legacy: [],
                 evolution: []
-            }, undefined, undefined,
+            },
+            {
+                moveTypes: [],
+                powerPoints: 35,
+                basePower: 40,
+                priority: 0,
+                accuracy: 100,
+                moveRange: MoveRange.AllAllies,
+                moveCategory: MoveCategory.Physical,
+                description: ""
+            },
+            undefined, undefined,
         );
 
         expect(node.moveFlags).toEqual([]);

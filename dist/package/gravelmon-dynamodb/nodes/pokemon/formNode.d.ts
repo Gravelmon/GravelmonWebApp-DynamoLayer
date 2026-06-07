@@ -1,9 +1,9 @@
 import { GenderDifferenceNode as GenderDifference } from '../../models/assets/genderDifference';
 import { PokemonData, PokemonIdentifier, PokemonNode } from './pokemonNode';
-import { NumberRange } from "../../models/properties/numberRange";
-import { ResourceLocation } from "../../models/minecraft/resourceLocation";
-import { ResolverData } from '../../models/assets/resolverData';
-import { PosingData } from '../../models/assets/posing/posingFileData';
+import { NumberRange } from "../../models";
+import { ResourceLocation } from "../../models";
+import { ResolverData } from '../../models';
+import { PosingData } from '../../models';
 import { SpawnData as SpawnData } from '../../models/spawning/spawnData';
 export declare const FormEntity = "Form";
 export declare const enum ItemDropMethod {
@@ -32,10 +32,13 @@ export interface MechanicInteraction {
     mechanic: string;
     resultingForms: PokemonIdentifier[];
 }
+export interface DropData {
+    dropAmount?: number;
+    drops?: ItemDrop[];
+}
 export interface FormData {
     genderDifference?: GenderDifference;
     lightingData?: LightingData;
-    evolutions?: PokemonIdentifier[];
     isFormOf: PokemonIdentifier;
     affectedByMechanics?: string[];
     resolverData?: ResolverData;
@@ -43,8 +46,9 @@ export interface FormData {
     speciesFeatures: string[];
     spawnData?: SpawnData[];
     revivesFromFossils?: string[];
-    drops?: ItemDrop[];
+    dropData?: DropData;
     mechanicInteractions?: MechanicInteraction[];
+    addedByGame?: string;
 }
 export declare class FormNode extends PokemonNode {
     formData: FormData;

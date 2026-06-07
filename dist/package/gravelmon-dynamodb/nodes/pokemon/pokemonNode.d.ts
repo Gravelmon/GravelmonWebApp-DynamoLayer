@@ -5,14 +5,12 @@ import { Stats } from '../../models/properties/stats';
 import { MoveSet } from '../../models/battle/moveset';
 import { RidingBehaviourOptions as RidingOptions } from "../../models";
 export declare const PokemonEntity = "Pokemon";
-export declare const HasAbilityEdgeType = "HasAbility";
 export declare class PokemonIdentifier {
     game: string;
     pokemon: string;
-    formName?: string;
-    constructor(game: string, pokemon: string, formName?: string | string[]);
+    formAspects?: string[];
+    constructor(game: string, pokemon: string, formAspects?: string | string[]);
     toString(): string;
-    static fromString(identifier: string): PokemonIdentifier;
     isForm(): boolean;
     serialize(): any;
     static deserialize(data: any): PokemonIdentifier;

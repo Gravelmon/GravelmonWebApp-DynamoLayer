@@ -4,6 +4,7 @@ import {deserializeVector, serializeVector, Vector} from "../../properties/vecto
 import {PoseType} from "./poseType";
 import {NumberRange} from "../../properties/numberRange";
 import {Animation, deserializeAnimation, serializeAnimation} from '../../../nodes/assets/animationNode';
+import {MoveIdentifier} from "../../../nodes";
 
 export const PosingDataEntity = "PosingData";
 
@@ -25,7 +26,7 @@ export enum NamedAnimationTypes {
 
 export interface NamedAnimation {
     animationExpression: string;
-    name: NamedAnimationTypes;
+    name: NamedAnimationTypes | MoveIdentifier;
     animation: SK;
 }
 
@@ -92,7 +93,7 @@ function serializePoseAnimation(poseAnimation: PoseAnimation) {
         namedAnimations: poseAnimation.namedAnimations ?
             poseAnimation.namedAnimations.map(namedAnimation => ({
                 animationExpression: namedAnimation.animationExpression,
-                name: namedAnimation.name,
+                name: namedAnimation.name instanceof MoveIdentifier ? namedAnimation.name.serialize() : namedAnimation.name,
                 animation: namedAnimation.animation,
             })) : undefined,
         animations: poseAnimation.animations ?
@@ -132,7 +133,7 @@ function deserializePoseAnimation(data: any): PoseAnimation {
         namedAnimations: data.namedAnimations
             ? data.namedAnimations.map((na: any) => ({
                 animationExpression: na.animationExpression,
-                name: na.name,
+                name: na.name instanceof MoveIdentifier ? MoveIdentifier.deserialize(na.name) : na.name,
                 animation: na.animation,
             }))
             : undefined,
