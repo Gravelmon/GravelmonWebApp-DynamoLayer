@@ -128,7 +128,10 @@ export interface PokemonData {
 }
 
 export function deserializePokemonData(rawData: any): PokemonData {
-    if (rawData.pokemonIdentifier === undefined) throw new Error("pokemonIdentifier was undefined")
+    if (rawData.pokemonIdentifier === undefined) {
+        console.log(rawData);
+        throw new Error("pokemonIdentifier was undefined")
+    }
     if (rawData.pokemonIdentifier.game === undefined) throw new Error("game was undefined")
     let pokemonIdentifier: PokemonIdentifier = PokemonIdentifier.deserialize(rawData.pokemonIdentifier);
     return {
