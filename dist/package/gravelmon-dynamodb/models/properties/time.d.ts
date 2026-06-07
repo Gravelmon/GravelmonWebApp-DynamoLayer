@@ -3,7 +3,10 @@ export declare enum Time {
     Day = "day",
     Any = "any",
     Night = "night",
-    Twilight = "twilight"
+    Twilight = "twilight",
+    Dawn = "dawn",
+    Dusk = "dusk",
+    Noon = "noon"
 }
 export type TimeRange = {
     type: "time";

@@ -4,7 +4,10 @@ export enum Time {
     Day = "day",
     Any = "any",
     Night = "night",
-    Twilight = "twilight"
+    Twilight = "twilight",
+    Dawn = "dawn",
+    Dusk = "dusk",
+    Noon = "noon"
 }
 
 export type TimeRange =
@@ -34,28 +37,29 @@ export function deserializeTimeRange(value: any): TimeRange {
         throw new Error("Invalid TimeRange: value is null/undefined");
     }
 
-    if (Array.isArray(value)) {
+    if (value.type === "list") {
+        let values : any[] = value.value;
         return {
             type: "list",
-            value: value.map(deserializeTimeRange)
+            value: values.map(deserializeTimeRange)
         };
     }
 
-    if (typeof value === "object" && "min" in value && "max" in value) {
+    if (value.type === "range") {
         return {
             type: "range",
-            value: NumberRange.deserialize(value)
+            value: NumberRange.deserialize(value.value)
         };
     }
 
-    if (typeof value === "string") {
-        if (!Object.values(Time).includes(value as Time)) {
-            throw new Error(`Invalid Time value: ${value}`);
+    if (value.type === "time") {
+        if (!Object.values(Time).includes(value.value as Time)) {
+            throw new Error(`Invalid Time value: ${value.value}`);
         }
 
         return {
             type: "time",
-            value: value as Time
+            value: value.value as Time
         };
     }
 
