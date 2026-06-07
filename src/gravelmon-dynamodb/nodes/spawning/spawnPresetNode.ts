@@ -11,6 +11,14 @@ export interface SpawnPresetOptions {
     antiCondition?: SpawnCondition;
 }
 
+export function deserializeSpawnPresetOptions(spawnPresetOptions: any) {
+    return {
+        name: ResourceLocation.deserialize(spawnPresetOptions.name),
+        condition: spawnPresetOptions.condition ? SpawnCondition.deserialize(spawnPresetOptions.condition) : undefined,
+        antiCondition: spawnPresetOptions.antiCondition ? SpawnCondition.deserialize(spawnPresetOptions.antiCondition) : undefined
+    };
+}
+
 export class SpawnPresetNode extends DynamoNode {
     spawnPresetOptions: SpawnPresetOptions;
     static version = 1;
@@ -24,11 +32,7 @@ export class SpawnPresetNode extends DynamoNode {
         if(!data.spawnPresetOptions || !data.spawnPresetOptions.name) {
             throw new Error("Invalid data for deserializing SpawnPresetNode: missing spawnPresetOptions or name");
         }
-        const options: SpawnPresetOptions = {
-            name: ResourceLocation.deserialize(data.spawnPresetOptions.name),
-            condition: data.spawnPresetOptions.condition ? SpawnCondition.deserialize(data.spawnPresetOptions.condition) : undefined,
-            antiCondition: data.spawnPresetOptions.antiCondition ? SpawnCondition.deserialize(data.spawnPresetOptions.antiCondition) : undefined
-        };
+        const options: SpawnPresetOptions = deserializeSpawnPresetOptions(data.spawnPresetOptions);
 
         return new SpawnPresetNode(options);
     }

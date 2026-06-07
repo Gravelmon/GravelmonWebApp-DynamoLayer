@@ -28,7 +28,7 @@ export interface EvolutionOptions {
     learnsMovesUponEvolving?: MoveIdentifier[];
 }
 
-function deserializeEvolutionOptions(options : any) {
+export function deserializeEvolutionOptions(options : any) {
      return {
         evolutionType: options.evolutionType,
         consumesHeldItem: options.consumesHeldItem,
@@ -43,7 +43,7 @@ function deserializeEvolutionOptions(options : any) {
     }
 }
 
-function serializeEvolutionOptions(evolutionOptions: EvolutionOptions) {
+export function serializeEvolutionOptions(evolutionOptions: EvolutionOptions) {
     return {
         evolutionType: evolutionOptions.evolutionType,
         consumesHeldItem: evolutionOptions.consumesHeldItem,

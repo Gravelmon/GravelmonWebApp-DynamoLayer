@@ -19,6 +19,26 @@ export interface EvolutionOptions {
     shedsIntoForm?: PokemonIdentifier;
     learnsMovesUponEvolving?: MoveIdentifier[];
 }
+export declare function deserializeEvolutionOptions(options: any): {
+    evolutionType: any;
+    consumesHeldItem: any;
+    isOptional: any;
+    evolutionConditions: any;
+    needsToHoldItem: ResourceLocation | undefined;
+    requiresItemUsedOn: ResourceLocation | undefined;
+    shedsIntoForm: PokemonIdentifier | undefined;
+    learnsMovesUponEvolving: any;
+};
+export declare function serializeEvolutionOptions(evolutionOptions: EvolutionOptions): {
+    evolutionType: EvolutionType;
+    consumesHeldItem: boolean | undefined;
+    isOptional: boolean | undefined;
+    evolutionConditions: Record<string, any>[];
+    needsToHoldItem: any;
+    useItemOn: any;
+    shedsIntoForm: any;
+    learnsMoveUponEvolving: any[] | undefined;
+};
 export declare class EvolutionNode extends DynamoNode {
     currentPokemon: PokemonIdentifier;
     evolutions: PokemonIdentifier[];

@@ -7,6 +7,11 @@ export interface SpawnPresetOptions {
     condition?: SpawnCondition;
     antiCondition?: SpawnCondition;
 }
+export declare function deserializeSpawnPresetOptions(spawnPresetOptions: any): {
+    name: ResourceLocation;
+    condition: SpawnCondition | undefined;
+    antiCondition: SpawnCondition | undefined;
+};
 export declare class SpawnPresetNode extends DynamoNode {
     spawnPresetOptions: SpawnPresetOptions;
     static version: number;
