@@ -16,7 +16,7 @@ export interface LiteralNode {
 }
 export interface NotNode {
     type: 'not';
-    value: ExpressionNode;
+    operand: ExpressionNode;
 }
 export interface BooleanNode {
     type: 'boolean';

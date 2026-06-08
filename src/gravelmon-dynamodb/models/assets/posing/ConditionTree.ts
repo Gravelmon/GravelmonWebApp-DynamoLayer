@@ -30,7 +30,7 @@ export interface LiteralNode {
 
 export interface NotNode {
     type: 'not';
-    value: ExpressionNode;
+    operand: ExpressionNode;
 }
 
 export interface BooleanNode {
@@ -96,7 +96,7 @@ export function serializeExpression(node: ExpressionNode): any {
         case 'not':
             return {
                 type: 'not',
-                value: serializeExpression(node.value)
+                value: serializeExpression(node.operand)
             };
 
         case 'literal':
@@ -143,7 +143,7 @@ export function deserializeExpression(data: any): ExpressionNode {
         case 'not':
             return {
                 type: 'not',
-                value: deserializeExpression(data.value),
+                operand: deserializeExpression(data.operand),
             };
 
         case 'query':
