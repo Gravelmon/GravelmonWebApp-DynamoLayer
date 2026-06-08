@@ -114,6 +114,7 @@ export function serializeExpression(node: ExpressionNode): any {
 }
 
 export function deserializeExpression(data: any): ExpressionNode {
+    console.log(data);
     switch (data.type) {
         case 'logical':
             return {

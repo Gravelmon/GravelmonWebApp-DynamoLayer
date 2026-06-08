@@ -51,7 +51,7 @@ function serializePoseAnimation(poseAnimation: Pose) {
     }
 }
 
-function deserializePoseAnimation(data: any): Pose {
+function deserializePose(data: any): Pose {
     return {
         name: data.name,
         isBattle: data.isBattle,
@@ -198,7 +198,7 @@ export function deserializePosingData(data: any): PosingData {
 
             poseAnimations: opts.poseAnimations
                 ? opts.poseAnimations.map((pa: any) =>
-                    deserializePoseAnimation(pa)
+                    deserializePose(pa)
                 )
                 : undefined,
 

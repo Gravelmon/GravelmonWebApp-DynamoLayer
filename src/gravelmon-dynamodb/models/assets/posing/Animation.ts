@@ -60,9 +60,7 @@ export function deserializeAnimation(data: any): AnyAnimation {
         animationSource: data.animationSource,
         animationOverwriteString: data.animationOverwriteString,
         animation: data.animation ?? [],
-        conditionExpression: data.conditionExpression
-            ? deserializeExpression(data.conditionExpression)
-            : undefined,
+        conditionExpression: data.conditionExpression ? deserializeExpression(data.conditionExpression) : undefined,
     };
 
     switch (data.type) {
