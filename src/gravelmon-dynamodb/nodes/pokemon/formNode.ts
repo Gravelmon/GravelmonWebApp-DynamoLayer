@@ -121,14 +121,14 @@ export function serializeFormData(formData: FormData): any {
         revivesFromFossils: formData.revivesFromFossils,
         dropData: formData.dropData ? {
             dropAmount: formData.dropData.dropAmount,
-            drops: formData.dropData.drops?.map(drop => {
+            drops: formData.dropData.drops ? formData.dropData.drops.map(drop => {
                 percentage: drop.percentage;
                 quantity: drop.quantity;
                 quantityRange: drop.quantityRange ? drop.quantityRange.serialize() : undefined;
                 maxSelectableItems: drop.maxSelectableItems;
                 dropMethod: drop.dropMethod
                 item: drop.item.serialize();
-            })
+            }) : undefined
         } : undefined,
         mechanicInteractions: formData.mechanicInteractions?.map(mechanicInteraction => {
             return {
