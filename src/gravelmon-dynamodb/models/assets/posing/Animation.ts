@@ -19,10 +19,8 @@ export function serializeAnimation(anim: Animation): any {
             ...base,
             pitchMultiplier: anim.pitchMultiplier,
             yawMultiplier: anim.yawMultiplier,
-            maxPitch: anim.maxPitch,
-            minPitch: anim.minPitch,
-            maxYaw: anim.maxYaw,
-            minYaw: anim.minYaw,
+            pitchRange: anim.pitchRange ? anim.pitchRange.serialize() : undefined,
+            yawRange: anim.yawRange ? anim.yawRange.serialize() : undefined
         };
     }
 
@@ -73,10 +71,8 @@ export function deserializeAnimation(data: any): AnyAnimation {
                 ...base,
                 pitchMultiplier: data.pitchMultiplier,
                 yawMultiplier: data.yawMultiplier,
-                maxPitch: data.maxPitch,
-                minPitch: data.minPitch,
-                maxYaw: data.maxYaw,
-                minYaw: data.minYaw,
+                pitchRange: data.pitchRange ? NumberRange.deserialize(data.pitchRange) : undefined,
+                yawRange: data.yawRange ? NumberRange.deserialize(data.yawRange) : undefined,
             } satisfies LookAnimation;
 
         case AnimationTypes.Named:
@@ -157,12 +153,10 @@ export interface Animation {
 
 //"q.look('head_ai', 1, 1, 70, -45, 45, -45)"
 export interface LookAnimation extends Animation {
-    pitchMultiplier: number;
-    yawMultiplier: number;
-    maxPitch: number;
-    minPitch: number;
-    maxYaw: number;
-    minYaw: number;
+    pitchMultiplier?: number;
+    yawMultiplier?: number;
+    pitchRange?: NumberRange;
+    yawRange?: NumberRange;
 }
 
 //should generally use the q.bedrock_stateful() method, but can also use the q.bedrock_primary

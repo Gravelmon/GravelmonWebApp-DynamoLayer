@@ -1,4 +1,4 @@
-import {PokemonIdentifier} from "../../../nodes/pokemon/pokemonNode";
+import {PokemonIdentifier} from "../../../nodes";
 import {deserializeVector, serializeVector, Vector} from "../../properties";
 import {MoveIdentifier} from "../../../nodes";
 import {
@@ -6,7 +6,7 @@ import {
     NamedAnimation,
     QuirkAnimation,
     RidingStyle, serializeAnimation
-} from "./animation";
+} from "./Animation";
 import {ExpressionNode} from "./ConditionTree";
 import {PoseType} from "./poseType";
 
@@ -47,6 +47,7 @@ function serializePoseAnimation(poseAnimation: Pose) {
         animations: poseAnimation.animations ? poseAnimation.animations.map(serializeAnimation) : undefined,
         transformTicks: poseAnimation.transformTicks,
         transformToTicks: poseAnimation.transformToTicks,
+        transitions: poseAnimation.transitions ? poseAnimation.transitions.map(serializeAnimation) : undefined,
     }
 }
 
@@ -88,6 +89,7 @@ function deserializePoseAnimation(data: any): Pose {
             : undefined,
         transformTicks: data.transformTicks,
         transformToTicks: data.transformToTicks,
+        transitions: data.transitions ? data.transitions.map(deserializeAnimation) : undefined,
     };
 }
 

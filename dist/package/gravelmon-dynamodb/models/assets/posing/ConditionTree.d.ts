@@ -1,13 +1,22 @@
-export type ExpressionNode = LogicalNode | ComparisonNode | QueryNode | LiteralNode | BooleanNode;
+export type ExpressionNode = LogicalNode | ComparisonNode | QueryNode | LiteralNode | TernaryNode | NotNode | BooleanNode;
 export interface QueryNode {
     type: 'query';
     query: string;
-    inverted: boolean;
     args: ExpressionNode[];
+}
+export interface TernaryNode {
+    type: 'ternary';
+    condition: ExpressionNode;
+    ifTrue: ExpressionNode;
+    ifFalse: ExpressionNode;
 }
 export interface LiteralNode {
     type: 'literal';
     value: string | number;
+}
+export interface NotNode {
+    type: 'not';
+    value: ExpressionNode;
 }
 export interface BooleanNode {
     type: 'boolean';

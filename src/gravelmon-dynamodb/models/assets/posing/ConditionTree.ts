@@ -3,20 +3,34 @@ export type ExpressionNode =
     | ComparisonNode
     | QueryNode
     | LiteralNode
+    | TernaryNode
+    | NotNode
     | BooleanNode;
 
 export interface QueryNode {
     type: 'query';
 
     query: string;
-    inverted: boolean;
     args: ExpressionNode[];
+}
+
+export interface TernaryNode {
+    type: 'ternary';
+
+    condition: ExpressionNode;
+    ifTrue: ExpressionNode;
+    ifFalse: ExpressionNode;
 }
 
 export interface LiteralNode {
     type: 'literal';
 
     value: string | number;
+}
+
+export interface NotNode {
+    type: 'not';
+    value: ExpressionNode;
 }
 
 export interface BooleanNode {
@@ -64,12 +78,25 @@ export function serializeExpression(node: ExpressionNode): any {
                 right: serializeExpression(node.right),
             };
 
+        case 'ternary':
+            return {
+                type: 'ternary',
+                condition: serializeExpression(node.condition),
+                ifTrue: serializeExpression(node.ifTrue),
+                ifFalse: serializeExpression(node.ifFalse),
+            };
+
         case 'query':
             return {
                 type: 'query',
                 query: node.query,
-                inverted: node.inverted,
                 args: node.args.map(serializeExpression),
+            };
+
+        case 'not':
+            return {
+                type: 'not',
+                value: serializeExpression(node.value)
             };
 
         case 'literal':
@@ -104,11 +131,24 @@ export function deserializeExpression(data: any): ExpressionNode {
                 right: deserializeExpression(data.right),
             };
 
+        case 'ternary':
+            return {
+                type: 'ternary',
+                condition: deserializeExpression(data.condition),
+                ifTrue: deserializeExpression(data.ifTrue),
+                ifFalse: deserializeExpression(data.ifFalse),
+            };
+
+        case 'not':
+            return {
+                type: 'not',
+                value: deserializeExpression(data.value),
+            };
+
         case 'query':
             return {
                 type: 'query',
                 query: data.query,
-                inverted: data.inverted ?? false,
                 args: (data.args ?? []).map(deserializeExpression),
             };
 

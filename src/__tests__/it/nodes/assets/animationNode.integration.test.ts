@@ -1,6 +1,6 @@
-import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb/service/gravelmonDynamoDBService";
+import {GravelmonDynamoDBService} from "../../../../gravelmon-dynamodb";
 import { createTestEnv } from "../../../testEnv";
-import {AnimationEntity, AnimationNode } from "../../../../gravelmon-dynamodb/nodes/assets/animationNode";
+import {AnimationEntity, AnimationNode } from "../../../../gravelmon-dynamodb";
 
 let service: GravelmonDynamoDBService;
 let env: ReturnType<typeof createTestEnv>;

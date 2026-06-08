@@ -1,6 +1,6 @@
-import { PokemonIdentifier } from "../../../nodes/pokemon/pokemonNode";
+import { PokemonIdentifier } from "../../../nodes";
 import { Vector } from "../../properties";
-import { Animation, NamedAnimation, QuirkAnimation, RidingStyle } from "./animation";
+import { Animation, NamedAnimation, QuirkAnimation, RidingStyle } from "./Animation";
 import { ExpressionNode } from "./ConditionTree";
 import { PoseType } from "./poseType";
 export interface TransformedPart {

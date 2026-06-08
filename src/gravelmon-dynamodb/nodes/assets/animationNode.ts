@@ -1,12 +1,10 @@
-import { PoseType } from "../../models/assets/posing/poseType";
-import { deserializerRegistry } from "../../service/deserializerRegistry";
-import { DynamoNode } from "../../service/dynamoNodes";
+import { PoseType } from "../../models";
+import { deserializerRegistry } from "../../service";
+import { DynamoNode } from "../../service";
 import { PokemonIdentifier } from "../pokemon/pokemonNode";
 import {NamedAnimationTypes} from "../../models";
 
 export const AnimationEntity = "Animation";
-
-
 
 //animations can be coupled with states or poses for generating a generic poser for the user
 export type PrimaryPoseType = PoseType | NamedAnimationTypes

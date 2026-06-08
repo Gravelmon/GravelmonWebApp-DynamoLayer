@@ -1,5 +1,5 @@
-import { PoseType } from "../../models/assets/posing/poseType";
-import { DynamoNode } from "../../service/dynamoNodes";
+import { PoseType } from "../../models";
+import { DynamoNode } from "../../service";
 import { PokemonIdentifier } from "../pokemon/pokemonNode";
 import { NamedAnimationTypes } from "../../models";
 export declare const AnimationEntity = "Animation";

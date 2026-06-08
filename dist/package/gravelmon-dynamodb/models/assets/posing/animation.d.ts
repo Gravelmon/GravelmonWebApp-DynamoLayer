@@ -39,12 +39,10 @@ export interface Animation {
     conditionExpression?: ExpressionNode;
 }
 export interface LookAnimation extends Animation {
-    pitchMultiplier: number;
-    yawMultiplier: number;
-    maxPitch: number;
-    minPitch: number;
-    maxYaw: number;
-    minYaw: number;
+    pitchMultiplier?: number;
+    yawMultiplier?: number;
+    pitchRange?: NumberRange;
+    yawRange?: NumberRange;
 }
 export interface NamedAnimation extends Animation {
     name: NamedAnimationTypes | MoveIdentifier | PoseType | string;
