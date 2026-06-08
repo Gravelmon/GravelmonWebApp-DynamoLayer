@@ -3,18 +3,18 @@ import { NumberRange } from "../properties/numberRange";
 import { deserializeSeat, Seat, serializeSeat } from "./seat";
 
 export enum RidingKey {
-    Horse,
-    Vehicle,
-    Boat,
-    Submarine,
-    Dolphin,
-    Bird,
-    Jet,
-    Hover,
-    Rocket,
-    Burst,
-    Glider,
-    Minekart
+    Horse = "Horse",
+    Vehicle = "Vehicle",
+    Boat = "Boat",
+    Submarine = "Submarine",
+    Dolphin = "Dolphin",
+    Bird = "Bird",
+    Jet = "Jet",
+    Hover = "Hover",
+    Rocket = "Rocket",
+    Burst = "Burst",
+    Glider = "Glider",
+    Minekart = "Minekart"
 }
 
 export type RidingStats = {

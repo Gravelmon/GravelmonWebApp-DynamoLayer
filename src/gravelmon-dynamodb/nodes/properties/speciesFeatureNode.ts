@@ -6,9 +6,9 @@ import {PokemonIdentifier} from "../pokemon/pokemonNode";
 export const SpeciesFeatureEntity = "SpeciesFeature";
 
 export enum SpeciesFeatureType {
-    Flag,
-    Choice,
-    Integer
+    Flag = "Flag",
+    Choice = "Choice",
+    Integer = "Integer"
 }
 
 abstract class SpeciesFeatureNode extends DynamoNode {

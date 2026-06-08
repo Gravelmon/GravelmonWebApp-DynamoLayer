@@ -3,7 +3,8 @@ import { NumberRange } from "../properties/numberRange";
 import {Time} from "../properties";
 
 export enum LabelMode {
-    ANY, ALL
+    ANY = "ANY",
+    ALL = "ALL"
 }
 
 export interface SpawnCondition {

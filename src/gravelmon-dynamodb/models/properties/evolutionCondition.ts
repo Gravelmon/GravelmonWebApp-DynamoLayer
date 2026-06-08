@@ -5,50 +5,50 @@ import {Time} from "./time";
 import {NumberRange} from "./numberRange";
 
 export enum EvolutionConditionType {
-    LEVEL,
-    TIME_RANGE,
-    STAT_COMPARE,
-    STAT_EQUAL,
-    HAS_MOVE,
-    HELD_ITEM,
-    PROPERTIES,
-    FRIENDSHIP,
-    FRIENDSHIP_BELOW,
-    PARTY_MEMBER,
-    BIOME,
-    STRUCTURE,
-    ADVANCEMENT,
-    WEATHER,
-    BLOCKS_TRAVELED,
-    HAS_MOVE_TYPE,
-    BATTLE_CRITICAL_HITS,
-    CHANCE,
-    RECOIL,
-    USE_MOVE,
-    PROPERTY_RANGE,
-    DEFEAT,
-    DAMAGE_TAKEN,
-    MOON_PHASE,
+    LEVEL = "LEVEL",
+    TIME_RANGE = "TIME_RANGE",
+    STAT_COMPARE = "STAT_COMPARE",
+    STAT_EQUAL = "STAT_EQUAL",
+    HAS_MOVE = "HAS_MOVE",
+    HELD_ITEM = "HELD_ITEM",
+    PROPERTIES = "PROPERTIES",
+    FRIENDSHIP = "FRIENDSHIP",
+    FRIENDSHIP_BELOW = "FRIENDSHIP_BELOW",
+    PARTY_MEMBER = "PARTY_MEMBER",
+    BIOME = "BIOME",
+    STRUCTURE = "STRUCTURE",
+    ADVANCEMENT = "ADVANCEMENT",
+    WEATHER = "WEATHER",
+    BLOCKS_TRAVELED = "BLOCKS_TRAVELED",
+    HAS_MOVE_TYPE = "HAS_MOVE_TYPE",
+    BATTLE_CRITICAL_HITS = "BATTLE_CRITICAL_HITS",
+    CHANCE = "CHANCE",
+    RECOIL = "RECOIL",
+    USE_MOVE = "USE_MOVE",
+    PROPERTY_RANGE = "PROPERTY_RANGE",
+    DEFEAT = "DEFEAT",
+    DAMAGE_TAKEN = "DAMAGE_TAKEN",
+    MOON_PHASE = "MOON_PHASE",
 }
 
 enum MoonPhase {
-    FULL_MOON,
-    WANING_GIBBOUS,
-    THIRD_QUARTER,
-    WANING_CRESCENT,
-    NEW_MOON,
-    WAXING_CRESCENT,
-    FIRST_QUARTER,
-    WAXING_GIBBOUS
+    FULL_MOON = "FULL_MOON",
+    WANING_GIBBOUS = "WANING_GIBBOUS",
+    THIRD_QUARTER = "THIRD_QUARTER",
+    WANING_CRESCENT = "WANING_CRESCENT",
+    NEW_MOON = "NEW_MOON",
+    WAXING_CRESCENT = "WAXING_CRESCENT",
+    FIRST_QUARTER = "FIRST_QUARTER",
+    WAXING_GIBBOUS = "WAXING_GIBBOUS"
 }
 
 export enum Stat {
-    attack,
-    defence,
-    special_attack,
-    special_defence,
-    hp,
-    speed
+    attack = "attack",
+    defence = "defence",
+    special_attack = "special_attack",
+    special_defence = "special_defence",
+    hp = "hp",
+    speed = "speed"
 }
 
 export enum Gender {

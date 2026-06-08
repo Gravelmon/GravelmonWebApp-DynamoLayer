@@ -17,19 +17,19 @@ export declare enum NamedAnimationTypes {
     AirStatus = "air_status"
 }
 export declare enum RidingStyle {
-    LAND = 0,
-    LIQUID = 1,
-    AIR = 2
+    LAND = "Land",
+    LIQUID = "Liquid",
+    AIR = "Air"
 }
 export interface PrimarySettings {
     curve: "one" | "symmetric" | "symmetrical_wide";
     excludedLabels?: string[];
 }
 export declare enum AnimationTypes {
-    Look = 0,
-    Named = 1,
-    Quirk = 2,
-    Animation = 3
+    Look = "Look",
+    Named = "Named",
+    Quirk = "Quirk",
+    Animation = "Animation"
 }
 export interface Animation {
     type: AnimationTypes;

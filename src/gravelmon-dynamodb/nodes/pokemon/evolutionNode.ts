@@ -7,9 +7,6 @@ import {DynamoNode} from "../../service";
 
 export const EvolutionEntity = "Evolution";
 
-
-
-
 export enum EvolutionType {
     LevelUp = "level_up",
     ItemInteract = "item_interact",

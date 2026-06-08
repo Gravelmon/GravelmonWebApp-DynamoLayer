@@ -31,9 +31,10 @@ export interface ItemDrop {
 }
 
 export enum LiquidGlowMode {
-    LAND,
-    UNDERWATER,
-    BOTH}
+    LAND = "LAND",
+    UNDERWATER = "UNDERWATER",
+    BOTH = "BOTH"
+}
 
 export interface LightingData {
     lightLevel: number;

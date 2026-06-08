@@ -2,8 +2,8 @@ import { ResourceLocation } from "../minecraft/resourceLocation";
 import { NumberRange } from "../properties/numberRange";
 import { Time } from "../properties";
 export declare enum LabelMode {
-    ANY = 0,
-    ALL = 1
+    ANY = "ANY",
+    ALL = "ALL"
 }
 export interface SpawnCondition {
     dimensions?: string[];

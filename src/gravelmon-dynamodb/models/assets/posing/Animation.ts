@@ -120,9 +120,9 @@ export enum NamedAnimationTypes {
 }
 
 export enum RidingStyle {
-    LAND,
-    LIQUID,
-    AIR
+    LAND= "Land",
+    LIQUID = "Liquid",
+    AIR = "Air"
 }
 
 export interface PrimarySettings {
@@ -134,10 +134,10 @@ export interface PrimarySettings {
 }
 
 export enum AnimationTypes {
-    Look,
-    Named,
-    Quirk,
-    Animation,
+    Look = "Look",
+    Named = "Named",
+    Quirk = "Quirk",
+    Animation = "Animation",
 }
 
 //will generally use q.bedrock()

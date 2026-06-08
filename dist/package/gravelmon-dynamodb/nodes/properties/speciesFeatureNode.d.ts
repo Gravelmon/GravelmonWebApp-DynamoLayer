@@ -3,9 +3,9 @@ import { NumberRange, ResourceLocation, Vector } from "../../models";
 import { PokemonIdentifier } from "../pokemon/pokemonNode";
 export declare const SpeciesFeatureEntity = "SpeciesFeature";
 export declare enum SpeciesFeatureType {
-    Flag = 0,
-    Choice = 1,
-    Integer = 2
+    Flag = "Flag",
+    Choice = "Choice",
+    Integer = "Integer"
 }
 declare abstract class SpeciesFeatureNode extends DynamoNode {
     speciesFeatureName: string;
