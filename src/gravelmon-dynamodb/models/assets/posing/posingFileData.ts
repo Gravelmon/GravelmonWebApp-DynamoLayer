@@ -1,40 +1,14 @@
-import {SK} from '../../../service/dynamoNodes';
 import {PokemonIdentifier} from "../../../nodes/pokemon/pokemonNode";
-import {deserializeVector, serializeVector, Vector} from "../../properties/vector";
-import {PoseType} from "./poseType";
-import {NumberRange} from "../../properties/numberRange";
-import {Animation, deserializeAnimation, serializeAnimation} from '../../../nodes/assets/animationNode';
+import {deserializeVector, serializeVector, Vector} from "../../properties";
 import {MoveIdentifier} from "../../../nodes";
-
-export const PosingDataEntity = "PosingData";
-
-export const PosingForSpeciesFeatureEdgeType = "PosingForSpeciesFeature";
-export const PosingForFormEdgeType = "PosingForForm";
-export const OverridesPosingDataEdgeType = "Overrides";
-
-export enum NamedAnimationTypes {
-    Cry = "cry",
-    Recoil = "recoil",
-    Status = "status",
-    Special = "special",
-    Physical = "Physical",
-    Faint = "faint",
-    AirSpecial = "air_special",
-    AirPhysical = "air_physical",
-    AirStatus = "air_status",
-}
-
-export interface NamedAnimation {
-    animationExpression: string;
-    name: NamedAnimationTypes | MoveIdentifier;
-    animation: SK;
-}
-
-export interface ConditionalAnimation {
-    conditionExpression: string;
-    name: NamedAnimationTypes;
-    animation: SK;
-}
+import {
+    Animation, deserializeAnimation,
+    NamedAnimation,
+    QuirkAnimation,
+    RidingStyle, serializeAnimation
+} from "./animation";
+import {ExpressionNode} from "./ConditionTree";
+import {PoseType} from "./poseType";
 
 export interface TransformedPart {
     isVisible?: boolean
@@ -43,36 +17,21 @@ export interface TransformedPart {
     part: string;
 }
 
-export interface Quirk {
-    loopTimes?: number;
-    occurrenceRange: NumberRange;
-    curveExpression: string;
-    animation: SK;
-    isPrimary?: boolean;
-}
-
-export interface PoseAnimation {
-    name: string;
-    isBattle?: boolean;
-    isTouchingWater?: boolean;
-    isUnderWater?: boolean;
-    conditionExpression?: string;
-    allPoseTypes?: boolean;
-    pose: PoseType
-    transformedParts?: TransformedPart[];
-    quirks?: Quirk[];
-    namedAnimations?: NamedAnimation[];
-    animations: Animation[]
-    transformTicks?: number;
-    transformToTicks?: number;
-}
-
-function serializePoseAnimation(poseAnimation: PoseAnimation) {
+function serializePoseAnimation(poseAnimation: Pose) {
     return {
         name: poseAnimation.name,
+
         isBattle: poseAnimation.isBattle,
         isTouchingWater: poseAnimation.isTouchingWater,
         isUnderWater: poseAnimation.isUnderWater,
+        isInWaterOrRain: poseAnimation.isInWaterOrRain,
+        isStandingOnRedSand: poseAnimation.isStandingOnRedSand,
+        isStandingOnSand: poseAnimation.isStandingOnSand,
+        isStandingOnSandOrRedSand: poseAnimation.isStandingOnSandOrRedSand,
+        isDusk: poseAnimation.isDusk,
+        isWild: poseAnimation.isWild,
+        isRideStyle: poseAnimation.isRideStyle,
+
         conditionExpression: poseAnimation.conditionExpression,
         allPoseTypes: poseAnimation.allPoseTypes,
         pose: poseAnimation.pose,
@@ -83,33 +42,28 @@ function serializePoseAnimation(poseAnimation: PoseAnimation) {
                 position: transformedPart.position ? serializeVector(transformedPart.position) : undefined,
                 part: transformedPart.part,
             })) : undefined,
-        quirks: poseAnimation.quirks ? poseAnimation.quirks.map(quirk => ({
-            loopTimes: quirk.loopTimes,
-            occurrenceRange: quirk.occurrenceRange.serialize(),
-            curveExpression: quirk.curveExpression,
-            animation: quirk.animation,
-            isPrimary: quirk.isPrimary,
-        })) : undefined,
-        namedAnimations: poseAnimation.namedAnimations ?
-            poseAnimation.namedAnimations.map(namedAnimation => ({
-                animationExpression: namedAnimation.animationExpression,
-                name: namedAnimation.name instanceof MoveIdentifier ? namedAnimation.name.serialize() : namedAnimation.name,
-                animation: namedAnimation.animation,
-            })) : undefined,
-        animations: poseAnimation.animations ?
-            poseAnimation.animations.map(animation => serializeAnimation(animation))
-            : undefined,
+        quirks: poseAnimation.quirks ? poseAnimation.quirks.map(serializeAnimation) : undefined,
+        namedAnimations: poseAnimation.namedAnimations ? poseAnimation.namedAnimations.map(serializeAnimation) : undefined,
+        animations: poseAnimation.animations ? poseAnimation.animations.map(serializeAnimation) : undefined,
         transformTicks: poseAnimation.transformTicks,
         transformToTicks: poseAnimation.transformToTicks,
     }
 }
 
-function deserializePoseAnimation(data: any): PoseAnimation {
+function deserializePoseAnimation(data: any): Pose {
     return {
         name: data.name,
         isBattle: data.isBattle,
         isTouchingWater: data.isTouchingWater,
         isUnderWater: data.isUnderWater,
+        isInWaterOrRain: data.isInWaterOrRain,
+        isStandingOnRedSand: data.isStandingOnRedSand,
+        isStandingOnSand: data.isStandingOnSand,
+        isStandingOnSandOrRedSand: data.isStandingOnSandOrRedSand,
+        isDusk: data.isDusk,
+        isWild: data.isWild,
+        isRideStyle: data.isRideStyle,
+
         conditionExpression: data.conditionExpression,
         allPoseTypes: data.allPoseTypes,
         pose: data.pose,
@@ -121,15 +75,7 @@ function deserializePoseAnimation(data: any): PoseAnimation {
                 part: tp.part,
             }))
             : undefined,
-        quirks: data.quirks
-            ? data.quirks.map((q: any) => ({
-                loopTimes: q.loopTimes,
-                occurrenceRange: NumberRange.deserialize(q.occurrenceRange),
-                curveExpression: q.curveExpression,
-                animation: q.animation, // assuming already correct type (string / PK)
-                isPrimary: q.isPrimary,
-            }))
-            : undefined,
+        quirks: data.quirks ? data.quirks.map(deserializeAnimation) : undefined,
         namedAnimations: data.namedAnimations
             ? data.namedAnimations.map((na: any) => ({
                 animationExpression: na.animationExpression,
@@ -144,6 +90,8 @@ function deserializePoseAnimation(data: any): PoseAnimation {
         transformToTicks: data.transformToTicks,
     };
 }
+
+
 
 export interface CameraOffset {
     firstPersonCameraOffset: Vector;
@@ -160,13 +108,39 @@ export interface PosingFileOptions {
     headBone?: string;
     rootBone: string;
     cameraOffsets?: CameraOffset[];
-    poseAnimations: PoseAnimation[];
+    poseAnimations: Pose[];
     globalAnimations?: NamedAnimation[];
     overridesPosingData?: PokemonIdentifier;
 }
 
 export interface PosingData {
     posingFileOptions: PosingFileOptions;
+}
+
+export interface Pose {
+    name: string;
+
+    isBattle?: boolean;
+    isTouchingWater?: boolean;
+    isUnderWater?: boolean;
+    isInWaterOrRain?: boolean;
+    isStandingOnRedSand?: boolean;
+    isStandingOnSand?: boolean;
+    isStandingOnSandOrRedSand?: boolean;
+    isDusk?: boolean;
+    isWild?: boolean;
+    isRideStyle?: RidingStyle[];
+
+    conditionExpression?: ExpressionNode;
+    allPoseTypes?: boolean;
+    pose: PoseType
+    transformedParts?: TransformedPart[];
+    quirks?: QuirkAnimation[];
+    namedAnimations?: NamedAnimation[];
+    animations: Animation[]
+    transformTicks?: number;
+    transformToTicks?: number;
+    transitions?: NamedAnimation[];
 }
 
 export function serializePosingData(data: PosingData): Record<string, any> {
@@ -187,11 +161,7 @@ export function serializePosingData(data: PosingData): Record<string, any> {
             poseAnimations: data.posingFileOptions.poseAnimations ?
                 data.posingFileOptions.poseAnimations.map(poseAnimation => serializePoseAnimation(poseAnimation))
                 : undefined,
-            globalAnimations: data.posingFileOptions.globalAnimations ? data.posingFileOptions.globalAnimations.map(globalAnimation => ({
-                animationExpression: globalAnimation.animationExpression,
-                name: globalAnimation.name,
-                animation: globalAnimation.animation,
-            })) : undefined,
+            globalAnimations: data.posingFileOptions.globalAnimations ? data.posingFileOptions.globalAnimations.map(serializeAnimation) : undefined,
             overridesPosingData: data.posingFileOptions.overridesPosingData?.serialize(),
         }
     }
@@ -231,11 +201,7 @@ export function deserializePosingData(data: any): PosingData {
                 : undefined,
 
             globalAnimations: opts.globalAnimations
-                ? opts.globalAnimations.map((ga: any) => ({
-                    animationExpression: ga.animationExpression,
-                    name: ga.name,
-                    animation: deserializeAnimation(ga.animation),
-                }))
+                ? opts.globalAnimations.map(deserializeAnimation)
                 : undefined,
 
             overridesPosingData: opts.overridesPosingData
