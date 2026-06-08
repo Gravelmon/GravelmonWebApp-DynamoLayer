@@ -41,7 +41,7 @@ export function serializeAnimation(anim: Animation): any {
         };
     }
 
-    throw new Error(`Unknown animation type: ${(anim as any).type}`);
+    return base;
 }
 
 export type AnyAnimation =
