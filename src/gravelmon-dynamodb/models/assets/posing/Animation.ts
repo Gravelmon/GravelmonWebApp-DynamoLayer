@@ -90,6 +90,11 @@ export function deserializeAnimation(data: any): AnyAnimation {
                 primarySettings: data.primarySettings,
             } satisfies QuirkAnimation;
 
+        case AnimationTypes.Animation:
+            return {
+                ...base,
+            }
+
         default:
             throw new Error(`Unknown AnimationTypes: ${data.type}`);
     }
@@ -120,7 +125,7 @@ export enum NamedAnimationTypes {
 }
 
 export enum RidingStyle {
-    LAND= "Land",
+    LAND = "Land",
     LIQUID = "Liquid",
     AIR = "Air"
 }
@@ -160,7 +165,7 @@ export interface LookAnimation extends Animation {
 }
 
 //should generally use the q.bedrock_stateful() method, but can also use the q.bedrock_primary
-export interface NamedAnimation extends Animation{
+export interface NamedAnimation extends Animation {
     name: NamedAnimationTypes | MoveIdentifier | PoseType | string;
     primarySettings?: PrimarySettings;
 }
