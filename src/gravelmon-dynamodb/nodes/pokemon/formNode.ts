@@ -43,7 +43,9 @@ export interface LightingData {
 
 export interface MechanicInteraction {
     mechanic: string;
-    resultingForms: PokemonIdentifier[];
+    usingItem?: ResourceLocation;
+    resultingForms: PokemonIdentifier;
+    addedByGame: string;
 }
 
 export interface DropData {
@@ -131,7 +133,9 @@ export function serializeFormData(formData: FormData): any {
         mechanicInteractions: formData.mechanicInteractions?.map(mechanicInteraction => {
             return {
                 mechanic: mechanicInteraction.mechanic,
-                resultingForm: mechanicInteraction.resultingForms.map(form=>form.serialize())
+                resultingForm: mechanicInteraction.resultingForms,
+                addedByGame: mechanicInteraction.addedByGame,
+                usingItem: mechanicInteraction.usingItem ? mechanicInteraction.usingItem.serialize() : undefined
             }
         }),
         addedByGame: formData.addedByGame
@@ -159,19 +163,21 @@ export function deserializeFormData(data: any): FormData {
         revivesFromFossils: data.revivesFromFossils ?? [],
         dropData: data.dropData ? {
             dropAmount: data.dropData.dropAmount,
-            drops: data.dropData.drops.map((drop: any) => {
+            drops: data.dropData.drops ? data.dropData.drops.map((drop: any) => {
                 percentage: drop.percentage;
                 quantity: drop.quantity;
                 quantityRange: drop.quantityRange ? NumberRange.deserialize(drop.quantityRange) : undefined;
                 maxSelectableItems: drop.maxSelectableItems;
                 dropMethod: drop.dropMethod
                 item: ResourceLocation.deserialize(drop.item);
-            })
+            }) : undefined
         } : undefined,
         mechanicInteractions: data.mechanicInteractions ? data.mechanicInteractions.map((mechanicInteraction: any) => {
             return {
                 mechanic: mechanicInteraction.mechanic,
-                resultingForm: mechanicInteraction.resultingForms.map((form:any)=> PokemonIdentifier.deserialize(form))
+                resultingForm: PokemonIdentifier.deserialize(mechanicInteraction.resultingForm),
+                addedByGame: mechanicInteraction.addedByGame,
+                usingItem: mechanicInteraction.usingItem ? ResourceLocation.deserialize(mechanicInteraction.usingItem) : undefined
             }
         }) : undefined,
         addedByGame: data.addedByGame

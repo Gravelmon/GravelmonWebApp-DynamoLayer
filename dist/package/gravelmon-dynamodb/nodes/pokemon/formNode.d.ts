@@ -30,7 +30,9 @@ export interface LightingData {
 }
 export interface MechanicInteraction {
     mechanic: string;
-    resultingForms: PokemonIdentifier[];
+    usingItem?: ResourceLocation;
+    resultingForms: PokemonIdentifier;
+    addedByGame: string;
 }
 export interface DropData {
     dropAmount?: number;
