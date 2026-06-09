@@ -22,6 +22,7 @@ export declare class Hitbox {
     constructor(width: number, height: number, fixed?: boolean);
 }
 export interface PokemonData {
+    originalDexNumber?: number;
     pokemonIdentifier: PokemonIdentifier;
     baseStats?: Stats;
     rebalancedStats?: Stats;

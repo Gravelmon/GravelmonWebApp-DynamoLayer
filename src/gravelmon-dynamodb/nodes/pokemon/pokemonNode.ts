@@ -80,6 +80,7 @@ export class Hitbox {
 }
 
 export interface PokemonData {
+    originalDexNumber?: number;
     pokemonIdentifier: PokemonIdentifier;
     baseStats?: Stats;
     rebalancedStats?: Stats;
@@ -135,6 +136,7 @@ export function deserializePokemonData(rawData: any): PokemonData {
     // if (rawData.pokemonIdentifier.game === undefined) throw new Error("game was undefined")
     let pokemonIdentifier: PokemonIdentifier = PokemonIdentifier.deserialize(rawData.pokemonIdentifier);
     return {
+        originalDexNumber: rawData.originalDexNumber,
         pokemonIdentifier: pokemonIdentifier,
         baseStats: rawData.baseStats ? Stats.deserialize(rawData.baseStats) : undefined,
         rebalancedStats: rawData.rebalancedStats ? Stats.deserialize(rawData.rebalancedStats) : undefined,
@@ -187,6 +189,7 @@ export class PokemonNode extends DynamoNode {
 
     public serializePokemonData(): Record<string, any> {
         return {
+            originalDexNumber: this.pokemonData.originalDexNumber,
             pokemonIdentifier: this.pokemonData.pokemonIdentifier.serialize(),
             baseStats: this.pokemonData.baseStats ? this.pokemonData.baseStats.serialize() : undefined,
             rebalancedStats: this.pokemonData.rebalancedStats?.serialize(),
