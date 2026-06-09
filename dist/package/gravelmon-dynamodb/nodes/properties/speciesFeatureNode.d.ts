@@ -7,7 +7,7 @@ export declare enum SpeciesFeatureType {
     Choice = "Choice",
     Integer = "Integer"
 }
-declare abstract class SpeciesFeatureNode extends DynamoNode {
+export declare abstract class SpeciesFeatureNode extends DynamoNode {
     speciesFeatureName: string;
     speciesFeatureType: SpeciesFeatureType;
     isAspect: boolean;
@@ -50,4 +50,3 @@ export declare class IntegerSpeciesFeatureNode extends SpeciesFeatureNode {
     }[], introducedByGame: string, recipients: PokemonIdentifier[], display?: IntegerSpeciesFeatureDisplay, lastEdited?: number);
     serialize(): Record<string, any>;
 }
-export {};

@@ -11,7 +11,7 @@ export enum SpeciesFeatureType {
     Integer = "Integer"
 }
 
-abstract class SpeciesFeatureNode extends DynamoNode {
+export abstract class SpeciesFeatureNode extends DynamoNode {
     speciesFeatureName: string;
     speciesFeatureType: SpeciesFeatureType;
     isAspect: boolean = true;
