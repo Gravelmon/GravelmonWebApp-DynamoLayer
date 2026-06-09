@@ -28,12 +28,10 @@ export class GameNode extends DynamoNode {
             s3LogoLocation: rawGameData.s3LogoLocation,
 
             introducesPokemon: Object.fromEntries(
-                Object.entries(rawGameData.introducesPokemon).map(
-                    ([key, pokemon]) => [
-                        key,
-                        PokemonIdentifier.deserialize(pokemon)
-                    ]
-                )
+                rawGameData.introducesPokemon.map((entry: any) => [
+                    entry.key,
+                    PokemonIdentifier.deserialize(entry.value)
+                ])
             ),
             introducesItem: rawGameData.introducesItem.map((item: any) => new ResourceLocation(item.namespace, item.path)),
             introducesMoves: rawGameData.introducesMoves.map((move: any) => new MoveIdentifier(move.game, move.move)),
@@ -58,11 +56,11 @@ export class GameNode extends DynamoNode {
                 isPermitted: this.gameData.isPermitted,
                 isEngineCollection: this.gameData.isEngineCollection,
                 s3LogoLocation: this.gameData.s3LogoLocation,
-                introducesPokemon: Object.fromEntries(
-                    Object.entries(this.gameData.introducesPokemon).map(([key, value]) => [
-                        key,
-                        value.serialize()
-                    ])
+                introducesPokemon: Object.entries(this.gameData.introducesPokemon).map(
+                    ([key, value]) => ({
+                        key: Number(key),
+                        value: value.serialize()
+                    })
                 ),
                 introducesItem: this.gameData.introducesItem.map(item => item.serialize()),
                 introducesMoves: this.gameData.introducesMoves.map(move => move.serialize()),
