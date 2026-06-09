@@ -59,12 +59,12 @@ export class MoveFlagNode extends DynamoNode {
     public serialize(): Record<string, any> {
         return {
             ...super.serialize(),
-            flags: this.moves.map(m => m.serialize())
+            moves: this.moves.map(m => m.serialize())
         }
     }
 
     public static deserialize(data: Record<string, any>): MoveFlagNode {
-        return new MoveFlagNode(data.name, data.flags.map((m : any) => MoveIdentifier.deserialize(m)));
+        return new MoveFlagNode(data.name, data.moves.map((m : any) => MoveIdentifier.deserialize(m)));
     }
 }
 
