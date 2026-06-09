@@ -21,6 +21,6 @@ export class EggGroupNode extends DynamoNode {
     }
 
     public static deserialize(data: Record<string, any>): EggGroupNode {
-        return new EggGroupNode(data.name, data.flags.map((m : any) => PokemonIdentifier.deserialize(m)));
+        return new EggGroupNode(data.name, data.pokemonInEggGroup.map((m : any) => PokemonIdentifier.deserialize(m)));
     }
 }

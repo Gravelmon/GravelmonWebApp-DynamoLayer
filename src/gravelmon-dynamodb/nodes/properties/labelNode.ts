@@ -20,6 +20,6 @@ export class LabelNode extends DynamoNode {
     }
 
     public static deserialize(data: Record<string, any>): LabelNode {
-        return new LabelNode(data.name, data.flags.map((m : any) => PokemonIdentifier.deserialize(m)));
+        return new LabelNode(data.name, data.pokemonInLabel.map((m : any) => PokemonIdentifier.deserialize(m)));
     }
 }

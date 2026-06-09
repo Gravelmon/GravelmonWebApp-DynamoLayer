@@ -20,6 +20,6 @@ export class ExperienceGroupNode extends DynamoNode {
     }
 
     public static deserialize(data: Record<string, any>): ExperienceGroupNode {
-        return new ExperienceGroupNode(data.name, data.flags.map((m : any) => PokemonIdentifier.deserialize(m)));
+        return new ExperienceGroupNode(data.name, data.pokemonInExperienceGroup.map((m : any) => PokemonIdentifier.deserialize(m)));
     }
 }
