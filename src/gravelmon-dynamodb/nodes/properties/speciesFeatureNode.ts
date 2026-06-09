@@ -78,8 +78,8 @@ export abstract class SpeciesFeatureNode extends DynamoNode {
                 data.display ? {
                     uiName: data.display.uiName,
                     color: deserializeVector(data.display.color),
-                    underlay: data.display.underlay.serialize(),
-                    overlay: data.display.overlay.serialize(),
+                    underlay: ResourceLocation.deserialize(data.display.underlay),
+                    overlay: ResourceLocation.deserialize(data.display.overlay),
                 } : undefined, data.lastEdited);
         } else {
             throw new Error("Invalid speciesFeature type for deserializing SpeciesFeatureNode");
