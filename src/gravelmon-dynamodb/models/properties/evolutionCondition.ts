@@ -289,8 +289,8 @@ export class BiomeCondition extends EvolutionCondition<ResourceLocation | undefi
         super(EvolutionConditionType.BIOME, {biomeCondition: biomeCondition, biomeAnticondition: biomeAnticondition});
     }
 
-    public serializeValue(value: ResourceLocation): any {
-        return value.serialize();
+    public serializeValue(value?: ResourceLocation): any {
+        return value ? value.serialize() : undefined;
     }
 }
 
@@ -300,7 +300,7 @@ export class StructureCondition extends EvolutionCondition<ResourceLocation | un
     }
 
     public serializeValue(value: ResourceLocation): any {
-        return value.serialize();
+        return value ? value.serialize() : undefined;
     }
 }
 

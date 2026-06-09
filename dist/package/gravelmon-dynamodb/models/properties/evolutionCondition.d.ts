@@ -98,7 +98,7 @@ export declare class PartyMemberCondition extends EvolutionCondition<any> {
 }
 export declare class BiomeCondition extends EvolutionCondition<ResourceLocation | undefined> {
     constructor(biomeCondition?: ResourceLocation, biomeAnticondition?: ResourceLocation);
-    serializeValue(value: ResourceLocation): any;
+    serializeValue(value?: ResourceLocation): any;
 }
 export declare class StructureCondition extends EvolutionCondition<ResourceLocation | undefined> {
     constructor(structureCondition?: ResourceLocation, structureAnticondition?: ResourceLocation);
