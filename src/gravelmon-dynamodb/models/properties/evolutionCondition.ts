@@ -180,7 +180,7 @@ export abstract class EvolutionCondition<T> {
             case EvolutionConditionType.PROPERTY_RANGE:
                 return new PropertyRangeCondition(
                     get("feature"),
-                    NumberRange.deserialize(get("amount"))
+                    NumberRange.deserialize(get("range"))
                 );
 
             case EvolutionConditionType.DEFEAT:
@@ -352,7 +352,7 @@ export class DefeatCondition extends EvolutionCondition<any> {
 
 export class PropertyRangeCondition extends EvolutionCondition<any> {
     constructor(feature: string, value: NumberRange) {
-        super(EvolutionConditionType.PROPERTY_RANGE, {feature: feature, amount: value});
+        super(EvolutionConditionType.PROPERTY_RANGE, {feature: feature, range: value});
     }
 
     public serializeValue(value: any): any {
