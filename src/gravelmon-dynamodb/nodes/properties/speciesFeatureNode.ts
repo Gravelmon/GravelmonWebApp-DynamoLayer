@@ -36,14 +36,14 @@ export abstract class SpeciesFeatureNode extends DynamoNode {
     }
 
     static deserialize(data: Record<string, any>): SpeciesFeatureNode {
-        if (
-            data.speciesFeatureType === undefined ||
-            data.defaultOption === undefined ||
-            data.isPrimarySpeciesFeature === undefined ||
-            data.introducedByGame === undefined
-        ) {
-            throw new Error("Invalid data for deserializing SpeciesFeatureNode: missing required properties");
-        }
+        // if (
+        //     data.speciesFeatureType === undefined ||
+        //     data.defaultOption === undefined ||
+        //     data.isPrimarySpeciesFeature === undefined ||
+        //     data.introducedByGame === undefined
+        // ) {
+        //     throw new Error("Invalid data for deserializing SpeciesFeatureNode: missing required properties");
+        // }
         const speciesFeatureType: SpeciesFeatureType = data.speciesFeatureType;
         const speciesFeatureName: string = data.speciesFeatureName;
         const defaultOption: boolean | "random" | string | number = data.defaultOption;
