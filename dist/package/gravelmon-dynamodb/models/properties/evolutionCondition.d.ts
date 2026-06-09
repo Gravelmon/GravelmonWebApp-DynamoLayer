@@ -56,7 +56,6 @@ export declare abstract class EvolutionCondition<T> {
     protected constructor(type: EvolutionConditionType, condition: Record<string, T>);
     serialize(): Record<string, any>;
     serializeValue(value: T): any;
-    private static deserializeValue;
     static deserialize(data: any): EvolutionCondition<any>;
 }
 export declare class LevelCondition extends EvolutionCondition<number> {

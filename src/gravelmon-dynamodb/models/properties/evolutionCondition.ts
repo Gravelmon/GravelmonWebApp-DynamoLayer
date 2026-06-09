@@ -1,5 +1,4 @@
 import {ResourceLocation} from "../minecraft/resourceLocation";
-import {PokemonIdentifier} from "../../nodes/pokemon/pokemonNode";
 import {MoveIdentifier} from "../../nodes";
 import {Time} from "./time";
 import {NumberRange} from "./numberRange";
@@ -76,78 +75,122 @@ export abstract class EvolutionCondition<T> {
         return value;
     }
 
-    private static deserializeValue(type: EvolutionConditionType, value: any): any {
-        if (type === EvolutionConditionType.HELD_ITEM) {
-            return ResourceLocation.deserialize(value);
-        } else if (type === EvolutionConditionType.PARTY_MEMBER) {
-            return PokemonIdentifier.deserialize(value);
-        }
-        return value;
-    }
-
     static deserialize(data: any): EvolutionCondition<any> {
-        const evolutionConditionData = {
-            type: data.type,
-            values: data.values.map((value: any) => EvolutionCondition.deserializeValue(data.type, value)) as any[]
-        };
+        if (!data || typeof data !== "object") {
+            throw new Error(`Invalid EvolutionCondition: ${JSON.stringify(data)}`);
+        }
 
-        switch (evolutionConditionData.type) {
+        const type: EvolutionConditionType = data.type;
+
+        // convert [{key, value}] -> { key: value }
+        const values: Record<string, any> = {};
+
+        if (Array.isArray(data.values)) {
+            for (const entry of data.values) {
+                if (!entry || typeof entry !== "object") continue;
+                values[entry.key] = entry.value;
+            }
+        }
+
+        // normalize common nested types
+        const get = (k: string) => values[k];
+
+        switch (type) {
             case EvolutionConditionType.LEVEL:
-                return new LevelCondition(evolutionConditionData.values[0]);
+                return new LevelCondition(get("minLevel"));
+
             case EvolutionConditionType.TIME_RANGE:
-                return new TimeCondition(evolutionConditionData.values[0]);
+                return new TimeCondition(get("range"));
+
             case EvolutionConditionType.MOON_PHASE:
-                return new MoonPhaseCondition(evolutionConditionData.values[0]);
+                return new MoonPhaseCondition(get("moonPhase"));
+
             case EvolutionConditionType.STAT_COMPARE:
-                return new StatCompareCondition(evolutionConditionData.values[0], evolutionConditionData.values[1]);
+                return new StatCompareCondition(get("highStat"), get("lowStat"));
+
             case EvolutionConditionType.STAT_EQUAL:
-                return new StatEqualCondition(evolutionConditionData.values[0], evolutionConditionData.values[1]);
+                return new StatEqualCondition(get("statOne"), get("statTwo"));
+
             case EvolutionConditionType.HAS_MOVE:
-                return new HasMoveCondition(MoveIdentifier.deserialize(evolutionConditionData.values[0]));
+                return new HasMoveCondition(MoveIdentifier.deserialize(get("move")));
+
             case EvolutionConditionType.HAS_MOVE_TYPE:
-                return new HasMoveTypeCondition(evolutionConditionData.values[0]);
+                return new HasMoveTypeCondition(get("type"));
+
             case EvolutionConditionType.HELD_ITEM:
-                return new HeldItemCondition(ResourceLocation.deserialize(evolutionConditionData.values[0]));
+                return new HeldItemCondition(ResourceLocation.deserialize(get("itemCondition")));
+
             case EvolutionConditionType.FRIENDSHIP:
-                return new FriendshipCondition(evolutionConditionData.values[0] as number);
+                return new FriendshipCondition(get("amount"));
+
             case EvolutionConditionType.FRIENDSHIP_BELOW:
-                return new FriendshipBelowCondition(evolutionConditionData.values[0] as number);
+                return new FriendshipBelowCondition(get("amount"));
+
             case EvolutionConditionType.PROPERTIES:
-                return new PropertyCondition(evolutionConditionData.values[0]);
+                return new PropertyCondition(get("target"));
+
             case EvolutionConditionType.PARTY_MEMBER:
-                return new PartyMemberCondition(evolutionConditionData.values[0] as string, evolutionConditionData.values[1] as boolean);
+                return new PartyMemberCondition(get("target"), get("contains"));
+
             case EvolutionConditionType.BIOME:
-                return new BiomeCondition(evolutionConditionData.values[0] ? evolutionConditionData.values[0] as ResourceLocation : undefined,
-                    evolutionConditionData.values[1] ? evolutionConditionData.values[1] as ResourceLocation: undefined);
+                return new BiomeCondition(
+                    get("biomeCondition")
+                        ? ResourceLocation.deserialize(get("biomeCondition"))
+                        : undefined,
+                    get("biomeAnticondition")
+                        ? ResourceLocation.deserialize(get("biomeAnticondition"))
+                        : undefined
+                );
+
             case EvolutionConditionType.STRUCTURE:
-                return new StructureCondition(evolutionConditionData.values[0] ? evolutionConditionData.values[0] as ResourceLocation : undefined,
-                    evolutionConditionData.values[1] ? evolutionConditionData.values[1] as ResourceLocation: undefined);
+                return new StructureCondition(
+                    get("structureCondition")
+                        ? ResourceLocation.deserialize(get("structureCondition"))
+                        : undefined,
+                    get("structureAnticondition")
+                        ? ResourceLocation.deserialize(get("structureAnticondition"))
+                        : undefined
+                );
+
             case EvolutionConditionType.ADVANCEMENT:
-                return new AdvancementCondition(evolutionConditionData.values[0] as ResourceLocation);
-            case EvolutionConditionType.WEATHER:
-                const {isRaining, isThundering} = evolutionConditionData.values[0] as {
-                    isRaining: boolean,
-                    isThundering: boolean
-                };
-                return isRaining ? new RainingCondition(true) : new ThunderCondition(isThundering);
+                return new AdvancementCondition(ResourceLocation.deserialize(get("requiredAdvancement")));
+
+            case EvolutionConditionType.WEATHER: {
+                const weather = values;
+                return weather.isRaining
+                    ? new RainingCondition(true)
+                    : new ThunderCondition(weather.isThundering);
+            }
+
             case EvolutionConditionType.BLOCKS_TRAVELED:
-                return new BlocksTraveledCondition(evolutionConditionData.values[0] as number);
+                return new BlocksTraveledCondition(get("amount"));
+
             case EvolutionConditionType.BATTLE_CRITICAL_HITS:
-                return new BattleCriticalHitsCondition(evolutionConditionData.values[0] as number);
+                return new BattleCriticalHitsCondition(get("amount"));
+
             case EvolutionConditionType.CHANCE:
-                return new ChanceCondition(evolutionConditionData.values[0] as number);
+                return new ChanceCondition(get("chance"));
+
             case EvolutionConditionType.RECOIL:
-                return new RecoilCondition(evolutionConditionData.values[0] as number);
+                return new RecoilCondition(get("amount"));
+
             case EvolutionConditionType.USE_MOVE:
-                return new UseMoveCondition(evolutionConditionData.values[0] as string, evolutionConditionData.values[1] as number);
+                return new UseMoveCondition(get("move"), get("amount"));
+
             case EvolutionConditionType.PROPERTY_RANGE:
-                return new PropertyRangeCondition(evolutionConditionData.values[0], NumberRange.deserialize(evolutionConditionData.values[1]));
+                return new PropertyRangeCondition(
+                    get("feature"),
+                    NumberRange.deserialize(get("amount"))
+                );
+
             case EvolutionConditionType.DEFEAT:
-                return new DefeatCondition(evolutionConditionData.values[0] as string, evolutionConditionData.values[1] as number);
+                return new DefeatCondition(get("target"), get("amount"));
+
             case EvolutionConditionType.DAMAGE_TAKEN:
-                return new DamageTakenCondition(evolutionConditionData.values[0] as number);
+                return new DamageTakenCondition(get("amount"));
+
             default:
-                throw new Error(`Unsupported EvolutionConditionType: ${evolutionConditionData.type}`);
+                throw new Error(`Unsupported EvolutionConditionType: ${type}`);
         }
     }
 }
