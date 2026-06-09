@@ -18,7 +18,7 @@ export interface EvolutionOptions {
     
     consumesHeldItem?: boolean;
     isOptional?: boolean;
-    evolutionConditions: EvolutionCondition<any>[]
+    evolutionConditions?: EvolutionCondition<any>[]
     needsToHoldItem?: ResourceLocation;
     requiresItemUsedOn?: ResourceLocation;
     shedsIntoForm?: PokemonIdentifier;
@@ -45,10 +45,10 @@ export function serializeEvolutionOptions(evolutionOptions: EvolutionOptions) {
         evolutionType: evolutionOptions.evolutionType,
         consumesHeldItem: evolutionOptions.consumesHeldItem,
         isOptional: evolutionOptions.isOptional,
-        evolutionConditions: evolutionOptions.evolutionConditions.map(condition => condition.serialize()),
-        needsToHoldItem: evolutionOptions.needsToHoldItem?.serialize(),
-        useItemOn: evolutionOptions.requiresItemUsedOn?.serialize(),
-        shedsIntoForm: evolutionOptions.shedsIntoForm?.serialize(),
+        evolutionConditions: evolutionOptions.evolutionConditions ? evolutionOptions.evolutionConditions.map(condition => condition.serialize()) : undefined,
+        needsToHoldItem: evolutionOptions.needsToHoldItem ? evolutionOptions.needsToHoldItem.serialize() : undefined,
+        useItemOn: evolutionOptions.requiresItemUsedOn?evolutionOptions.requiresItemUsedOn.serialize() : undefined,
+        shedsIntoForm: evolutionOptions.shedsIntoForm?evolutionOptions.shedsIntoForm.serialize() : undefined,
         learnsMoveUponEvolving: evolutionOptions.learnsMovesUponEvolving ?
             evolutionOptions.learnsMovesUponEvolving?.map(move => move.serialize())
             : undefined

@@ -13,7 +13,7 @@ export interface EvolutionOptions {
     evolutionType: EvolutionType;
     consumesHeldItem?: boolean;
     isOptional?: boolean;
-    evolutionConditions: EvolutionCondition<any>[];
+    evolutionConditions?: EvolutionCondition<any>[];
     needsToHoldItem?: ResourceLocation;
     requiresItemUsedOn?: ResourceLocation;
     shedsIntoForm?: PokemonIdentifier;
@@ -33,7 +33,7 @@ export declare function serializeEvolutionOptions(evolutionOptions: EvolutionOpt
     evolutionType: EvolutionType;
     consumesHeldItem: boolean | undefined;
     isOptional: boolean | undefined;
-    evolutionConditions: Record<string, any>[];
+    evolutionConditions: Record<string, any>[] | undefined;
     needsToHoldItem: any;
     useItemOn: any;
     shedsIntoForm: any;
