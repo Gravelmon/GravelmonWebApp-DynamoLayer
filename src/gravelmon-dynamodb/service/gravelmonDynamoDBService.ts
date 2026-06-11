@@ -1,5 +1,8 @@
 import {
+    CreateTableCommand,
+    DescribeTableCommand,
     DynamoDBClient,
+    waitUntilTableExists
 } from "@aws-sdk/client-dynamodb";
 import {
     BatchGetCommand,
@@ -9,11 +12,11 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoItem, DynamoNode, PK, SK} from "./dynamoNodes";
 import {deserializerRegistry} from "./deserializerRegistry";
-
+const isLocal =
+    process.env.IS_LOCAL === "true" ||
+    process.env.AWS_SAM_LOCAL === "true";
 export function getDynamoConfig() {
-    const isLocal =
-        process.env.IS_LOCAL === "true" ||
-        process.env.AWS_SAM_LOCAL === "true";
+
 
     if (!isLocal) return {};
 
@@ -46,6 +49,69 @@ export class GravelmonDynamoDBService {
             }
         });
         this.tableName = tableName;
+    }
+
+    async initialize(): Promise<void> {
+        if(isLocal) await this.ensureTableExists();
+    }
+
+    private async ensureTableExists(): Promise<void> {
+        try {
+            await this.baseClient.send(
+                new DescribeTableCommand({
+                    TableName: this.tableName
+                })
+            );
+
+            return; // table exists
+        } catch (err: any) {
+            if (err.name !== "ResourceNotFoundException") {
+                throw err;
+            }
+        }
+
+        await this.baseClient.send(
+            new CreateTableCommand({
+                TableName: this.tableName,
+                BillingMode: "PAY_PER_REQUEST",
+
+                AttributeDefinitions: [
+                    {AttributeName: "PK", AttributeType: "S"},
+                    {AttributeName: "SK", AttributeType: "S"},
+                    {AttributeName: "entityType", AttributeType: "S"}
+                ],
+
+                KeySchema: [
+                    {AttributeName: "PK", KeyType: "HASH"},
+                    {AttributeName: "SK", KeyType: "RANGE"}
+                ],
+
+                GlobalSecondaryIndexes: [
+                    {
+                        IndexName: "GSI1-EntityType",
+                        KeySchema: [
+                            {
+                                AttributeName: "entityType",
+                                KeyType: "HASH"
+                            }
+                        ],
+                        Projection: {
+                            ProjectionType: "ALL"
+                        }
+                    }
+                ]
+            })
+        );
+
+        await waitUntilTableExists(
+            {
+                client: this.baseClient,
+                maxWaitTime: 30
+            },
+            {
+                TableName: this.tableName
+            }
+        );
     }
 
     // ---------- Core Queries ----------
