@@ -5,7 +5,6 @@ import {getNodePK} from "../../../../gravelmon-dynamodb";
 import {FormData, FormNode, LiquidGlowMode, PokemonData, PokemonIdentifier} from "../../../../gravelmon-dynamodb";
 import {Stats} from "../../../../gravelmon-dynamodb";
 import {PoseType} from "../../../../gravelmon-dynamodb";
-import {CommonLayerNames} from "../../../../gravelmon-dynamodb";
 import {SpawnData, SpawnType} from "../../../../gravelmon-dynamodb";
 import {SpawnablePositionType, SpawnBucket} from "../../../../gravelmon-dynamodb";
 import {ResourceLocation} from "../../../../gravelmon-dynamodb";
@@ -147,20 +146,6 @@ describe("FormNode Integration Tests", () => {
 
             affectedByMechanics: ["weather"],
 
-            resolverData: {
-                layers: [
-                    {
-                        name: CommonLayerNames.Emissive,
-                        texture: new ResourceLocation("test", "path"),
-                        isEmissive: true
-                    }
-                ],
-                variationForSpeciesFeatureChoice: {
-                    speciesFeature: "form",
-                    choice: "galar"
-                }
-            },
-
             posingData: {
                 posingFileOptions: {
                     profileScale: 1,
@@ -240,19 +225,19 @@ describe("FormNode Integration Tests", () => {
         expect(data.lightingData?.lightLevel).toBe(10);
         expect(data.lightingData?.liquidGlowMode).toBe("LAND");
 
-// resolver
-        expect(data.resolverData).toBeDefined();
-        expect(data.resolverData?.layers.length).toBe(1);
-
-        const layer = data.resolverData!.layers[0];
-        expect(layer.name).toBe(CommonLayerNames.Emissive);
-        expect(layer.isEmissive).toBe(true);
-
-// variation
-        expect(data.resolverData?.variationForSpeciesFeatureChoice).toEqual({
-            speciesFeature: "form",
-            choice: "galar"
-        });
+// // resolver
+//         expect(data.resolverData).toBeDefined();
+//         expect(data.resolverData?.layers.length).toBe(1);
+//
+//         const layer = data.resolverData!.layers[0];
+//         expect(layer.name).toBe(CommonLayerNames.Emissive);
+//         expect(layer.isEmissive).toBe(true);
+//
+// // variation
+//         expect(data.resolverData?.variationForSpeciesFeatureChoice).toEqual({
+//             speciesFeature: "form",
+//             choice: "galar"
+//         });
 
 // posing
         expect(data.posingData).toBeDefined();

@@ -1,4 +1,7 @@
 import { ResourceLocation } from "../minecraft";
+/**
+ * Matches Java CommonLayerNames enum
+ */
 export declare enum CommonLayerNames {
     Emissive = "emissive",
     TransparentEmissive = "transparentEmissive",
@@ -8,35 +11,59 @@ export declare enum CommonLayerNames {
     Flame = "flame",
     Glow = "glow"
 }
+/**
+ * Matches Java AbstractTexture
+ */
 export interface AnimatedTexture {
     texture: ResourceLocation;
     framerate?: number;
-    loops: boolean;
+    loops?: boolean;
     numberOfFrames?: number;
 }
+export type Texture = ResourceLocation | AnimatedTexture;
+/**
+ * Matches Java ResolverLayer
+ */
 export interface ResolverLayer {
-    name: string | CommonLayerNames;
-    texture: ResourceLocation | AnimatedTexture;
+    name?: string;
+    texture: Texture;
     isEmissive?: boolean;
     isTranslucent?: boolean;
 }
-export interface ResolverData {
+/**
+ * Matches Java VariationDTO
+ */
+export interface VariationDTO {
+    aspects: string[];
+    condition?: string;
+    poser?: ResourceLocation;
+    model?: ResourceLocation;
+    texture?: Texture;
     layers: ResolverLayer[];
-    variationForSpeciesFeatureChoice?: {
-        speciesFeature: string;
-        choice: string;
-    };
+    sprites?: Record<string, ResourceLocation>;
 }
-export declare function serializeResolverData(resolverData: ResolverData): {
-    layers: {
-        name: string;
+/**
+ * Matches Java ResolverDataDTO
+ */
+export interface ResolverData {
+    variations: VariationDTO[];
+}
+export declare function serializeResolverData(data: ResolverData): {
+    variations: {
+        aspects: string[];
+        condition: string | undefined;
+        poser: any;
+        model: any;
         texture: any;
-        isEmissive: boolean | undefined;
-        isTranslucent: boolean | undefined;
+        layers: {
+            name: string | undefined;
+            texture: any;
+            isEmissive: boolean | undefined;
+            isTranslucent: boolean | undefined;
+        }[];
+        sprites: {
+            [k: string]: any;
+        } | undefined;
     }[];
-    variationForSpeciesFeatureChoice: {
-        speciesFeature: string;
-        choice: string;
-    } | undefined;
 };
 export declare function deserializeResolverData(data: any): ResolverData;
