@@ -11,13 +11,15 @@ export class StructureNode extends DynamoNode {
     containedBy: ResourceLocation[];
     usedInSpawnPresets: ResourceLocation[];
     canSpawnPokemon: PokemonIdentifier[];
+    containsLoot: ResourceLocation[];//doesnt list all of the loot unless the structure was added by gravelmon
 
-    constructor(resourceLocation: ResourceLocation, containedBy: ResourceLocation[] = [], usedInSpawnPresets: ResourceLocation[] = [], canSpawnPokemon: PokemonIdentifier[] = []) {
+    constructor(resourceLocation: ResourceLocation, containedBy: ResourceLocation[] = [], containsLoot: ResourceLocation[] = [], usedInSpawnPresets: ResourceLocation[] = [], canSpawnPokemon: PokemonIdentifier[] = []) {
         super(StructureTagEntity, resourceLocation.toString());
         this.resourceLocation = resourceLocation;
         this.containedBy = containedBy;
         this.usedInSpawnPresets = usedInSpawnPresets;
         this.canSpawnPokemon = canSpawnPokemon;
+        this.containsLoot = containsLoot;
     }
     
     static deserialize(data: Record<string, any>): DynamoNode {
@@ -27,8 +29,10 @@ export class StructureNode extends DynamoNode {
 
         return new StructureNode(ResourceLocation.deserialize(data.resourceLocation),
             data.containedBy?.map((structureData: any) => ResourceLocation.deserialize(structureData)) ?? [],
+            data.containsLoot?.map((lootData: any) => ResourceLocation.deserialize(lootData)) ?? [],
             data.usedInSpawnPresets?.map((structureData: any) => ResourceLocation.deserialize(structureData)) ?? [],
-            data.canSpawnPokemon?.map((pokemonData: any) => PokemonIdentifier.deserialize(pokemonData)) ?? []);
+            data.canSpawnPokemon?.map((pokemonData: any) => PokemonIdentifier.deserialize(pokemonData)) ?? [],
+        );
     }
 
     public serialize(): Record<string, any> {
@@ -37,7 +41,8 @@ export class StructureNode extends DynamoNode {
             resourceLocation: this.resourceLocation.serialize(),
             containedBy: this.containedBy.map(Structure => Structure.serialize()),
             usedInSpawnPresets: this.usedInSpawnPresets.map(Structure => Structure.serialize()),
-            canSpawnPokemon: this.canSpawnPokemon.map(pokemon => pokemon.serialize())
+            canSpawnPokemon: this.canSpawnPokemon.map(pokemon => pokemon.serialize()),
+            containsLoot: this.containsLoot.map(loot => loot.serialize())
         }
     }
 }

@@ -53,6 +53,11 @@ export interface DropData {
     drops?: ItemDrop[]
 }
 
+export interface Fossil {
+    fossil: ResourceLocation;
+    canBeFoundInStructures: ResourceLocation[];
+}
+
 export interface FormData {
     genderDifference?: GenderDifference;
     lightingData?: LightingData;
@@ -63,7 +68,7 @@ export interface FormData {
     posingData?: PosingData;
     speciesFeatures: string[];
     spawnData?: SpawnData[];
-    revivesFromFossils?: string[];
+    revivesFromFossils?: Fossil[];
     dropData?: DropData;
     mechanicInteractions?: MechanicInteraction[];
     addedByGame: string;
@@ -118,7 +123,12 @@ export function serializeFormData(formData: FormData): any {
         posingData: formData.posingData ? serializePosingData(formData.posingData) : undefined,
         speciesFeatures: formData.speciesFeatures,
         spawnData: formData.spawnData ? formData.spawnData.map(serializeSpawnData) : undefined,
-        revivesFromFossils: formData.revivesFromFossils,
+        revivesFromFossils: formData.revivesFromFossils ? formData.revivesFromFossils.map(fossil => {
+            return {
+                fossil: fossil.fossil.serialize(),
+                canBeFoundInStructures: fossil.canBeFoundInStructures.map(structure => structure.serialize())
+            }
+        }) : undefined,
         dropData: formData.dropData ? {
             dropAmount: formData.dropData.dropAmount,
             drops: Array.isArray(formData.dropData.drops)
@@ -166,7 +176,12 @@ export function deserializeFormData(data: any): FormData {
         posingData: data.posingData ? deserializePosingData(data.posingData) : undefined,
         speciesFeatures: data.speciesFeatures,
         spawnData: data.spawnData ? data.spawnData.map(deserializeSpawnData) : undefined,
-        revivesFromFossils: data.revivesFromFossils ?? [],
+        revivesFromFossils: data.revivesFromFossils ? data.revivesFromFossils.map((fossil : any) => {
+            return {
+                fossil: ResourceLocation.deserialize(fossil.fossil),
+                canBeFoundInStructures: fossil.canBeFoundInStructures.map((structure : any) => ResourceLocation.deserialize(structure))
+            }
+        }) : undefined,
         dropData: data.dropData ? {
             dropAmount: data.dropData.dropAmount,
             drops: data.dropData.drops ? data.dropData.drops.map((drop: any) => {

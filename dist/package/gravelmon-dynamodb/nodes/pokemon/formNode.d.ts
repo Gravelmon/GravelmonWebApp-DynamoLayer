@@ -38,6 +38,10 @@ export interface DropData {
     dropAmount?: number;
     drops?: ItemDrop[];
 }
+export interface Fossil {
+    fossil: ResourceLocation;
+    canBeFoundInStructures: ResourceLocation[];
+}
 export interface FormData {
     genderDifference?: GenderDifference;
     lightingData?: LightingData;
@@ -47,7 +51,7 @@ export interface FormData {
     posingData?: PosingData;
     speciesFeatures: string[];
     spawnData?: SpawnData[];
-    revivesFromFossils?: string[];
+    revivesFromFossils?: Fossil[];
     dropData?: DropData;
     mechanicInteractions?: MechanicInteraction[];
     addedByGame: string;

@@ -8,7 +8,8 @@ export declare class StructureNode extends DynamoNode {
     containedBy: ResourceLocation[];
     usedInSpawnPresets: ResourceLocation[];
     canSpawnPokemon: PokemonIdentifier[];
-    constructor(resourceLocation: ResourceLocation, containedBy?: ResourceLocation[], usedInSpawnPresets?: ResourceLocation[], canSpawnPokemon?: PokemonIdentifier[]);
+    containsLoot: ResourceLocation[];
+    constructor(resourceLocation: ResourceLocation, containedBy?: ResourceLocation[], containsLoot?: ResourceLocation[], usedInSpawnPresets?: ResourceLocation[], canSpawnPokemon?: PokemonIdentifier[]);
     static deserialize(data: Record<string, any>): DynamoNode;
     serialize(): Record<string, any>;
 }
