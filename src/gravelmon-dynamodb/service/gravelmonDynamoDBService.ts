@@ -144,8 +144,6 @@ export class GravelmonDynamoDBService {
         return this.deserializeItems(result.Items ?? []);
     }
 
-    // ---------- Table Setup -----------
-
     async queryByEntityType(entityType: string) {
         const result = await this.baseClient.send(
             new QueryCommand({
@@ -233,6 +231,23 @@ export class GravelmonDynamoDBService {
         }
 
         for (const chunk of chunks) {
+            const seen = new Map<string, any>();
+
+            for (const item of chunk) {
+                const s = item.serialize();
+                const key = `${s.PK}|${s.SK}`;
+
+                if (seen.has(key)) {
+                    console.error("DUPLICATE KEY", {
+                        key,
+                        first: seen.get(key),
+                        second: s
+                    });
+                }
+
+                seen.set(key, s);
+            }
+
             const transactItems = chunk.map(item => ({
                 Put: {
                     TableName: this.tableName,
