@@ -56,25 +56,22 @@ export function serializeEvolutionOptions(evolutionOptions: EvolutionOptions) {
 }
 
 export class EvolutionNode extends DynamoNode {
-    currentPokemon: PokemonIdentifier;
+    currentPokemon: PokemonIdentifier;//the pokemon that is evolving
 
     // identifiers of resulting evolutions
-    evolutions: PokemonIdentifier[];
+    evolutions: EvolutionOptions[];
 
     // identifiers of pre-evolutions
     preEvolutions: PokemonIdentifier[];
-    evolutionOptions: EvolutionOptions;
     static version = 1;
 
     constructor(
         currentPokemon: PokemonIdentifier,
-        evolutionOptions: EvolutionOptions,
-        evolutions: PokemonIdentifier[],
+        evolutions: EvolutionOptions[],
         preEvolutions: PokemonIdentifier[],
         lastEdited: number = Date.now()
     ) {
         super(EvolutionEntity, currentPokemon.toString(), EvolutionNode.version, lastEdited);
-        this.evolutionOptions = evolutionOptions;
         this.currentPokemon = currentPokemon;
         this.evolutions = evolutions;
         this.preEvolutions = preEvolutions;
@@ -84,19 +81,18 @@ export class EvolutionNode extends DynamoNode {
         return {
             ...super.serialize(),
             currentPokemon: this.currentPokemon.serialize(),
-            evolutions: this.evolutions.map(p => p.serialize()),
+            evolutions: this.evolutions.map(p => serializeEvolutionOptions(p)),
             preEvolutions: this.preEvolutions.map(p => p.serialize()),
-            evolutionOptions: serializeEvolutionOptions(this.evolutionOptions)
         }
     }
 
     static deserialize(data: any): EvolutionNode {
         const currentPokemon = PokemonIdentifier.deserialize(data.currentPokemon);
-        const evolutions: PokemonIdentifier[] = [];
+        const evolutions: EvolutionOptions[] = [];
         const preEvolutions: PokemonIdentifier[] = [];
         if (data.evolutions) {
             data.evolutions.forEach((evolution: any) => {
-                evolutions.push(evolution);
+                evolutions.push(deserializeEvolutionOptions(evolution));
             });
         }
         if (data.preEvolutions) {
@@ -106,7 +102,7 @@ export class EvolutionNode extends DynamoNode {
         }
 
 
-        return new EvolutionNode(currentPokemon, deserializeEvolutionOptions(data.evolutionOptions), evolutions, preEvolutions, data.lastEdited);
+        return new EvolutionNode(currentPokemon, evolutions, preEvolutions, data.lastEdited);
     }
 }
 

@@ -41,11 +41,10 @@ export declare function serializeEvolutionOptions(evolutionOptions: EvolutionOpt
 };
 export declare class EvolutionNode extends DynamoNode {
     currentPokemon: PokemonIdentifier;
-    evolutions: PokemonIdentifier[];
+    evolutions: EvolutionOptions[];
     preEvolutions: PokemonIdentifier[];
-    evolutionOptions: EvolutionOptions;
     static version: number;
-    constructor(currentPokemon: PokemonIdentifier, evolutionOptions: EvolutionOptions, evolutions: PokemonIdentifier[], preEvolutions: PokemonIdentifier[], lastEdited?: number);
+    constructor(currentPokemon: PokemonIdentifier, evolutions: EvolutionOptions[], preEvolutions: PokemonIdentifier[], lastEdited?: number);
     serialize(): any;
     static deserialize(data: any): EvolutionNode;
 }

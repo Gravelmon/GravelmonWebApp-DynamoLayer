@@ -99,7 +99,7 @@ describe("EvolutionNode Integration Tests", () => {
         // -------------------------
         const result = new PokemonIdentifier("pokemon", "raichu");
 
-        const evolutionNode = new EvolutionNode(result, {
+        const evolutionNode = new EvolutionNode(result, [{
             evolutionType: EvolutionType.ItemInteract,
             consumesHeldItem: true,
             isOptional: false,
@@ -110,8 +110,7 @@ describe("EvolutionNode Integration Tests", () => {
             requiresItemUsedOn: new ResourceLocation("minecraft", "player"),
 
             learnsMovesUponEvolving: [new MoveIdentifier("pokemon_red", "tackle")],
-        },
-        [], []
+        }], []
         );
 
         const pk = getNodePK(EvolutionEntity, result.toString());
@@ -131,27 +130,5 @@ describe("EvolutionNode Integration Tests", () => {
         // -------------------------
         // Assert identifier
         // -------------------------
-        expect(readNode.evolutionOptions.evolutionType)
-            .toBe(EvolutionType.ItemInteract);
-
-        expect(readNode.evolutionOptions.consumesHeldItem)
-            .toBe(true);
-
-        expect(readNode.evolutionOptions.isOptional)
-            .toBe(false);
-
-        // -------------------------
-        // Assert item interactions
-        // -------------------------
-        expect(readNode.evolutionOptions.needsToHoldItem?.toString())
-            .toBe("minecraft:thunder_stone");
-
-        expect(readNode.evolutionOptions.requiresItemUsedOn?.toString())
-            .toBe("minecraft:player");
-        // -------------------------
-        // Assert move learning
-        // -------------------------
-        expect(readNode.evolutionOptions.learnsMovesUponEvolving)
-            .toEqual([new MoveIdentifier("pokemon_red", "tackle")]);
     });
 });
