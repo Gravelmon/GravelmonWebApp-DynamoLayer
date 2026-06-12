@@ -25,19 +25,34 @@ export interface EvolutionOptions {
     learnsMovesUponEvolving?: MoveIdentifier[];
 }
 
-export function deserializeEvolutionOptions(options : any) {
-     return {
-        evolutionType: options.evolutionType,
+export function deserializeEvolutionOptions(options: any): EvolutionOptions {
+    if (!options) {
+        console.error("Invalid evolution option:", options);
+        throw new Error("Evolution option is undefined");
+    }
+
+    return {
+        evolutionType: options.evolutionType ?? options.type,
         consumesHeldItem: options.consumesHeldItem,
         isOptional: options.isOptional,
-        evolutionConditions: Array.isArray(options.evolutionConditions) ?
-            options.evolutionConditions.map((condition: any) => EvolutionCondition.deserialize(condition))
+        evolutionConditions: Array.isArray(options.evolutionConditions)
+            ? options.evolutionConditions.map((condition: any) =>
+                EvolutionCondition.deserialize(condition))
             : [],
-        needsToHoldItem: options.needsToHoldItem ? ResourceLocation.deserialize(options.needsToHoldItem) : undefined,
-        requiresItemUsedOn: options.useItemOn ? ResourceLocation.deserialize(options.useItemOn) : undefined,
-        shedsIntoForm: options.shedsIntoForm ? PokemonIdentifier.deserialize(options.shedsIntoForm) : undefined,
-        learnsMovesUponEvolving: options.learnsMoveUponEvolving ? options.learnsMoveUponEvolving.map((move:any)  => MoveIdentifier.deserialize(move)) : undefined
-    }
+        needsToHoldItem: options.needsToHoldItem
+            ? ResourceLocation.deserialize(options.needsToHoldItem)
+            : undefined,
+        requiresItemUsedOn: options.requiresItemUsedOn
+            ? ResourceLocation.deserialize(options.requiresItemUsedOn)
+            : undefined,
+        shedsIntoForm: options.shedsIntoForm
+            ? PokemonIdentifier.deserialize(options.shedsIntoForm)
+            : undefined,
+        learnsMovesUponEvolving: options.learnsMovesUponEvolving
+            ? options.learnsMovesUponEvolving.map((move: any) =>
+                MoveIdentifier.deserialize(move))
+            : undefined
+    };
 }
 
 export function serializeEvolutionOptions(evolutionOptions: EvolutionOptions) {
@@ -97,7 +112,9 @@ export class EvolutionNode extends DynamoNode {
         }
         if (data.preEvolutions) {
             data.preEvolutions.forEach((preEvolution: any) => {
-                preEvolutions.push(preEvolution);
+                preEvolutions.push(
+                    PokemonIdentifier.deserialize(preEvolution)
+                );
             });
         }
 

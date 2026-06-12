@@ -19,16 +19,7 @@ export interface EvolutionOptions {
     shedsIntoForm?: PokemonIdentifier;
     learnsMovesUponEvolving?: MoveIdentifier[];
 }
-export declare function deserializeEvolutionOptions(options: any): {
-    evolutionType: any;
-    consumesHeldItem: any;
-    isOptional: any;
-    evolutionConditions: any;
-    needsToHoldItem: ResourceLocation | undefined;
-    requiresItemUsedOn: ResourceLocation | undefined;
-    shedsIntoForm: PokemonIdentifier | undefined;
-    learnsMovesUponEvolving: any;
-};
+export declare function deserializeEvolutionOptions(options: any): EvolutionOptions;
 export declare function serializeEvolutionOptions(evolutionOptions: EvolutionOptions): {
     evolutionType: EvolutionType;
     consumesHeldItem: boolean | undefined;
